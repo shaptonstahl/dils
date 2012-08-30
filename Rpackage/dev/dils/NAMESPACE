@@ -1,0 +1,2 @@
+useDynLib(dils)
+exportPattern("^[[:alpha:]]+")

@@ -1,0 +1,12 @@
+Package: dils
+Type: Package
+Title: Data-Informed Link Strength. Combine multiple-relationship networks into a single weighted network.
+Version: 0.1
+Date: 2012-08-23
+Author: Stephen R. Haptonstahl
+Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
+Suggests: testthat
+Description: More about what it does (maybe more than one line)
+License: GPL-2
+Depends: Rcpp (>= 0.9.13)
+LinkingTo: Rcpp

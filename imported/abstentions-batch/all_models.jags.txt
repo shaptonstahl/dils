@@ -1,0 +1,134 @@
+models <- list(
+  cjr=list(
+    compete="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      probit(p[i,j]) <- mu[i,j];
+      mu[i,j] <- beta[j]*theta[i] - alpha[j];
+#      llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  theta[1] ~ dnorm(-2, 100);
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators] ~ dnorm(2, 100);
+}",
+    extreme="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      probit(p[i,j]) <- mu[i,j];
+      mu[i,j] <- beta[j]*theta[i] - alpha[j];
+#      llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  theta[1] ~ dnorm(0, 1);
+  theta[2] ~ dnorm(-1, 100);
+  for(i in 3:(n.legislators-2)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators-1] ~ dnorm(1, 100);
+  theta[n.legislators] ~ dnorm(0, 1);
+}",
+    indiff="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      probit(p[i,j]) <- mu[i,j]
+      mu[i,j] <- beta[j]*theta[i] - alpha[j];
+#      llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  theta[1] ~ dnorm(-2, 100);
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators] ~ dnorm(2, 100);
+}"),
+  abstain=list(
+    compete="model {
+  for (i in 1:n.legislators) {
+    for (j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      m.voted[i,j] ~ dbern(q[i,j]);
+      probit(p[i,j]) <- mu[i,j,1];   
+      probit(q[i,j]) <- mu[i,j,2];
+      mu[i,j,1]  <- beta[j]*theta[i] - alpha[j];
+      mu[i,j,2]  <- delta[j]*agree[i,j] + gamma[j];
+      agree[i,j] <- step(together[i,j]);
+      together[i,j] <- sign[i,j]*lead[party.membership[i],j];
+	sign[i,j] <- step(rc[i,j])-0.5
+# 	llh[i,j]   <- rc[i,j]*m.voted[i,j]*log(p[i,j])*log(q[i,j])+(1-rc[i,j])*m.voted[i,j]*log(1-p[i,j])*log(q[i,j])+(1-m.voted[i,j])*log(1-q[i,j]);
+#     fake.llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+  #Tau.mu[1:2,1:2] ~ dwish(identity.two,2);
+#  sumllh <- sum(llh[,]);
+#  fake.sumllh <- sum(fake.llh[,]);
+  # PRIORS
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { delta[j]  ~ dnorm(0, 0.25)T(0,); }
+  for(j in 1:n.item) { gamma[j]  ~ dnorm(0, 0.25); }
+  theta[1] ~ dnorm(-2, 100);
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators] ~ dnorm(2, 100);
+}",
+    extreme="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      m.voted[i,j] ~ dbern(q[i,j]);
+      probit(p[i,j]) <- mu[i,j,1];
+      probit(q[i,j]) <- mu[i,j,2];
+      mu[i,j,1] <- beta[j]*theta[i]  - alpha[j];
+      mu[i,j,2] <- lambda[2]*theta[i] - lambda[3]*theta.sq[i] + lambda[1];
+#      llh[i,j] <- rc[i,j]*m.voted[i,j]*log(p[i,j])*log(q[i,j])+(1-rc[i,j])*m.voted[i,j]*log(1-p[i,j])*log(q[i,j])+(1-m.voted[i,j])*log(1-q[i,j]);
+#      fake.llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+#  fake.sumllh <- sum(fake.llh[,]);
+  for (j in 1:n.item) { alpha[j] ~ dnorm (0, 0.25); }
+  for (j in 1:n.item) { beta[j]  ~ dnorm (0, 0.25); }
+  lambda[1] ~ dnorm(mu.l[1], 0.25);
+  lambda[2] ~ dnorm(mu.l[2], 0.25)T(0,);
+  lambda[3] ~ dnorm(mu.l[3], 0.25)T(0,);
+  mu.l[1] <-  0;
+  mu.l[2] <-  1;
+  mu.l[3] <-  1;
+  theta[1] ~ dnorm(0, 1);
+  theta[2] ~ dnorm(-1, 100);
+  for(i in 3:(n.legislators-2)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators-1] ~ dnorm(1, 100);
+  theta[n.legislators] ~ dnorm(0, 1);
+  for(i in 1:n.legislators) { theta.sq[i] <- pow(theta[i],2); }
+}",
+    indiff="model {
+  for (i in 1:n.legislators) {
+    cut[i,1] <- cut[i,2]*(-1);
+    for (j in 1:n.item) {
+      y[i,j] ~ dcat(p[i,j,1:3]);
+      p[i,j,1] <- Q[i,j,1];
+      p[i,j,2] <- Q[i,j,2] - Q[i,j,1];
+      p[i,j,3] <- 1 - Q[i,j,2];
+      for(n in 1:2) { probit(Q[i,j,n]) <- cut[i,n] - beta[j]*theta[i] + alpha[j]; }
+#      llh[i,j] <- y.is.aye[i,j]*m.voted[i,j]*log(p[i,j,3]) + (1-y.is.aye[i,j])*m.voted[i,j]*log(p[i,j,1]) + (1-m.voted[i,j])*log(p[i,j,2]);
+#      fake.llh[i,j] <- y.is.aye[i,j]*log(p[i,j,3]) + (1-y.is.aye[i,j])*log(p[i,j,1]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+#  fake.sumllh <- sum(fake.llh[,]);
+  # PRIORS
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  theta[1] ~ dnorm(-2, 100);
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators] ~ dnorm(2, 100);
+  for (i in 1:n.legislators) { cut[i,2] ~ dunif(0, 5); }
+}"))

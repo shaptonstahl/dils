@@ -1,0 +1,178 @@
+models <- list(
+  cjr=list(
+    cjrComplete="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      probit(p[i,j]) <- mu[i,j];
+      mu[i,j] <- beta[j]*theta[i] - alpha[j];
+#      llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  theta[1] <- -2;                  # spike leftmost legislator
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 0.25); }
+  theta[n.legislators] <- 2;      # spike rightmost legislator
+}",
+    compete="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      probit(p[i,j]) <- mu[i,j];
+      mu[i,j] <- beta[j]*theta[i] - alpha[j];
+#      llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  theta[1] <- -2;                  # spike leftmost legislator
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 0.25); }
+  theta[n.legislators] <- 2;      # spike rightmost legislator
+}",
+    extreme="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      probit(p[i,j]) <- mu[i,j];
+      mu[i,j] <- beta[j]*theta[i] - alpha[j];
+#      llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  theta[1] ~ dnorm(0, 1);
+  theta[2] <- -1;
+  for(i in 3:(n.legislators-2)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators-1] <- 1;
+  theta[n.legislators] ~ dnorm(0, 1);
+}",
+    alien="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      probit(p[i,j]) <- mu[i,j];
+      mu[i,j] <- beta[j]*theta[i] - alpha[j];
+#      llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  theta[1] <- -2;
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators] <- 2;
+}",
+    indiff="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      probit(p[i,j]) <- mu[i,j]
+      mu[i,j] <- beta[j]*theta[i] - alpha[j];
+#      llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  theta[1] <- -2;
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators] <- 2;
+}"),
+  abstain=list(
+  compete="model {
+  for (i in 1:n.legislators) {
+    for (j in 1:n.item) {
+      y[i,j] ~ dcat(Q[i,j,1:3]);         # code Nay as 1, NA as 2, Aye as 3
+      Q[i,j,1] <- pow(probVoteDisagree*(1-CJR[i,j]), p[i,j]) * pow(probVoteAgree*(1-CJR[i,j]), (1 - p[i,j]));
+      Q[i,j,2] <- 1 - Q[i,j,1] - Q[i,j,3];
+      Q[i,j,3] <- pow(probVoteAgree*CJR[i,j], p[i,j]) * pow(probVoteDisagree*CJR[i,j], (1 - p[i,j]));
+      probit(CJR[i,j]) <- beta[j]*theta[i] - alpha[j];
+      p[i,j] <- lead[party.membership[i],j];
+    }
+  }
+  # priors
+  logit(probVoteAgree) <- delta[1]+delta[2];
+  logit(probVoteDisagree) <- delta[1];
+  #delta.p[1:2] <- sort(delta);
+  delta[1] ~ dnorm(0,0.1);
+  delta[2] ~ dexp(0.1); #dexp(.01);
+  for(j in 1:n.item) { alpha[j]  ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j] ~ dnorm(0, 0.25); }
+  theta[1] <- -2;                  # spike leftmost legislator
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 0.25); }
+  theta[n.legislators] <- 2;      # spike rightmost legislator
+}",
+    extreme="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      rc[i,j] ~ dbern(p[i,j]);
+      m.voted[i,j] ~ dbern(q[i,j]);
+      probit(p[i,j]) <- mu[i,j,1];
+      probit(q[i,j]) <- mu[i,j,2];
+      mu[i,j,1] <- beta[j]*theta[i]  - alpha[j];
+      mu[i,j,2] <- lambda[1] - lambda[2]*theta.sq[i];
+#      llh[i,j] <- rc[i,j]*m.voted[i,j]*log(p[i,j])*log(q[i,j])+(1-rc[i,j])*m.voted[i,j]*log(1-p[i,j])*log(q[i,j])+(1-m.voted[i,j])*log(1-q[i,j]);
+#      fake.llh[i,j] <- rc[i,j]*log(p[i,j]) + (1-rc[i,j])*log(1-p[i,j]);
+    }
+  }
+#  sumllh <- sum(llh[,]);
+#  fake.sumllh <- sum(fake.llh[,]);
+  for (j in 1:n.item) { alpha[j] ~ dnorm (0, 0.25); }
+  for (j in 1:n.item) { beta[j]  ~ dnorm (0, 0.25); }
+  lambda[1] ~ dexp(3);
+  lambda[2] ~ dexp(3);
+  theta[1] ~ dnorm(0, 1);
+  theta[2] <- -1;
+  for(i in 3:(n.legislators-2)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators-1] <- 1;
+  theta[n.legislators] ~ dnorm(0, 1);
+  for(i in 1:n.legislators) { theta.sq[i] <- pow(theta[i],2); }
+}",
+    alien="model { 
+  for(i in 1:n.legislators) {
+    for(j in 1:n.item) {
+      y[i,j] ~ dcat(probabilities[i,j,1:3]);
+      probabilities[i,j,1:3] <- rshprobalien(aye[j], nay[j], sigma[j], tau[i], theta[i], draws.eta, draws.nu);
+    }
+  }
+  for (j in 1:n.item) { aye[j] ~ dnorm (0, 0.25); }
+  for (j in 1:n.item) { nay[j]  ~ dnorm (0, 0.25); }
+  for (j in 1:n.item) { sigma[j]  ~ dunif(0, 0.25); }
+  for(i in 1:n.legislators) { 
+    neg.tau[i] ~ dexp(0.1);
+    tau[i] <- -1 * neg.tau[i];
+  }
+  theta[1] ~ dnorm(-2, 100);
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators] ~ dnorm(2, 100);
+}",
+    indiff="model {
+  for (i in 1:n.legislators) {
+    for (j in 1:n.item) {
+      y[i,j] ~ dcat(p[i,j,1:3]);
+      p[i,j,1] <- 1 - Q[i,j,1];         # Pr(Nay observed)
+      p[i,j,2] <- Q[i,j,1] - Q[i,j,2];  # Pr(abstain)
+      p[i,j,3] <- Q[i,j,2];             # Pr(Aye observed)
+      probit(Q[i,j,1]) <- beta[j]*theta[i] - alpha[j] + gamma[i]/sigma[j];
+      probit(Q[i,j,2]) <- beta[j]*theta[i] - alpha[j] - gamma[i]/sigma[j];
+    }
+  }
+  # PRIORS
+  for(j in 1:n.item) { alpha[j] ~ dnorm(0, 0.25); }
+  for(j in 1:n.item) { beta[j]  ~ dnorm(0, 0.25); }
+  sigma[1] <- 1;
+  for(j in 2:n.item) { sigma[j]  ~ dexp(0.1); }
+  theta[1] <- -2;
+  for(i in 2:(n.legislators-1)) { theta[i] ~ dnorm(0, 1); }
+  theta[n.legislators] <- 2;
+  for (i in 1:n.legislators) { gamma[i] ~ dexp(0.1); }`
+}"))
+
+#models$cjr$competeNoMAR <- models$cjr$compete
+#models$cjr$competeMaj <- models$cjr$compete
+#models$abstain$competeNoMAR <- models$abstain$compete
+#models$abstain$competeMaj <- models$abstain$compete

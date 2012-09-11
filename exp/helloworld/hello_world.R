@@ -1,8 +1,26 @@
 # Test STAN with a simple little IRT model
 
+# To install STAN, must have Rtools installed.
+# options(repos = c(getOption("repos"), rstan = "http://wiki.stan.googlecode.com/git/R"))
+# install.packages("rstan")
+
+#####  Awesome decrufting  #####
+source("http://www.haptonstahl.org/R/Decruft/Decruft.R")
+
 library(rstan)
 
-options(repos = c(getOption("repos"), rstan = "http://wiki.stan.googlecode.com/git/R"))
+#####  Set options  #####
+# options(stringsAsFactors = FALSE)
+if( "BT-SHAPTONSTAL" == Sys.info()["nodename"] ) {
+  setwd("C:/Users/shaptonstahl/Documents/GitHub/dils")
+} else if( interactive() ) {
+  new.wd <- rchoose.dir()
+  if(!is.na(new.wd)) setwd(new.wd)  # Interactively set working directory
+  rm(new.wd)
+} else {
+  stop("Must set working directory")
+}
+
 
 schools_code <- '
   data {
@@ -28,7 +46,6 @@ fit <- stan(model_code = schools_code, data = schools_dat,
 
 fit1 <- stan(file = 'exp/8schools.stan', data = schools_dat, 
              iter = 1000, n_chains = 4)
-
 
 fit2 <- stan(fit = fit1, data = schools_dat, iter = 10000, n_chains = 4)
 

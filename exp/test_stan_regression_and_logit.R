@@ -3,24 +3,24 @@
 source("http://www.haptonstahl.org/R/Decruft/Decruft.R")
 library(rstan)
 
-y <- readRDS("generated_y.rds")
-true.parameters <- readRDS("generated_true_parameters.rds")
+y <- readRDS("exp/generated_y.rds")
+true.parameters <- readRDS("exp/generated_true_parameters.rds")
 
 
 model.regression <- "
 data {
-  int<lower=0> N;
-  real x[N];
-  real y[N];
+int<lower=0> N;
+real x[N];
+real y[N];
 }
 parameters {
-  real alpha;
-  real beta;
-  real<lower=0> sigma;
+real alpha;
+real beta;
+real<lower=0> sigma;
 }
 model {
-  for (n in 1:N)
-    y[n] ~ normal(alpha + beta * x[n], sigma);
+for (n in 1:N)
+y[n] ~ normal(alpha + beta * x[n], sigma);
 }
 "
 data.regression <- lapply(1:true.parameters$n.continuous.vars, function(k) 
@@ -33,8 +33,11 @@ fit.regression <- lapply(1:true.parameters$n.continuous.vars, function(k)
   stan(model_code=model.regression, data=data.regression[[k]])
 )
 
-print(fit.regression)
-plot(fit.regression)
+# save(data.regression, fit.regression, file="exp/regression_results.RData")
+# load(file="exp/regression_results.RData")
+
+print(fit.regression[[2]])
+plot(fit.regression[[2]])
 
 
 set_cppo(mode = c("debug"))

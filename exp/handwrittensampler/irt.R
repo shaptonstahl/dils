@@ -42,23 +42,37 @@ fit.ideal <- DropIdealLegislator(fit.ideal, c(1,2))
 
 
 ###  functions  ###
-RescaleParameters <- function(current.x, 
-                              current.beta, 
-                              current.alpha)
-{
+ItemBetaAlphaGivenYstarX <- function(item.current.y.star, current.x, item.y) {
+  x.cons <- cbind(-1, current.x)
+  B1 = solve( t(x.cons) %*% x.cons )
+  bbar <- as.vector(solve( (t(x.cons) %*% x.cons),
+                           t(x.cons) %*% as.matrix(item.current.y.star)))
+  draw <- as.vector(rmvnorm(n=1, mean=bbar, sigma=B1))
+  return( list(alpha=draw[1], beta=draw[2]) )
+}
+
+ItemXGivenYstarBetaAlpha <- function(item.current.y.star, current.beta, current.alpha) {
+  B1 = solve( t(current.beta) %*% as.matrix(current.beta) )
+  bbar <- as.vector(solve( t(current.beta) %*% as.matrix(current.beta), 
+                           t(current.beta) %*% 
+                             as.matrix(item.current.y.star + current.alpha) ))
+  return( as.vector(rmvnorm(n=1, mean=bbar, sigma=B1)) )
+}
+
+RescaleParameters <- function(current.x, current.beta, current.alpha) {
   #' Assumes lower peg is first x, upper peg is second x
   #' Assumes lower peg value is -1, upper peg value is second 1
   out.beta <- current.beta * 2 * current.x[1] * 
     (current.x[2] - current.x[1])
   out.alpha <- current.alpha + current.beta * current.x[1]
-  out.x <- c(0, (current.x[2] - current.x[1]) * current(x)[-1])
-  return(x=out.x, beta=out.beta, alpha=out.alpha)
+  out.x <- c(0, (current.x[2] - current.x[1]) * current.x[-1])
+  return( list(x=out.x, beta=out.beta, alpha=out.alpha) )
 }
 
 ItemYstarGivenBetaAlphaX <- function(item.current.beta, item.current.alpha,
-                                     current.X, item.y) {
+                                     current.x, item.y) {
   nay.indices <- which(0==item.y)
-  y.star.means <- current.X %*% as.matrix(item.current.beta) - item.current.alpha
+  y.star.means <- current.x %*% as.matrix(item.current.beta) - item.current.alpha
   y.star.means[nay.indices] <- - y.star.means[nay.indices]
   
   draws <- rtruncnorm(n=length(item.y),
@@ -68,76 +82,105 @@ ItemYstarGivenBetaAlphaX <- function(item.current.beta, item.current.alpha,
   return( draws )
 }
 
-ItemBetaAlphaGivenYstarX <- function(item.current.y.star, current.X, item.y) {
-  current.X.with.constant <- cbind(-1, current.X)
-  B1 = solve( t(current.X.with.constant) %*% current.X.with.constant )
-  bbar <- as.vector(solve( (t(current.X.with.constant) %*% current.X.with.constant),
-                           t(current.X.with.constant) %*% as.matrix(current.y.star)))
-  draw <- as.vector(rmvnorm(n=1, mean=bbar, sigma=B1))
-  return( list(alpha=draw[1], beta=draw[2]) )
-}
-
-ItemXGivenYstarBetaAlpha <- function(item.current.y.star, current.beta, current.alpha, y) {
-  B1 = solve( t(current.beta) %*% as.matrix(current.beta) )
-  bbar <- as.vector(solve( t(current.beta) %*% as.matrix(current.beta), 
-                           t(current.beta) %*% 
-                             as.matrix(item.current.y.star * current.alpha) ))
-  return( as.vector(rmvnorm(n=1, mean=bbar, sigma=B1)) )
-}
-
 SRH1dIRT <- function(y,
+                     peg.ids=c(1,2),
                      burnin=500,
                      keep.draws=1000,
                      thin=1,
-                     debug=FALSE)
+                     debug1=FALSE, debug2=FALSE)
 {
   #' number of draws made ~~ burnin + keep.draws * thin
   #' b0 = 0
   #' B0 = improper flat prior
+  #' Scaled between -1 and 1
   
-  cbind(-1, X)
-  if(missing(b0)) b0 <- rep(0, ncol(X))
+  y <- rbind(y[peg.ids,], y[-peg.ids,])
+  #' From here on assumes that x[1] = -1 and x[2] = 1
+  N <- nrow(y)
+  M <- ncol(y)
+  
+  #' initialize x, y.star, beta, and alpha
+  current.x <- c(-1,1, runif(nrow(y)-2))
   
   current.y.star <- rexp(length(y))
   current.y.star[0 == y] <- - current.y.star[0 == y]
+  current.y.star <- matrix(current.y.star, ncol=M, nrow=N)
   
-  if(debug) browser()
+  current.beta <- rep(0, M)
+  current.alpha <- rep(0, M)
   
-  current.beta <- BetaGivenYstar(current.y.star=current.y.star,
-                                 X=cbind(-1, X),
-                                 y=y,
-                                 B0inv=B0inv,
-                                 b0=b0)
+  if(debug1) browser()
   
   if(burnin > 0) {
     for(i in 1:burnin) {
-      current.y.star <- YstarGivenBeta(current.beta=current.beta,
-                                       X=X,
-                                       y=y,
-                                       a0=a0,
-                                       d0=d0)
-      current.beta <- BetaGivenYstar(current.y.star=current.y.star,
-                                     X=X,
-                                     y=y,
-                                     B0inv=B0inv,
-                                     b0=b0)
-    }
+      
+      for(j in 1:M) {
+        ab <- ItemBetaAlphaGivenYstarX(item.current.y.star=current.y.star[,j], 
+                                       current.x=current.x, 
+                                       item.y=y[,j])
+        current.alpha[j] <- ab$alpha
+        current.beta[j] <- ab$beta
+      }
+      
+      for(i in 1:N) {
+        current.x[i] <- ItemXGivenYstarBetaAlpha(item.current.y.star=current.y.star[i,],
+                                                 current.beta,
+                                                 current.alpha)
+      }
+      rescaled.params <- RescaleParameters(current.x=current.x, 
+                        current.beta=current.beta,
+                        current.alpha=current.alpha)
+      current.x <- rescaled.params$x
+      current.alpha <- rescaled.params$alpha
+      current.beta <- rescaled.params$beta
+      
+      for(j in 1:M) {
+        current.y.star[j] <- ItemYstarGivenBetaAlphaX(item.current.beta=current.beta[j], 
+                                                      item.current.alpha=current.alpha[j],
+                                                      current.x=current.x, 
+                                                      item.y=y[,j])
+      }
+      
+    } #' End sampling loop
   }
   
-  draws <- list(beta=matrix(0, nrow=keep.draws, ncol=ncol(X)))
+  if(debug2) browser()
+  
+  draws <- list(beta=matrix(0, nrow=keep.draws, ncol=M),
+                alpha=matrix(0, nrow=keep.draws, ncol=M),
+                x=matrix(0, nrow=keep.draws, ncol=N))
   
   for(i in 1:(keep.draws*thin)) {
-    current.y.star <- YstarGivenBeta(current.beta=current.beta,
-                                     X=X,
-                                     y=y,
-                                     a0=a0,
-                                     d0=d0)
-    current.beta <- BetaGivenYstar(current.y.star=current.y.star,
-                                   X=X,
-                                   y=y,
-                                   B0inv=B0inv,
-                                   b0=b0)
+    for(j in 1:M) {
+      ab <- ItemBetaAlphaGivenYstarX(item.current.y.star=current.y.star[,j], 
+                                     current.x=current.x, 
+                                     item.y=y[,j])
+      current.alpha[j] <- ab$alpha
+      current.beta[j] <- ab$beta
+    }
+    
+    for(i in 1:N) {
+      current.x[i] <- ItemXGivenYstarBetaAlpha(item.current.y.star=current.y.star[i,],
+                                               current.beta,
+                                               current.alpha)
+    }
+    rescaled.params <- RescaleParameters(current.x=current.x, 
+                                         current.beta=current.beta,
+                                         current.alpha=current.alpha)
+    current.x <- rescaled.params$x
+    current.alpha <- rescaled.params$alpha
+    current.beta <- rescaled.params$beta
+    
+    for(j in 1:M) {
+      current.y.star[j] <- ItemYstarGivenBetaAlphaX(item.current.beta=current.beta[j], 
+                                                    item.current.alpha=current.alpha[j],
+                                                    current.x=current.x, 
+                                                    item.y=y[,j])
+    }
+    
     if(0 == i %% thin) {
+      draws$beta[i/thin,] <- current.beta
+      draws$beta[i/thin,] <- current.beta
       draws$beta[i/thin,] <- current.beta
     }
   }
@@ -145,5 +188,6 @@ SRH1dIRT <- function(y,
   return(draws) 
 }
 
-SRHprobit(y=y, X=X, keep.draws=10)
-SRHprobit(y=y, X=X, debug=TRUE)
+SRH1dIRT(y=y, burnin=10, keep.draws=10, debug1=TRUE)
+SRH1dIRT(y=y, burnin=10, keep.draws=10, debug2=TRUE)
+SRH1dIRT(y=y, burnin=10, keep.draws=10)

@@ -5,35 +5,35 @@ irt.model <- "
 // IRT 1PL (RASCH) MODEL
 
 data {
-int<lower=1> J; // number of students
-int<lower=1> K; // number of questions
-int<lower=1> N; // number of observations
-int<lower=1,upper=J> jj[N]; // student for observation n
-int<lower=1,upper=K> kk[N]; // question for observation n
-int<lower=0,upper=1> y[N]; // correctness for observation n
+  int<lower=1> J; // number of students
+  int<lower=1> K; // number of questions
+  int<lower=1> N; // number of observations
+  int<lower=1,upper=J> jj[N]; // student for observation n
+  int<lower=1,upper=K> kk[N]; // question for observation n
+  int<lower=0,upper=1> y[N]; // correctness for observation n
 }
 parameters {
-real delta; // mean student ability
-real alpha[J]; // ability of student j - mean ability
-real beta[K]; // difficulty of question k
+  real delta; // mean student ability
+  real alpha[J]; // ability of student j - mean ability
+  real beta[K]; // difficulty of question k
 }
 model {
-alpha ~ normal(0,1); // informative true prior
-beta ~ normal(0,1); // informative true prior
-delta ~ normal(.75,1); // informative true prior
-for (n in 1:N)
-y[n] ~ bernoulli_logit(alpha[jj[n]] - beta[kk[n]] + delta);
+  alpha ~ normal(0,1); // informative true prior
+  beta ~ normal(0,1); // informative true prior
+  delta ~ normal(.75,1); // informative true prior
+  for (n in 1:N)
+    y[n] ~ bernoulli_logit(alpha[jj[n]] - beta[kk[n]] + delta);
 }
 "
 
-library('rstan');
-NMax <- 1000000;
-fit <- 0;
-Nchains <- 1;
-Niter <- 200;
-Js <- c(10,100,1000,10000);
-Ks <- c(10,100,1000);
-times <- array(NA,c(length(Js),length(Ks)));
+library('rstan')
+NMax <- 1000000
+fit <- 0
+Nchains <- 1
+Niter <- 200
+Js <- c(10,100,1000,10000)
+Ks <- c(10,100,1000)
+times <- array(NA,c(length(Js),length(Ks)))
 for (jidx in 1:length(Js)) {
   J <- Js[jidx];
   for (kidx in 1:length(Ks)) {

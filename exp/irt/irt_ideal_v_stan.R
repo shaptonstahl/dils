@@ -10,7 +10,7 @@ library(rstan)
 ###  Assume true parameters and  ###
 ###  genereate obeserved data    ###
 ####################################
-n.nodes <- 50
+n.nodes <- 150
 n.dyads <- n.nodes * (n.nodes+1) / 2
 n.networks <- 10
 true.dils <- runif(n.dyads)
@@ -38,13 +38,14 @@ y <- rbind(1, 0, y)
 #################################################
 rc <- rollcall(y, legis.names=c("peg 1", 
                                 "peg 0", 
-                                paste("dyad", 1:(rc$n-2))))
+                                paste("dyad", 1:(nrow(y)-2))))
 priors.ideal <- constrain.legis(rc,
                                 x=list("peg 1"=1, "peg 0"=0),
                                 d=1)
 fit.ideal <- ideal(rc, 
                    priors=priors.ideal,
-                   maxiter=1e4, 
+                   maxiter=1e5+500,
+                   thin=100,
                    verbose=TRUE)
 fit.ideal <- DropIdealLegislator(fit.ideal, c(1,2))
 
@@ -64,7 +65,7 @@ cor(est.dils.ideal, true.dils)
 
 #################################################
 ###  Estimate parameters given observed data  ###
-###  using stan                               ###
+###  using stan, straightforward model        ###
 #################################################
 irt.model <- '
 data {
@@ -131,6 +132,18 @@ irt.inits <- function() {
                beta=rnorm(ncol(y), 0, 3)) )
 }
 
+irt.inits <- function() {
+  good.inits <- InitializeIdeals(rc, 
+                                 anchors=c(1,2), 
+                                 anchor.values=c(1,0), 
+                                 d=1)
+  return( list(dils=good.inits$ideal.points[,1], 
+               alpha=rnorm(ncol(y), 0, 3),
+               beta=rnorm(ncol(y), 0, 3)) )
+}
+
+
+
 fit.model <- stan(model_name="IRT 1d with Probit link by SRH",
                   model_code=irt.model,
                   data=irt.data,
@@ -149,9 +162,81 @@ fit.run <- stan(model_name="IRT 1d with Probit link by SRH",
                 chains=4,
                 iter=1e5,
                 warmup=2e4,
-                thin=1,
+                thin=100,
                 init=irt.inits,
                 save_dso=TRUE)
+
+#################################################
+###  Estimate parameters given observed data  ###
+###  using stan, latent model                 ###
+#################################################
+irt.latent.model <- '
+data {
+  // Initialize variables for data here
+  int<lower=1> N;              // number of dyads
+  int<lower=1> M;              // number of networks
+  int<lower=0,upper=1> y[N,M]; // outcome for observation i,j
+}
+parameters {
+  // Initialize variables for parameters here
+  real<lower=0, upper=1> dils[N];
+  real alpha[M];
+  real beta[M];
+  real<lower=-5,upper=5> ystar[N,M];
+}
+model {
+  // Give parameters priors here (cannot nail with '<-')
+  dils[1] ~ normal(.995, .001);  // spike prior
+  dils[2] ~ normal(.005, .001);  // spike prior
+  for(i in 3:N) {
+    dils[i] ~ uniform(0,1);  // uninformative prior
+  }
+  alpha ~ normal(0, 3);      // uninformative prior
+  beta ~ normal(0, 3);       // uninformative prior
+  ystar ~ uniform(-2,2);     // light information prior
+
+  // Specify model DGP here
+  for (i in 1:N) {
+    for(j in 1:M) {
+      ystar[i,j] ~ normal(beta[j] * dils[i] - alpha[j], 1);
+      dils[i,j] <- int_step(ystar[i,j];
+    }
+  }
+}
+'
+irt.data=list(N=nrow(y), M=ncol(y), y=y)
+
+irt.inits <- function() {
+  good.inits <- InitializeIdeals(rc, 
+                                 anchors=c(1,2), 
+                                 anchor.values=c(1,0), 
+                                 d=1)
+  return( list(dils=good.inits$ideal.points[,1], 
+               alpha=rnorm(ncol(y), 0, 3),
+               beta=rnorm(ncol(y), 0, 3)) )
+}
+fit.latent.model <- stan(model_name="IRT 1d with Probit link by SRH",
+                  model_code=irt.latent.model,
+                  data=irt.data,
+                  pars=c("dils", "beta", "alpha", "ystar"),
+                  chains=2,
+                  iter=100,
+                  warmup=10,
+                  thin=1,
+                  #init=irt.inits,
+                  save_dso=TRUE)
+
+fit.latent.run <- stan(model_name="IRT 1d with Probit link by SRH",
+                fit=irt.latent.model,
+                data=irt.data,
+                pars=c("dils", "beta", "alpha"),
+                chains=4,
+                iter=1e5,
+                warmup=2e4,
+                thin=100,
+                init=irt.inits,
+                save_dso=TRUE)
+
 
 ################################################
 ###  Compare true parameter values to those  ###

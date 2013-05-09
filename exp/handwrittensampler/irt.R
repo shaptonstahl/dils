@@ -14,14 +14,21 @@ n <- 250
 m <- 20
 true.beta <- runif(m, min=-2, max=2)
 true.alpha <- runif(m, min=-1, max=1)
+
 true.x <- PegMinMax(runif(n))
 known.min.max <- c(which.min(true.x), which.max(true.x))
+true.x <- c(true.x[known.min.max], true.x[-known.min.max])
+
 true.y.star <- matrix(0, nrow=n, ncol=m)
 for(i in 1:n) {
   for(j in 1:m) {
     true.y.star[i,j] <- true.beta[j] * true.x[i] - true.alpha[j] + rnorm(1)
   }
 }
+# Force pegs to have all 1s or 0s
+true.y.star[1,] <- - rexp(m)
+true.y.star[2,] <- rexp(m)
+
 y <- ifelse(true.y.star > 0, 1, 0)
 # barplot(table(y))
 
@@ -42,8 +49,13 @@ fit.ideal <- DropIdealLegislator(fit.ideal, c(1,2))
 
 
 ###  functions  ###
-ItemBetaAlphaGivenYstarX <- function(item.current.y.star, current.x, item.y) {
+ItemBetaAlphaGivenYstarX <- function(item.current.y.star, current.x) {
   x.cons <- cbind(-1, current.x)
+  
+  if( rcond(t(x.cons) %*% x.cons) < 1e-10 ) {
+    browser("Reciprocal condition number too small")
+  }
+  
   B1 = solve( t(x.cons) %*% x.cons )
   bbar <- as.vector(solve( (t(x.cons) %*% x.cons),
                            t(x.cons) %*% as.matrix(item.current.y.star)))
@@ -62,10 +74,11 @@ ItemXGivenYstarBetaAlpha <- function(item.current.y.star, current.beta, current.
 RescaleParameters <- function(current.x, current.beta, current.alpha) {
   #' Assumes lower peg is first x, upper peg is second x
   #' Assumes lower peg value is -1, upper peg value is second 1
+  s.ratio <- 2 / (current.x[2] - current.x[1])
   out.beta <- current.beta * 2 * current.x[1] * 
     (current.x[2] - current.x[1])
   out.alpha <- current.alpha + current.beta * current.x[1]
-  out.x <- c(0, (current.x[2] - current.x[1]) * current.x[-1])
+  out.x <- sapply(current.x, function(this.x) (this.x - current.x[1]) * s.ratio - 1)
   return( list(x=out.x, beta=out.beta, alpha=out.alpha) )
 }
 
@@ -87,15 +100,28 @@ SRH1dIRT <- function(y,
                      burnin=500,
                      keep.draws=1000,
                      thin=1,
-                     debug1=FALSE, debug2=FALSE)
+                     lop=.025,
+                     debug1=FALSE, debug2=FALSE, debug3=FALSE, debug4=FALSE)
 {
   #' number of draws made ~~ burnin + keep.draws * thin
   #' b0 = 0
   #' B0 = improper flat prior
   #' Scaled between -1 and 1
   
+  #' Drop columns with almost no variation
+  drop.columns <- apply(y, 2, function(this.column) {
+    return( ifelse(mean(this.column) < lop | mean(this.column) > 1 - lop, TRUE, FALSE) )
+  })
+  if( sum(drop.columns) > 0 ) {
+    y <- y[,!drop.columns]
+    cat("Dropped the collowing columns because they were lopsided:\n")
+    print(which(drop.columns))
+  }
+  
+  #' Force pegs into first and second rows
   y <- rbind(y[peg.ids,], y[-peg.ids,])
   #' From here on assumes that x[1] = -1 and x[2] = 1
+
   N <- nrow(y)
   M <- ncol(y)
   
@@ -113,11 +139,10 @@ SRH1dIRT <- function(y,
   
   if(burnin > 0) {
     for(i in 1:burnin) {
-      
+
       for(j in 1:M) {
         ab <- ItemBetaAlphaGivenYstarX(item.current.y.star=current.y.star[,j], 
-                                       current.x=current.x, 
-                                       item.y=y[,j])
+                                       current.x=current.x)
         current.alpha[j] <- ab$alpha
         current.beta[j] <- ab$beta
       }
@@ -128,33 +153,33 @@ SRH1dIRT <- function(y,
                                                  current.alpha)
       }
       rescaled.params <- RescaleParameters(current.x=current.x, 
-                        current.beta=current.beta,
-                        current.alpha=current.alpha)
+                                           current.beta=current.beta,
+                                           current.alpha=current.alpha)
       current.x <- rescaled.params$x
       current.alpha <- rescaled.params$alpha
       current.beta <- rescaled.params$beta
       
       for(j in 1:M) {
-        current.y.star[j] <- ItemYstarGivenBetaAlphaX(item.current.beta=current.beta[j], 
+        if(debug2) browser()
+        current.y.star[,j] <- ItemYstarGivenBetaAlphaX(item.current.beta=current.beta[j], 
                                                       item.current.alpha=current.alpha[j],
                                                       current.x=current.x, 
                                                       item.y=y[,j])
       }
       
-    } #' End sampling loop
+    } #' End burnin sampling loop
   }
   
-  if(debug2) browser()
+  if(debug3) browser()
   
   draws <- list(beta=matrix(0, nrow=keep.draws, ncol=M),
                 alpha=matrix(0, nrow=keep.draws, ncol=M),
                 x=matrix(0, nrow=keep.draws, ncol=N))
   
-  for(i in 1:(keep.draws*thin)) {
+  for(g in 1:(keep.draws*thin)) {
     for(j in 1:M) {
       ab <- ItemBetaAlphaGivenYstarX(item.current.y.star=current.y.star[,j], 
-                                     current.x=current.x, 
-                                     item.y=y[,j])
+                                     current.x=current.x)
       current.alpha[j] <- ab$alpha
       current.beta[j] <- ab$beta
     }
@@ -172,13 +197,15 @@ SRH1dIRT <- function(y,
     current.beta <- rescaled.params$beta
     
     for(j in 1:M) {
-      current.y.star[j] <- ItemYstarGivenBetaAlphaX(item.current.beta=current.beta[j], 
-                                                    item.current.alpha=current.alpha[j],
-                                                    current.x=current.x, 
-                                                    item.y=y[,j])
+      current.y.star[,j] <- ItemYstarGivenBetaAlphaX(item.current.beta=current.beta[j], 
+                                                     item.current.alpha=current.alpha[j],
+                                                     current.x=current.x, 
+                                                     item.y=y[,j])
     }
     
-    if(0 == i %% thin) {
+    if(0 == g %% thin) {
+      if(debug4) browser()
+      
       draws$beta[i/thin,] <- current.beta
       draws$beta[i/thin,] <- current.beta
       draws$beta[i/thin,] <- current.beta
@@ -190,4 +217,6 @@ SRH1dIRT <- function(y,
 
 SRH1dIRT(y=y, burnin=10, keep.draws=10, debug1=TRUE)
 SRH1dIRT(y=y, burnin=10, keep.draws=10, debug2=TRUE)
+SRH1dIRT(y=y, burnin=10, keep.draws=10, debug3=TRUE)
+SRH1dIRT(y=y, burnin=10, keep.draws=10, debug4=TRUE)
 SRH1dIRT(y=y, burnin=10, keep.draws=10)

@@ -49,10 +49,13 @@ fit.ideal <- DropIdealLegislator(fit.ideal, c(1,2))
 
 
 ###  functions  ###
-ItemBetaAlphaGivenYstarX <- function(item.current.y.star, current.x) {
+ItemBetaAlphaGivenYstarX <- function(item.current.y.star, current.x, verbose=0) {
   x.cons <- cbind(-1, current.x)
   
-  if( rcond(t(x.cons) %*% x.cons) < 1e-10 ) {
+  XtX.condition.number <- rcond(t(x.cons) %*% x.cons)
+  if(verbose >= 2) cat("\nReciprocal condition number of XtX:", XtX.condition.number, "\n")
+  
+  if( XtX.condition.number < 1e-12 ) {
     browser("Reciprocal condition number too small")
   }
   
@@ -71,14 +74,16 @@ ItemXGivenYstarBetaAlpha <- function(item.current.y.star, current.beta, current.
   return( as.vector(rmvnorm(n=1, mean=bbar, sigma=B1)) )
 }
 
-RescaleParameters <- function(current.x, current.beta, current.alpha) {
-  #' Assumes lower peg is first x, upper peg is second x
-  #' Assumes lower peg value is -1, upper peg value is second 1
-  s.ratio <- 2 / (current.x[2] - current.x[1])
-  out.beta <- current.beta * 2 * current.x[1] * 
-    (current.x[2] - current.x[1])
-  out.alpha <- current.alpha + current.beta * current.x[1]
-  out.x <- sapply(current.x, function(this.x) (this.x - current.x[1]) * s.ratio - 1)
+RescaleParameters <- function(current.x, current.beta, current.alpha, 
+                              old.peg.values=current.x[1:2]) {
+  #' Assumes identified ideal points will have mean 0, sd 1, second peg greater 
+  #' than first.
+  new.peg.values <- (old.peg.values - mean(current.x)) / sd(current.x)
+  if( new.peg.values[2] < new.peg.values[1] ) new.peg.values <- - new.peg.values
+  out.beta <- current.beta * 2 * new.peg.values[1] * (current.x[2] - current.x[1]) /
+    (new.peg.values[2] - new.peg.values[1])
+  out.alpha <- new.peg.values[1] + current.alpha - current.beta * old.peg.values[1]
+  out.x <- IdentifyXNormalized(current.x, current.x[2])
   return( list(x=out.x, beta=out.beta, alpha=out.alpha) )
 }
 
@@ -101,6 +106,7 @@ SRH1dIRT <- function(y,
                      keep.draws=1000,
                      thin=1,
                      lop=.025,
+                     verbose=0,
                      debug1=FALSE, debug2=FALSE, debug3=FALSE, debug4=FALSE)
 {
   #' number of draws made ~~ burnin + keep.draws * thin
@@ -138,11 +144,13 @@ SRH1dIRT <- function(y,
   if(debug1) browser()
   
   if(burnin > 0) {
-    for(i in 1:burnin) {
+    display.percent <- 0
+    for(g in 1:burnin) {
 
       for(j in 1:M) {
         ab <- ItemBetaAlphaGivenYstarX(item.current.y.star=current.y.star[,j], 
-                                       current.x=current.x)
+                                       current.x=current.x,
+                                       verbose=verbose)
         current.alpha[j] <- ab$alpha
         current.beta[j] <- ab$beta
       }
@@ -166,7 +174,13 @@ SRH1dIRT <- function(y,
                                                       current.x=current.x, 
                                                       item.y=y[,j])
       }
-      
+      if( verbose > 0 ) {
+        if( 100 * g / (keep.draws * thin) > display.percent ) {
+          display.percent <- ceiling(100 * g / (keep.draws * thin))
+          cat("\rCompleted burnin draws: ", display.percent, "%", sep="")
+          if( display.percent == 100 ) cat("\n")
+        }
+      }
     } #' End burnin sampling loop
   }
   
@@ -176,10 +190,12 @@ SRH1dIRT <- function(y,
                 alpha=matrix(0, nrow=keep.draws, ncol=M),
                 x=matrix(0, nrow=keep.draws, ncol=N))
   
+  display.percent <- 0
   for(g in 1:(keep.draws*thin)) {
     for(j in 1:M) {
       ab <- ItemBetaAlphaGivenYstarX(item.current.y.star=current.y.star[,j], 
-                                     current.x=current.x)
+                                     current.x=current.x,
+                                     verbose=verbose)
       current.alpha[j] <- ab$alpha
       current.beta[j] <- ab$beta
     }
@@ -206,9 +222,16 @@ SRH1dIRT <- function(y,
     if(0 == g %% thin) {
       if(debug4) browser()
       
-      draws$beta[i/thin,] <- current.beta
-      draws$beta[i/thin,] <- current.beta
-      draws$beta[i/thin,] <- current.beta
+      draws$beta[g/thin,] <- current.beta
+      draws$alpha[g/thin,] <- current.alpha
+      draws$x[g/thin,] <- current.x
+    }
+    if( verbose > 0 ) {
+      if( 100 * g / (keep.draws * thin) > display.percent ) {
+        display.percent <- ceiling(100 * g / (keep.draws * thin))
+        cat("\rCompleted draws to be kept: ", display.percent, "%", sep="")
+        if( display.percent == 100 ) cat("\n")
+      }
     }
   }
   
@@ -219,4 +242,12 @@ SRH1dIRT(y=y, burnin=10, keep.draws=10, debug1=TRUE)
 SRH1dIRT(y=y, burnin=10, keep.draws=10, debug2=TRUE)
 SRH1dIRT(y=y, burnin=10, keep.draws=10, debug3=TRUE)
 SRH1dIRT(y=y, burnin=10, keep.draws=10, debug4=TRUE)
-SRH1dIRT(y=y, burnin=10, keep.draws=10)
+
+test.irt.result <- SRH1dIRT(y=y, burnin=10, keep.draws=10)
+str(test.irt.result)
+
+test.irt.result <- SRH1dIRT(y=y, burnin=100, keep.draws=100, verbose=1)
+test.irt.result <- SRH1dIRT(y=y, burnin=500, keep.draws=1000, verbose=2)
+test.irt.result <- SRH1dIRT(y=y, burnin=500, keep.draws=1000, verbose=1)
+
+irt.result <- SRH1dIRT(y=y, burnin=5000, keep.draws=1000, thin=100, verbose=1)

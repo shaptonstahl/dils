@@ -8,7 +8,7 @@
 #' 
 #' CombineTwoDyadTables(x1, x2, directed=FALSE): Combines two dyad tables checking compatibility and pairing on dyads carefully.
 #' 
-#' DyadMultiTable(..., directed=FALSE): Combines many dyad tables checking compatibility and pairing on dyads carefully.
+#' DyadMultiTable(x.list, directed=FALSE): Combines many dyad tables checking compatibility and pairing on dyads carefully.
 #' 
 #' ImputeDyad(x, i1, i2, directed=FALSE)
 #'   1. Sample the other dyads.
@@ -111,6 +111,29 @@ CombineTwoDyadTables <- function(x1, x2,
 #' xy <- CombineTwoDyadTables(x1=x, x2=y, names1="ba", names2="erdos")
 #' head(xy)
 
+DyadMultiTable <- function(x.list, wt.names=names(x.list), directed=FALSE) {
+  if( 1 == length(x.list) ) return( x.list )
+  if( 2 == length(x.list) ) {
+    return( CombineTwoDyadTables(x.list[[1]],
+                                 x.list[[2]],
+                                 names1=names(x.list)[1],
+                                 names2=names(x.list)[2]) )
+  } else {
+    out <- CombineTwoDyadTables(x.list[[1]],
+                                x.list[[2]],
+                                names1=names(x.list)[1],
+                                names2=names(x.list)[2])
+    for(i in 3:length(x.list)) {
+      out <- CombineTwoDyadTables(out,
+                                  x.list[[i]],
+#                                  names1=names(out)[-c(1:2)],
+                                  names2=names(x.list)[i])
+    }
+    return( out )
+  }
+}
+#' x.list <- lapply(nets, IgraphToDyadTable)
+#' dm.table <- DyadMultiTable(x.list)
 
 
 

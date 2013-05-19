@@ -6,15 +6,15 @@ n <- 50  #' multiple of 10. Number of nodes in each network
 
 #' May want to add things from graph.atlas
 
-nets <- list(ba.game(n=n, directed=FALSE),
-             erdos.renyi.game(n=n, p.or.m=.8),
-             grg.game(nodes=n, radius=.3, torus=TRUE),
-             growing.random.game(n=n, m=3, directed=FALSE),
-             interconnected.islands.game(islands.n=10,
+nets <- list(ba=ba.game(n=n, directed=FALSE),
+             erdos=erdos.renyi.game(n=n, p.or.m=.8),
+             grg=grg.game(nodes=n, radius=.3, torus=TRUE),
+             growing=growing.random.game(n=n, m=3, directed=FALSE),
+             islands=interconnected.islands.game(islands.n=10,
                                          islands.size=n/10,
                                          islands.pin=.8,
                                          n.inter=n/10),
-             k.regular.game (no.of.nodes=n, k=10)
+             k.regular=k.regular.game (no.of.nodes=n, k=10)
 )
 
 ids <- sample(1:(2*n), n, replace=FALSE)

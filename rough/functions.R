@@ -139,6 +139,17 @@ DyadMultiTable <- function(x.list, wt.names=names(x.list), directed=FALSE) {
 #' dm.table <- DyadMultiTable(x.list)
 #' str(dm.table)
 
+ImputeDyad <- function(x, i1, i2, directed=FALSE) {
+  #'   1. Sample the other dyads.
+  #'   2. Get weights of each dyad relative to the given dyad and rescale to sum to 1.
+  #'   3. Get weighted mean and weighted covariance of sample using cov.wt
+  #'   4. Use FastImputation to impute the missing data.  
+  #' Run over all dyads as a MapReduce job with no reducer, then combine into a DyadMultiTable.
+  
+  
+}
+
+
 
 #####  Run the Code  #####
 

@@ -54,13 +54,14 @@ IgraphToDyadTable <- function(g) {
 #' x <- IgraphToDyadTable(nets[[1]])
 
 FillDyadTable <- function(x, directed=FALSE) {
-  out <- expand.grid(ids, ids, 0)
-  out <- out[,c(2,1,3)]
+  out <- expand.grid(ids, ids)
+  for(i in 3:ncol(x)) out <- cbind(out, 0)
+  out <- cbind(out[,c(2,1)], out[,-c(1:2)])
   out <- as.data.frame(out)
   names(out) <- names(x)
   
   for(i in 1:nrow(x)) {
-    out[out$v1==x$v1[i] & out$v2==x$v2[i], "weight"] <- x$weight[i]
+    out[out$v1==x$v1[i] & out$v2==x$v2[i], -c(1:2)] <- x[i,-c(1:2)]
   }
   return( out )
 }
@@ -110,6 +111,8 @@ CombineTwoDyadTables <- function(x1, x2,
 #' head(xy)
 #' xy <- CombineTwoDyadTables(x1=x, x2=y, names1="ba", names2="erdos")
 #' head(xy)
+#' xyy <- CombineTwoDyadTables(x1=xy, x2=y, names2="erdos2")
+#' head(xyy)
 
 DyadMultiTable <- function(x.list, wt.names=names(x.list), directed=FALSE) {
   if( 1 == length(x.list) ) return( x.list )
@@ -134,7 +137,7 @@ DyadMultiTable <- function(x.list, wt.names=names(x.list), directed=FALSE) {
 }
 #' x.list <- lapply(nets, IgraphToDyadTable)
 #' dm.table <- DyadMultiTable(x.list)
-
+#' str(dm.table)
 
 
 #####  Run the Code  #####

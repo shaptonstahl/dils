@@ -10,7 +10,7 @@
 #' 
 #' DyadMultiTable(x.list, directed=FALSE): Combines many dyad tables checking compatibility and pairing on dyads carefully.
 #' 
-#' ImputeDyad(x, i1, i2, directed=FALSE)
+#' ImputeDyad(v1, v2, dmt, g.list, directed=FALSE)
 #'   1. Sample the other dyads.
 #'   2. Get weights of each dyad relative to the given dyad and rescale to sum to 1.
 #'   3. Get weighted mean and weighted covariance of sample using cov.wt
@@ -139,14 +139,52 @@ DyadMultiTable <- function(x.list, wt.names=names(x.list), directed=FALSE) {
 #' dm.table <- DyadMultiTable(x.list)
 #' str(dm.table)
 
-ImputeDyad <- function(x, i1, i2, directed=FALSE) {
+ImputeDyad <- function(v1, v2, dmt, g.list, n=2000directed=FALSE) {
   #'   1. Sample the other dyads.
   #'   2. Get weights of each dyad relative to the given dyad and rescale to sum to 1.
   #'   3. Get weighted mean and weighted covariance of sample using cov.wt
   #'   4. Use FastImputation to impute the missing data.  
   #' Run over all dyads as a MapReduce job with no reducer, then combine into a DyadMultiTable.
+  n.dyads <- nrow(dmt)
   
+  row.ids.to.sample <- 1:n.dyads
+  row.ids.to.sample <- row.ids.to.sample[!(dmt$v1==v1 && dmt$v2==v2)]
+  sample.dyads <- data.frame(id=sample(row.ids.to.sample, size=n),
+                             weight=0)
   
+  for(i in sample.dyads) {
+    v3 <- dmt$v1[i]
+    v4 <- dmt$v2[i]
+    d13 <- sapply(nets, function(g) { 
+      vid1 <- which(V(g)$name == v1)
+      vid2 <- which(V(g)$name == v2)
+      vid3 <- which(V(g)$name == v3)
+      vid4 <- which(V(g)$name == v4)
+      as.vector(shortest.paths(g, v=vid1, to=vid3, weights=NA))
+    })
+    d14 <- sapply(nets, function(g) { 
+      vid1 <- which(V(g)$name == v1)
+      vid2 <- which(V(g)$name == v2)
+      vid3 <- which(V(g)$name == v3)
+      vid4 <- which(V(g)$name == v4)
+      as.vector(shortest.paths(g, v=vid1, to=vid4, weights=NA))
+    })
+    d23 <- sapply(nets, function(g) { 
+      vid1 <- which(V(g)$name == v1)
+      vid2 <- which(V(g)$name == v2)
+      vid3 <- which(V(g)$name == v3)
+      vid4 <- which(V(g)$name == v4)
+      as.vector(shortest.paths(g, v=vid2, to=vid3, weights=NA))
+    })
+    d24 <- sapply(nets, function(g) { 
+      vid1 <- which(V(g)$name == v1)
+      vid2 <- which(V(g)$name == v2)
+      vid3 <- which(V(g)$name == v3)
+      vid4 <- which(V(g)$name == v4)
+      as.vector(shortest.paths(g, v=vid2, to=vid4, weights=NA))
+    })
+    
+  }
 }
 
 

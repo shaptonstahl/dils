@@ -200,16 +200,11 @@ ImputeDyad <- function(v1, v2, dmt, g.list, n=2000, directed=FALSE) {
                          verbose=FALSE) )
 }
 
-
-
-#####  Run the Code  #####
-
+#' #####  Inpute entire DyadMultiTable  #####
 
 
 
-#' Scale the weights
-for(i in 1:k) {
-  E(nets[[i]])$weight <- scale(E(nets[[i]])$weight)
-}
-
-get.edgelist
+#' Scale the link observe & imputed weight values in the 
+#' DyadMultiTable to make the final DILS weights interpretable.
+dm.table.imputed.scaled <- cbind(dm.table.imputed[,c(1:2)], 
+                                 scale(dm.table.imputed[,c(3:ncol(dm.table.imputed)]))

@@ -24,7 +24,7 @@
 #' 
 #' Generate a bunch of estimates of the weights (100? 1000?) and store them.Take means to get point estimates.
 #' 
-#' GenerateDILS: Just a dot product, but use this with MR (if necessary) to generate ALL DILS scores.
+#' GenerateDILS: Just a dot product and application of phi, but use this with MR (if necessary) to generate ALL DILS scores.
 #' 
 #' dils(g.list, directed=FALSE): Given a list of igraphs return an igraph of the DILS scores
 
@@ -33,20 +33,15 @@
 #' Just need some code to generate some graphs with different values.
 #' Need some with discrete values and some with continuous values.
 
-source("http://www.haptonstahl.org/R/Decruft/Decruft.R")
-
 library(igraph)
 library(FastImputation)
-nets <- readRDS("rough/data_artificial.rds")
-n <- vcount(nets[[1]])
-k <- length(nets)
-ids <- sort(V(nets[[1]])$name)
 
 #' A DyadTable has three columns ("v1", "v2", "weight") with v1 and v2 sorted.
 
 IgraphToDyadTable <- function(g) {
   out <- data.frame(get.edgelist(g), E(g)$weight)
   names(out) <- c("v1", "v2", "weight")
+  
   rownames(out) <- NULL
   out[, c("v1", "v2")] <- t(apply(out[, c("v1", "v2")], 1, sort))
   return( out )
@@ -54,9 +49,9 @@ IgraphToDyadTable <- function(g) {
 #' IgraphToDyadTable(nets[[1]])
 #' x <- IgraphToDyadTable(nets[[1]])
 
-FillDyadTable <- function(x, directed=FALSE) {
+FillDyadTable <- function(x, directed=FALSE, zero.to.na=TRUE) {
   out <- expand.grid(ids, ids)
-  for(i in 3:ncol(x)) out <- cbind(out, 0)
+  for(i in 3:ncol(x)) out <- cbind(out, ifelse(zero.to.na, NA, 0))
   out <- cbind(out[,c(2,1)], out[,-c(1:2)])
   out <- as.data.frame(out)
   names(out) <- names(x)
@@ -80,7 +75,8 @@ FillDyadTable <- function(x, directed=FALSE) {
 CombineTwoDyadTables <- function(x1, x2, 
                                  names1=names(x1)[-c(1:2)], 
                                  names2=names(x2)[-c(1:2)], 
-                                 directed=FALSE) {
+                                 directed=FALSE, 
+                                 zero.to.na=TRUE) {
   #' Check that names lists are the right length and distinct
   if( names1 == "weight" && names2 == "weight") {
     names1 <- "w1"
@@ -98,8 +94,8 @@ CombineTwoDyadTables <- function(x1, x2,
         sort(unique(x1$v1)) != sort(unique(x1$v1)) ) stop ("Sets of ids not consistent")
   
   #' Ensure that both are full; this ensures order matches
-  x1 <- FillDyadTable(x1)
-  x2 <- FillDyadTable(x2)
+  x1 <- FillDyadTable(x1, zero.to.na=zero.to.na)
+  x2 <- FillDyadTable(x2, zero.to.na=zero.to.na)
   
   #' cbind
   out <- cbind(x1, x2[,-c(1:2),])
@@ -115,23 +111,29 @@ CombineTwoDyadTables <- function(x1, x2,
 #' xyy <- CombineTwoDyadTables(x1=xy, x2=y, names2="erdos2")
 #' head(xyy)
 
-DyadMultiTable <- function(x.list, wt.names=names(x.list), directed=FALSE) {
+DyadMultiTable <- function(x.list, 
+                           wt.names=names(x.list), 
+                           directed=FALSE, 
+                           zero.to.na=TRUE) {
   if( 1 == length(x.list) ) return( x.list )
   if( 2 == length(x.list) ) {
     return( CombineTwoDyadTables(x.list[[1]],
                                  x.list[[2]],
                                  names1=names(x.list)[1],
-                                 names2=names(x.list)[2]) )
+                                 names2=names(x.list)[2],
+                                 zero.to.na=zero.to.na) )
   } else {
     out <- CombineTwoDyadTables(x.list[[1]],
                                 x.list[[2]],
                                 names1=names(x.list)[1],
-                                names2=names(x.list)[2])
+                                names2=names(x.list)[2],
+                                zero.to.na=zero.to.na)
     for(i in 3:length(x.list)) {
       out <- CombineTwoDyadTables(out,
                                   x.list[[i]],
 #                                  names1=names(out)[-c(1:2)],
-                                  names2=names(x.list)[i])
+                                  names2=names(x.list)[i],
+                                  zero.to.na=zero.to.na)
     }
     return( out )
   }
@@ -153,7 +155,7 @@ ImputeDyad <- function(v1, v2, dmt, g.list, n=2000, directed=FALSE) {
   sample.dyads <- data.frame(id=sort(sample(row.ids.to.sample, size=n)))
   sample.dyads$v3 <- dmt[sample.dyads$id,"v1"]
   sample.dyads$v4 <- dmt[sample.dyads$id,"v2"]
-  sample.dyads$weight <- 0
+  sample.dyads$weight <- NA
   
   for(i in 1:nrow(sample.dyads)) {
     v3 <- sample.dyads$v3[i]
@@ -186,6 +188,8 @@ ImputeDyad <- function(v1, v2, dmt, g.list, n=2000, directed=FALSE) {
   # Rescale weights to sum to 1
   sample.dyads$weight <- sample.dyads$weight / sum(sample.dyads$weight)
   
+  browser()
+  
   weighted.cov.result <- cov.wt(dmt[sample.dyads$id, -c(1:2)], wt=sample.dyads$weight)
   
   #' "Artificially generate result of TrainFastImputation
@@ -201,37 +205,6 @@ ImputeDyad <- function(v1, v2, dmt, g.list, n=2000, directed=FALSE) {
                          verbose=FALSE) )
 }
 
-
-x.list <- lapply(nets, IgraphToDyadTable)
-dm.table <- DyadMultiTable(x.list)
-#' ImputeDyad(v1=1, v2=6, dmt=dm.table, g.list=nets, n=200)
-#' system.time(one.imputed.dyad <- ImputeDyad(v1=1, v2=6, dmt=dm.table, g.list=nets, n=200))
-
-#' #####  Inpute entire DyadMultiTable  #####
-dm.table.imputed <- dm.table
-# dm.table.imputed <- readRDS("rough/dm_table_imputed.rds")
-range.to.do <- 2001:2500
-
-pb <- txtProgressBar()
-for(i in range.to.do) {
-  dm.table.imputed[i, -c(1:2)] <- ImputeDyad(v1=dm.table$v1[i],
-                                             v2=dm.table$v2[i],
-                                             dmt=dm.table,
-                                             g.list=nets,
-                                             n=200)
-  setTxtProgressBar(pb, value=(i-min(range.to.do)+1)/length(range.to.do))
-}
-close(pb)
-saveRDS(dm.table.imputed, "rough/dm_table_imputed.rds")
-#' head(dm.table.imputed)
-#' tail(dm.table.imputed)
-
-
-#' Scale the link observe & imputed weight values in the 
-#' DyadMultiTable to make the final DILS weights interpretable.
-dm.table.imputed.scaled <- cbind(dm.table.imputed[,c(1:2)], 
-                                 scale(dm.table.imputed[,c(3:ncol(dm.table.imputed))]))
-
 EstimatePcaWeights <- function(dmt, n.subsample=1e4) {
   sample.columns <- 3:ncol(dmt)
   sample.rows <- sample(1:nrow(dmt), size=n.subsample, replace=FALSE)
@@ -245,10 +218,9 @@ EstimatePcaWeights <- function(dmt, n.subsample=1e4) {
 }
 #' EstimatePcaWeights(dmt=dm.table.imputed.scaled, n.subsample=500)
 
-weight.draws <- t(sapply(1:1000, function(g) {
-  EstimatePcaWeights(dmt=dm.table.imputed.scaled, n.subsample=500)
-}))
-#' str(weight.draws)
-
-weight.est <- colMeans(weight.draws)
-weight.est
+GenerateDILS <- function(dmt, weights) {
+  raw.dils <- sapply(1:nrow(dmt), function(i) sum(dmt[i,3:ncol(dmt)] * weights))
+  return( pnorm(raw.dils) )
+}
+#' test.dils <- GenerateDILS(dm.table.imputed.scaled, weight.est)
+#' hist(test.dils, 50)

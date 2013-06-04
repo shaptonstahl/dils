@@ -36,6 +36,7 @@
 source("http://www.haptonstahl.org/R/Decruft/Decruft.R")
 
 library(igraph)
+library(FastImputation)
 nets <- readRDS("rough/data_artificial.rds")
 n <- vcount(nets[[1]])
 k <- length(nets)
@@ -148,7 +149,7 @@ ImputeDyad <- function(v1, v2, dmt, g.list, n=2000, directed=FALSE) {
   n.dyads <- nrow(dmt)
   
   row.ids.to.sample <- 1:n.dyads
-  row.ids.to.sample <- row.ids.to.sample[!(dmt$v1==v1 && dmt$v2==v2)]
+  row.ids.to.sample <- row.ids.to.sample[!(dmt$v1==v1 & dmt$v2==v2)]
   sample.dyads <- data.frame(id=sort(sample(row.ids.to.sample, size=n)))
   sample.dyads$v3 <- dmt[sample.dyads$id,"v1"]
   sample.dyads$v4 <- dmt[sample.dyads$id,"v2"]
@@ -195,13 +196,33 @@ ImputeDyad <- function(v1, v2, dmt, g.list, n=2000, directed=FALSE) {
                                   FI.cols.bound.to.sets=integer(0) )
   class(FastImputation.patterns) <- "FastImputationPatterns"
   
-  return( FastImputation(x=dmt[dmt$v1==v1 && dmt$v2==v2, -c(1:2)],
+  return( FastImputation(x=dmt[dmt$v1==v1 & dmt$v2==v2, -c(1:2)],
                          patterns=FastImputation.patterns,
                          verbose=FALSE) )
 }
 
-#' #####  Inpute entire DyadMultiTable  #####
 
+x.list <- lapply(nets, IgraphToDyadTable)
+dm.table <- DyadMultiTable(x.list)
+#' ImputeDyad(v1=1, v2=6, dmt=dm.table, g.list=nets, n=200)
+#' system.time(one.imputed.dyad <- ImputeDyad(v1=1, v2=6, dmt=dm.table, g.list=nets, n=200))
+
+#' #####  Inpute entire DyadMultiTable  #####
+dm.table.imputed <- dm.table
+range.to.do <- 1:100
+
+pb <- txtProgressBar()
+for(i in range.to.do) {
+  dm.table.imputed[i, -c(1:2)] <- ImputeDyad(v1=dm.table$v1[i],
+                                             v2=dm.table$v2[i],
+                                             dmt=dm.table,
+                                             g.list=nets,
+                                             n=200)
+  setTxtProgressBar(pb, value=(i-min(range.to.do)+1)/length(range.to.do))
+}
+close(pb)
+saveRDS(dm.table.imputed, "rough/dm_table_imputed.rds")
+#' head(dm.table.imputed)
 
 
 #' Scale the link observe & imputed weight values in the 

@@ -24,9 +24,9 @@
 #' 
 #' Generate a bunch of estimates of the weights (100? 1000?) and store them.Take means to get point estimates.
 #' 
-#' GenerateDILS: Just a dot product, but use this with MR to generate ALL DILS scores.
+#' GenerateDILS: Just a dot product, but use this with MR (if necessary) to generate ALL DILS scores.
 #' 
-#' dils(..., directed=FALSE): Given a set of igraphs return and igraph of the DILS scores
+#' dils(g.list, directed=FALSE): Given a list of igraphs return an igraph of the DILS scores
 
 
 #' #####  Testing Functions  #####
@@ -209,7 +209,8 @@ dm.table <- DyadMultiTable(x.list)
 
 #' #####  Inpute entire DyadMultiTable  #####
 dm.table.imputed <- dm.table
-range.to.do <- 1:100
+# dm.table.imputed <- readRDS("rough/dm_table_imputed.rds")
+range.to.do <- 2001:2500
 
 pb <- txtProgressBar()
 for(i in range.to.do) {
@@ -223,9 +224,31 @@ for(i in range.to.do) {
 close(pb)
 saveRDS(dm.table.imputed, "rough/dm_table_imputed.rds")
 #' head(dm.table.imputed)
+#' tail(dm.table.imputed)
 
 
 #' Scale the link observe & imputed weight values in the 
 #' DyadMultiTable to make the final DILS weights interpretable.
 dm.table.imputed.scaled <- cbind(dm.table.imputed[,c(1:2)], 
-                                 scale(dm.table.imputed[,c(3:ncol(dm.table.imputed)]))
+                                 scale(dm.table.imputed[,c(3:ncol(dm.table.imputed))]))
+
+EstimatePcaWeights <- function(dmt, n.subsample=1e4) {
+  sample.columns <- 3:ncol(dmt)
+  sample.rows <- sample(1:nrow(dmt), size=n.subsample, replace=FALSE)
+  
+  pca.result <- prcomp(dmt[sample.rows,sample.columns], center=FALSE, scale.=FALSE)
+  
+  weights <- pca.result$rotation[,1]
+  names(weights) <- names(dmt)[sample.columns]
+  
+  return( weights )
+}
+#' EstimatePcaWeights(dmt=dm.table.imputed.scaled, n.subsample=500)
+
+weight.draws <- t(sapply(1:1000, function(g) {
+  EstimatePcaWeights(dmt=dm.table.imputed.scaled, n.subsample=500)
+}))
+#' str(weight.draws)
+
+weight.est <- colMeans(weight.draws)
+weight.est

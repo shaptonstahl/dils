@@ -2,6 +2,9 @@
 
 source("http://www.haptonstahl.org/R/Decruft/Decruft.R")
 
+library(rstan)
+set_cppo('fast')
+
 #' #####  Generate fake data with known parameters to be recovered  #####
 #' 
 #' yi ~ N( beta xi + alphaj[i], sigma1 )
@@ -49,8 +52,61 @@ model {
 hier.data <- list(n_obs=n.obs,
                   n_groups=n.groups,
                   x=x,
-                  y=y
+                  y=y,
                   z=z,
                   group_ids=group.ids)
+hier.pars <- c("alpha", "beta", "gamma", "sigma")
+
+hier.fit.test1 <- stan(model_name="Test hierarchical regression",
+                       model_code=hier.model,
+                       data=hier.data,
+                       pars=hier.pars,
+                       chains=1,
+                       iter=10,  # kept draws = (iter - warmup) / thin * chains
+                       warmup=5,
+                       thin=1,
+                       verbose=TRUE,
+                       save_dso=TRUE)
+hier.fit.test2 <- stan(model_name="Test hierarchical regression",
+                       fit=hier.fit.test1,
+                       data=hier.data,
+                       pars=hier.pars,
+                       chains=2,
+                       iter=100,  # kept draws = (iter - warmup) / thin * chains
+                       warmup=10,
+                       thin=2,
+                       verbose=TRUE)
+draws.test2 <- extract(hier.fit.test2)
+
+hier.fit <- stan(model_name="Test hierarchical regression",
+                 fit=hier.fit.test1,
+                 data=hier.data,
+                 pars=hier.pars,
+                 chains=4,
+                 iter=2000,  # kept draws = (iter - warmup) / thin * chains
+                 warmup=500,
+                 thin=2,
+                 verbose=FALSE)
+
+hier.fit <- hier.fit.test
 
 #' #####  Compare the results  #####
+draws <- extract(hier.fit)
+str(draws)
+
+fit.alpha <- colMeans(draws$alpha)
+fit.beta <- mean(draws$beta)
+fit.gamma <- colMeans(draws$gamma)
+fit.sigma <- colMeans(draws$sigma)
+
+true.alpha
+fit.alpha
+
+true.beta
+fit.beta
+
+true.gamma
+fit.gamma
+
+true.sigma
+fit.sigma

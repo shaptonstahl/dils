@@ -10,13 +10,6 @@
 #' 
 #' DyadMultiTable(x.list, directed=FALSE): Combines many dyad tables checking compatibility and pairing on dyads carefully.
 #' 
-#' ImputeDyad(v1, v2, dmt, g.list, directed=FALSE)
-#'   1. Sample the other dyads.
-#'   2. Get weights of each dyad relative to the given dyad and rescale to sum to 1.
-#'   3. Get weighted mean and weighted covariance of sample using cov.wt
-#'   4. Use FastImputation to impute the missing data.  
-#' Run over all dyads as a MapReduce job with no reducer, then combine into a DyadMultiTable.
-#' 
 #' 'scale' (mean zero, sd one) the values of the links within each graph so weights will be directly
 #' interpretable.
 #' 
@@ -24,9 +17,11 @@
 #' 
 #' Generate a bunch of estimates of the weights (100? 1000?) and store them.Take means to get point estimates.
 #' 
-#' GenerateDILS: Just a dot product and application of phi, but use this with MR (if necessary) to generate ALL DILS scores.
+#' GenerateRawDILS: Just a dot product and application of phi, but use this with MR (if necessary) to generate ALL DILS scores.
 #' 
-#' dils(g.list, directed=FALSE): Given a list of igraphs return an igraph of the DILS scores
+#' DilsToAdjacency: Given raw DILS output (edgelist) convert to an adjacency matrix with proper rownames and columnnames
+#' 
+#' Then apply RSS
 
 
 #' #####  Testing Functions  #####
@@ -142,68 +137,70 @@ DyadMultiTable <- function(x.list,
 #' dm.table <- DyadMultiTable(x.list)
 #' str(dm.table)
 
-ImputeDyad <- function(v1, v2, dmt, g.list, n=2000, directed=FALSE) {
-  #'   1. Sample the other dyads.
-  #'   2. Get weights of each dyad relative to the given dyad and rescale to sum to 1.
-  #'   3. Get weighted mean and weighted covariance of sample using cov.wt
-  #'   4. Use FastImputation to impute the missing data.  
-  #' Run over all dyads as a MapReduce job with no reducer, then combine into a DyadMultiTable.
-  n.dyads <- nrow(dmt)
-  
-  row.ids.to.sample <- 1:n.dyads
-  row.ids.to.sample <- row.ids.to.sample[!(dmt$v1==v1 & dmt$v2==v2)]
-  sample.dyads <- data.frame(id=sort(sample(row.ids.to.sample, size=n)))
-  sample.dyads$v3 <- dmt[sample.dyads$id,"v1"]
-  sample.dyads$v4 <- dmt[sample.dyads$id,"v2"]
-  sample.dyads$weight <- NA
-  
-  for(i in 1:nrow(sample.dyads)) {
-    v3 <- sample.dyads$v3[i]
-    v4 <- sample.dyads$v4[i]
-    d13 <- sapply(g.list, function(g) { 
-      vid1 <- which(V(g)$name == v1)
-      vid3 <- which(V(g)$name == v3)
-      return( as.vector(shortest.paths(g, v=vid1, to=vid3, weights=NA)) )
-    })
-    d14 <- sapply(g.list, function(g) { 
-      vid1 <- which(V(g)$name == v1)
-      vid4 <- which(V(g)$name == v4)
-      as.vector(shortest.paths(g, v=vid1, to=vid4, weights=NA))
-    })
-    d23 <- sapply(g.list, function(g) { 
-      vid2 <- which(V(g)$name == v2)
-      vid3 <- which(V(g)$name == v3)
-      as.vector(shortest.paths(g, v=vid2, to=vid3, weights=NA))
-    })
-    d24 <- sapply(g.list, function(g) { 
-      vid2 <- which(V(g)$name == v2)
-      vid4 <- which(V(g)$name == v4)
-      as.vector(shortest.paths(g, v=vid2, to=vid4, weights=NA))
-    })
-    d1 <- sum(1/(1+pmin(d13, d14)))
-    d2 <- sum(1/(1+pmin(d23, d24)))
-    sample.dyads$weight[i] <- d1 + d2 - 2
-  }
-  
-  # Rescale weights to sum to 1
-  sample.dyads$weight <- sample.dyads$weight / sum(sample.dyads$weight)
-  
-  browser()
-  
-  weighted.cov.result <- cov.wt(dmt[sample.dyads$id, -c(1:2)], wt=sample.dyads$weight)
-  
-  #' "Artificially generate result of TrainFastImputation
-  FastImputation.patterns <- list(FI.means=weighted.cov.result$center,
-                                  FI.covariance=weighted.cov.result$cov,
-                                  FI.constraints=lapply(1:length(g.list), function(x) list(lower=0, upper=1)),
-                                  FI.cols.bound.to.intervals=1:length(g.list),
-                                  FI.cols.bound.to.sets=integer(0) )
-  class(FastImputation.patterns) <- "FastImputationPatterns"
-  
-  return( FastImputation(x=dmt[dmt$v1==v1 & dmt$v2==v2, -c(1:2)],
-                         patterns=FastImputation.patterns,
-                         verbose=FALSE) )
-}
+#####
+# ImputeDyad <- function(v1, v2, dmt, g.list, n=2000, directed=FALSE) {
+#   #'   1. Sample the other dyads.
+#   #'   2. Get weights of each dyad relative to the given dyad and rescale to sum to 1.
+#   #'   3. Get weighted mean and weighted covariance of sample using cov.wt
+#   #'   4. Use FastImputation to impute the missing data.  
+#   #' Run over all dyads as a MapReduce job with no reducer, then combine into a DyadMultiTable.
+#   n.dyads <- nrow(dmt)
+#   
+#   row.ids.to.sample <- 1:n.dyads
+#   row.ids.to.sample <- row.ids.to.sample[!(dmt$v1==v1 & dmt$v2==v2)]
+#   sample.dyads <- data.frame(id=sort(sample(row.ids.to.sample, size=n)))
+#   sample.dyads$v3 <- dmt[sample.dyads$id,"v1"]
+#   sample.dyads$v4 <- dmt[sample.dyads$id,"v2"]
+#   sample.dyads$weight <- NA
+#   
+#   for(i in 1:nrow(sample.dyads)) {
+#     v3 <- sample.dyads$v3[i]
+#     v4 <- sample.dyads$v4[i]
+#     d13 <- sapply(g.list, function(g) { 
+#       vid1 <- which(V(g)$name == v1)
+#       vid3 <- which(V(g)$name == v3)
+#       return( as.vector(shortest.paths(g, v=vid1, to=vid3, weights=NA)) )
+#     })
+#     d14 <- sapply(g.list, function(g) { 
+#       vid1 <- which(V(g)$name == v1)
+#       vid4 <- which(V(g)$name == v4)
+#       as.vector(shortest.paths(g, v=vid1, to=vid4, weights=NA))
+#     })
+#     d23 <- sapply(g.list, function(g) { 
+#       vid2 <- which(V(g)$name == v2)
+#       vid3 <- which(V(g)$name == v3)
+#       as.vector(shortest.paths(g, v=vid2, to=vid3, weights=NA))
+#     })
+#     d24 <- sapply(g.list, function(g) { 
+#       vid2 <- which(V(g)$name == v2)
+#       vid4 <- which(V(g)$name == v4)
+#       as.vector(shortest.paths(g, v=vid2, to=vid4, weights=NA))
+#     })
+#     d1 <- sum(1/(1+pmin(d13, d14)))
+#     d2 <- sum(1/(1+pmin(d23, d24)))
+#     sample.dyads$weight[i] <- d1 + d2 - 2
+#   }
+#   
+#   # Rescale weights to sum to 1
+#   sample.dyads$weight <- sample.dyads$weight / sum(sample.dyads$weight)
+#   
+#   browser()
+#   
+#   weighted.cov.result <- cov.wt(dmt[sample.dyads$id, -c(1:2)], wt=sample.dyads$weight)
+#   
+#   #' "Artificially generate result of TrainFastImputation
+#   FastImputation.patterns <- list(FI.means=weighted.cov.result$center,
+#                                   FI.covariance=weighted.cov.result$cov,
+#                                   FI.constraints=lapply(1:length(g.list), function(x) list(lower=0, upper=1)),
+#                                   FI.cols.bound.to.intervals=1:length(g.list),
+#                                   FI.cols.bound.to.sets=integer(0) )
+#   class(FastImputation.patterns) <- "FastImputationPatterns"
+#   
+#   return( FastImputation(x=dmt[dmt$v1==v1 & dmt$v2==v2, -c(1:2)],
+#                          patterns=FastImputation.patterns,
+#                          verbose=FALSE) )
+# }
+#####
 
 EstimatePcaWeights <- function(dmt, n.subsample=1e4) {
   sample.columns <- 3:ncol(dmt)

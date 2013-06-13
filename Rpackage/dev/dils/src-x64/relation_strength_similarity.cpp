@@ -53,7 +53,7 @@ Rcpp::List GetPathsLength1(Rcpp::NumericMatrix x, int v, Rcpp::NumericVector exc
   std::vector<int> neighbors = GetNeighborIds(x, v, excludeids);
   
   List out(neighbors.size());
-  for(unsigned int i = 0; i < out.size(); i++) {
+  for(int i = 0; i < out.size(); i++) {
     out[i] = NumericVector::create(v, neighbors[i]);  // store C++-based indices
   }
   return( out );
@@ -80,6 +80,25 @@ Rcpp::List GetMinPathsGivenRadius(Rcpp::NumericMatrix x, int v, int r, Rcpp::Num
   return( out );
 }
 
+Rcpp::List GetPathsAtoBRadius(Rcpp::NumericMatrix x, int vfrom, int vto, int r){
+  // vfrom, vto are C++-based indices
+  using namespace Rcpp ;
+  
+  NumericVector no_exclusions;
+  List all_paths = GetMinPathsGivenRadius(x, vfrom, r, no_exclusions);
+  List out;
+  NumericVector this_path;
+  int tail;
+  for(int i = 0; i < all_paths.length(); i++) {
+    this_path = all_paths[i];
+    tail = this_path[this_path.length() - 1];
+    if( vto == tail ) {
+      out = ListConcatenate(out, List::create(this_path));
+    }
+  }
+  return(out);
+}
+
 SEXP relation_strength_similarity(SEXP xadj, SEXP v1, SEXP v2, SEXP radius) {
   using namespace Rcpp ;
     
@@ -88,7 +107,5 @@ SEXP relation_strength_similarity(SEXP xadj, SEXP v1, SEXP v2, SEXP radius) {
   int vto = as<int>( v1 ) - 1;
   int r = as<int>( radius );
   
-  NumericVector no_exclusions;
-  
-  return wrap( GetMinPathsGivenRadius(x, vfrom, r, no_exclusions) );
+  return wrap( GetPathsAtoBRadius(x, vfrom, vto, r) );
 }

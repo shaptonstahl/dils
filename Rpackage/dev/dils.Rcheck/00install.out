@@ -1,0 +1,33 @@
+* installing *source* package 'dils' ...
+** libs
+
+*** arch - i386
+g++ -m32 -I"C:/R/R-30~1.1/include" -DDEBUG      -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O0 -Wall  -mtune=core2 -g   -c rcpp_hello_world.cpp -o rcpp_hello_world.o
+g++ -m32 -I"C:/R/R-30~1.1/include" -DDEBUG      -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O0 -Wall  -mtune=core2 -g   -c relation_strength_similarity.cpp -o relation_strength_similarity.o
+relation_strength_similarity.cpp: In function 'Rcpp::List GetPathsLength1(Rcpp::NumericMatrix, int, Rcpp::NumericVector)':
+relation_strength_similarity.cpp:56:40: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+relation_strength_similarity.cpp: In function 'Rcpp::List GetMinPathsGivenRadius(Rcpp::NumericMatrix, int, int, Rcpp::NumericVector)':
+relation_strength_similarity.cpp:74:39: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+relation_strength_similarity.cpp:74:43: warning: value computed is not used [-Wunused-value]
+relation_strength_similarity.cpp:74:45: error: expected ';' before ')' token
+relation_strength_similarity.cpp:82:11: error: 'out' was not declared in this scope
+relation_strength_similarity.cpp: In function 'SEXPREC* relation_strength_similarity(SEXP, SEXP, SEXP, SEXP)':
+relation_strength_similarity.cpp:90:7: warning: unused variable 'vto' [-Wunused-variable]
+relation_strength_similarity.cpp: In function 'Rcpp::List GetMinPathsGivenRadius(Rcpp::NumericMatrix, int, int, Rcpp::NumericVector)':
+relation_strength_similarity.cpp:83:1: warning: control reaches end of non-void function [-Wreturn-type]
+make: *** [relation_strength_similarity.o] Error 1
+g++ -m32 -I"C:/R/R-30~1.1/include" -DDEBUG      -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O0 -Wall  -mtune=core2 -g   -c relation_strength_similarity.cpp -o relation_strength_similarity.o
+relation_strength_similarity.cpp: In function 'Rcpp::List GetPathsLength1(Rcpp::NumericMatrix, int, Rcpp::NumericVector)':
+relation_strength_similarity.cpp:56:40: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+relation_strength_similarity.cpp: In function 'Rcpp::List GetMinPathsGivenRadius(Rcpp::NumericMatrix, int, int, Rcpp::NumericVector)':
+relation_strength_similarity.cpp:74:39: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+relation_strength_similarity.cpp:74:43: warning: value computed is not used [-Wunused-value]
+relation_strength_similarity.cpp:74:45: error: expected ';' before ')' token
+relation_strength_similarity.cpp:82:11: error: 'out' was not declared in this scope
+relation_strength_similarity.cpp: In function 'SEXPREC* relation_strength_similarity(SEXP, SEXP, SEXP, SEXP)':
+relation_strength_similarity.cpp:90:7: warning: unused variable 'vto' [-Wunused-variable]
+relation_strength_similarity.cpp: In function 'Rcpp::List GetMinPathsGivenRadius(Rcpp::NumericMatrix, int, int, Rcpp::NumericVector)':
+relation_strength_similarity.cpp:83:1: warning: control reaches end of non-void function [-Wreturn-type]
+make: *** [relation_strength_similarity.o] Error 1
+ERROR: compilation failed for package 'dils'
+* removing 'C:/Users/shaptonstahl/Documents/GitHub/dils/Rpackage/dev/dils.Rcheck/dils'

@@ -15,11 +15,15 @@ RelationStrengthSimilarity <- function(xadj, v1, v2, radius){
   stopifnot(radius %% 1 == 0)
   stopifnot(radius > 0)
   
-	.Call("relation_strength_similarity",
-	      xadj, 
-        v1, 
-        v2, 
-        radius,
-        PACKAGE="dils" )
+  if( v1 == v2 ) {
+    return( 1 )
+  } else {
+    return( .Call("relation_strength_similarity",
+                  xadj, 
+                  v1, 
+                  v2, 
+                  radius,
+                  PACKAGE="dils" ) )
+  }
 }
 

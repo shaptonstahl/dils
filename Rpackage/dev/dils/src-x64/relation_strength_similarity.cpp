@@ -80,7 +80,7 @@ Rcpp::List GetMinPathsGivenRadius(Rcpp::NumericMatrix x, int v, int r, Rcpp::Num
   return( out );
 }
 
-Rcpp::List GetPathsAtoBRadius(Rcpp::NumericMatrix x, int vfrom, int vto, int r){
+Rcpp::List GetPathsAtoBRadius(Rcpp::NumericMatrix x, int vfrom, int vto, int r) {
   // vfrom, vto are C++-based indices
   using namespace Rcpp ;
   
@@ -89,9 +89,10 @@ Rcpp::List GetPathsAtoBRadius(Rcpp::NumericMatrix x, int vfrom, int vto, int r){
   List out;
   NumericVector this_path;
   int tail;
+  NumericVector tails;
   for(int i = 0; i < all_paths.length(); i++) {
     this_path = all_paths[i];
-    tail = this_path[this_path.length() - 1];
+    tail = (int) this_path[this_path.length() - 1];
     if( vto == tail ) {
       out = ListConcatenate(out, List::create(this_path));
     }
@@ -99,13 +100,42 @@ Rcpp::List GetPathsAtoBRadius(Rcpp::NumericMatrix x, int vfrom, int vto, int r){
   return(out);
 }
 
+Rcpp::List GetPathsAtoBUnderRadius(Rcpp::NumericMatrix x, int vfrom, int vto, int r) {
+  using namespace Rcpp ;
+  
+  List out;
+  for(unsigned int i = 1; i <= r; i++) {
+    out = ListConcatenate(out, GetPathsAtoBRadius(x, vfrom, vto, i));
+  }
+  return out ;
+}
+
+double PathGeneralizedRelationStrength(Rcpp::NumericMatrix x, Rcpp::NumericVector path) {
+  using namespace Rcpp ;
+    
+  double out = 1.0;
+  for(unsigned int i = 0; i < path.length() - 1; i++) {
+    out = out * x(path(i), path(i+1));
+  }
+  return( out );
+}
+
 SEXP relation_strength_similarity(SEXP xadj, SEXP v1, SEXP v2, SEXP radius) {
   using namespace Rcpp ;
     
   NumericMatrix x( xadj );
   int vfrom = as<int>( v1 ) - 1;
-  int vto = as<int>( v1 ) - 1;
+  int vto = as<int>( v2 ) - 1;
   int r = as<int>( radius );
   
-  return wrap( GetPathsAtoBRadius(x, vfrom, vto, r) );
+  List paths = GetPathsAtoBUnderRadius(x, vfrom, vto, r);
+  if( 0 == paths.length() ) {
+    return( wrap(0) );
+  } else {
+    double out = 0.0;
+    for(unsigned int i = 0; i < paths.length(); i++) {
+      out = out + PathGeneralizedRelationStrength(x, paths[i]);
+    }
+    return wrap( out );
+  }
 }

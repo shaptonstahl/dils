@@ -99,7 +99,6 @@ RelationStrengthSimilarity <- function(x.adj, v1, v2, radius) {
   if(v1 == v2) {
     out <- 1
   } else {
-    #' Return just the RSS from v1 to v2
     paths <- GetPathsAtoBUnderRadius(x.adj, v1=v1, v2=v2, radius=radius)
     if( 0 == length(paths) ) {
       out <- 0

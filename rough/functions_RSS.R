@@ -6,14 +6,14 @@ GetNeighborIds <- function(x.adj, v.i, exclude) {
   #' 
   #' Note: If x.adj is directed it assumes weights go from row id to 
   #' column id.
-  neighbors <- which(x.adj[v.i,] != 0)
-  neighbors <- neighbors[neighbors != v.i]  #' remove self
   
+  x.adj[v.i, v.i] <- 0  #' remove self
   if( !missing(exclude) ) {
     for(id in exclude) {
-      neighbors <- neighbors[neighbors != id]  #' excluded ids
+      x.adj[v.i, id] <- 0  #' excluded ids
     }
   }
+  neighbors <- which(x.adj[v.i,] != 0)
   
   return(neighbors)
 }

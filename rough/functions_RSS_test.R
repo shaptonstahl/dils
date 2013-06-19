@@ -1,0 +1,82 @@
+#' Test RSS functions for problems
+
+source("http://www.haptonstahl.org/R/Decruft/Decruft.R")  # creates a clean R session
+
+source("rough/functions_RSS.R")
+
+TestAdjacencyMatrix <- function(n) {
+  x <- matrix(runif(n*n), nrow=n)
+  return( (x + t(x)) / 2 )
+}
+TestAdjacencyMatrix(2)
+TestAdjacencyMatrix(10)
+TestAdjacencyMatrix(100)
+TestAdjacencyMatrix(500)
+
+
+x10 <- TestAdjacencyMatrix(10)
+x20 <- TestAdjacencyMatrix(20)
+x30 <- TestAdjacencyMatrix(30)
+x40 <- TestAdjacencyMatrix(40)
+x50 <- TestAdjacencyMatrix(50)
+x100 <- TestAdjacencyMatrix(100)
+x150 <- TestAdjacencyMatrix(150)
+x200 <- TestAdjacencyMatrix(200)
+x250 <- TestAdjacencyMatrix(250)
+x300 <- TestAdjacencyMatrix(300)
+x400 <- TestAdjacencyMatrix(400)
+x500 <- TestAdjacencyMatrix(500)
+
+system.time(for(i in 1:1000) n.ids.10 <- GetNeighborIds(x10, 1))
+system.time(for(i in 1:1000) n.ids.20 <- GetNeighborIds(x20, 1))
+system.time(for(i in 1:1000) n.ids.30 <- GetNeighborIds(x30, 1))
+system.time(for(i in 1:1000) n.ids.40 <- GetNeighborIds(x40, 1))
+system.time(for(i in 1:1000) n.ids.50 <- GetNeighborIds(x50, 1))
+system.time(for(i in 1:1000) n.ids.100 <- GetNeighborIds(x100, 1))
+system.time(for(i in 1:1000) n.ids.150 <- GetNeighborIds(x150, 1))
+system.time(for(i in 1:1000) n.ids.200 <- GetNeighborIds(x200, 1))
+system.time(for(i in 1:1000) n.ids.250 <- GetNeighborIds(x250, 1))
+system.time(for(i in 1:1000) n.ids.300 <- GetNeighborIds(x300, 1))
+system.time(for(i in 1:1000) n.ids.400 <- GetNeighborIds(x400, 1))
+system.time(for(i in 1:1000) n.ids.500 <- GetNeighborIds(x500, 1))
+
+
+system.time(for(i in 1:1000) paths.length.1.10 <- GetPathsLength1(x10, 1))
+system.time(for(i in 1:1000) paths.length.1.20 <- GetPathsLength1(x20, 1))
+system.time(for(i in 1:1000) paths.length.1.30 <- GetPathsLength1(x30, 1))
+system.time(for(i in 1:1000) paths.length.1.40 <- GetPathsLength1(x40, 1))
+system.time(for(i in 1:1000) paths.length.1.50 <- GetPathsLength1(x50, 1))
+system.time(for(i in 1:1000) paths.length.1.100 <- GetPathsLength1(x100, 1))
+system.time(for(i in 1:1000) paths.length.1.150 <- GetPathsLength1(x150, 1))
+system.time(for(i in 1:1000) paths.length.1.200 <- GetPathsLength1(x200, 1))
+system.time(for(i in 1:1000) paths.length.1.250 <- GetPathsLength1(x250, 1))
+system.time(for(i in 1:1000) paths.length.1.300 <- GetPathsLength1(x300, 1))
+system.time(for(i in 1:1000) paths.length.1.400 <- GetPathsLength1(x400, 1))
+system.time(for(i in 1:1000) paths.length.1.500 <- GetPathsLength1(x500, 1))
+
+
+system.time(for(i in 1:1000) paths.length.1.10 <- GetMinPathsGivenRadius(x10, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.20 <- GetMinPathsGivenRadius(x20, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.30 <- GetMinPathsGivenRadius(x30, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.40 <- GetMinPathsGivenRadius(x40, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.50 <- GetMinPathsGivenRadius(x50, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.100 <- GetMinPathsGivenRadius(x100, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.150 <- GetMinPathsGivenRadius(x150, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.200 <- GetMinPathsGivenRadius(x200, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.250 <- GetMinPathsGivenRadius(x250, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.300 <- GetMinPathsGivenRadius(x300, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.400 <- GetMinPathsGivenRadius(x400, 1, 1))
+system.time(for(i in 1:1000) paths.length.1.500 <- GetMinPathsGivenRadius(x500, 1, 1))
+
+system.time(for(i in 1:1000) paths.length.1.10 <- GetMinPathsGivenRadius(x10, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.20 <- GetMinPathsGivenRadius(x20, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.30 <- GetMinPathsGivenRadius(x30, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.40 <- GetMinPathsGivenRadius(x40, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.50 <- GetMinPathsGivenRadius(x50, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.100 <- GetMinPathsGivenRadius(x100, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.150 <- GetMinPathsGivenRadius(x150, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.200 <- GetMinPathsGivenRadius(x200, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.250 <- GetMinPathsGivenRadius(x250, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.300 <- GetMinPathsGivenRadius(x300, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.400 <- GetMinPathsGivenRadius(x400, 1, 2))
+system.time(for(i in 1:1000) paths.length.1.500 <- GetMinPathsGivenRadius(x500, 1, 2))

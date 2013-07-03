@@ -1,2 +1,2 @@
-useDynLib(dils)
-exportPattern("^[[:alpha:]]+")
+export(GetSampleFromDataFrame)
+export(ScalablePCA)

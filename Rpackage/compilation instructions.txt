@@ -1,0 +1,8 @@
+1. Regenerate documentation using roxygen2
+  - In R, setwd to dils/Rpackage/dev folder
+  - library(roxygen2)
+  - roxygenize("dils")
+2. Run tests using testthat
+3. Regenerate package
+  - Open command prompt to dils/Rpackage/dev folder.
+  - 

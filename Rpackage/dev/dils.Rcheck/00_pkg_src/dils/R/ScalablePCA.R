@@ -4,7 +4,7 @@
 #' results for the first dimension.
 #' 
 #' @param x data.frame, data over which to run PCA
-#' @param filename character, name of the file containing the data (NOT IMPLEMENTED)
+#' @param filename character, name of the file containing the data. This must be a tab-delimited file with a header row formatted per the default options for \code{\link{read.delim}}.
 #' @param db Object type, database connection to table containing the data (NOT IMPLEMENTED)
 #' @param subsample numeric or logical, If an integer, size of each subsample.  If FALSE, runs PCA on entire data set.
 #' @param n.subsamples numeric, number of subsamples.
@@ -42,15 +42,13 @@ ScalablePCA <- function(x,
       }
     } else {
       source.type <- "file"
-      # ADD CODE: TEST CONNECTION TO FILE
-      stop("filename option not yet implemented")
       if(length(filename) > 1) {
         filename <- filename[1]
         warning("filename has multiple values; using only the first value")
       }
       if( is.character(filename) ) {
-        if( !(con <- file(filename, open="rt")) ) {
-          stop("Unable to make a connection to", filename)
+        if( !file.exists(filename) ) {
+          stop("Unable to make a connection to ", filename)
         }
       } else {
         stop("filename must be a character (length=1) vector specifying the name of the file to open")
@@ -117,18 +115,22 @@ ScalablePCA <- function(x,
   # Set internal sampling function to one of three externally-defined functions
   if( "db" == source.type ) {
     # n.rows.full.dataset <- ADD CODE TO READ db AND GET NUMBER OF RECORDS
-    pca.sample <- function(n=subsample) GetSampleFromDb(n=n, 
-                                                        out.of=n.rows.full.dataset, 
-                                                        db=db)
+    pca.sample <- function(n=subsample) GetSampleFromDb(n=n, db=db)
   } else if( "file" == source.type ) {
-    # n.rows.full.dataset <- ADD CODE TO READ filename AND GET NUMBER OF LINES
+    # Count rows in the text file, -1 for the header
+    n.rows.full.dataset <- -1  # don't count header row
+    con <- file(filename, "r")
+    while( length(input <- readLines(con, n=1e4)) > 0 ) {
+      n.rows.full.dataset <- n.rows.full.dataset + length(input)
+    }
+    close(con)
+    
     pca.sample <- function(n=subsample) GetSampleFromFile(n=n, 
                                                           out.of=n.rows.full.dataset, 
-                                                          con=con)
+                                                          filename=filename)
   } else if( "data.frame" == source.type ) {
     n.rows.full.dataset <- nrow(x)
-    pca.sample <- function(n=subsample) GetSampleFromDataFrame(n=n, 
-                                                               x=x)
+    pca.sample <- function(n=subsample) GetSampleFromDataFrame(n=n, x=x)
   } else{
     stop("source.type must be one of db, file, or data.frame")
   }

@@ -26,4 +26,4 @@ ScalablePCA : ......................
 > 
 > proc.time()
    user  system elapsed 
-   1.62    0.10    1.71 
+   0.93    0.06    0.98 

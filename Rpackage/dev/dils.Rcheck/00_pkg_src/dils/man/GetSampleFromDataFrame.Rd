@@ -27,6 +27,8 @@ x <- GetSampleFromDataFrame(10, iris)
   \url{http://www.haptonstahl.org/R}
 }
 \seealso{
-  \code{\link{ScalablePCA}}
+  \code{\link{ScalablePCA}},
+  \code{\link{GetSampleFromFile}},
+  \code{\link{GetSampleFromFile}}
 }
 

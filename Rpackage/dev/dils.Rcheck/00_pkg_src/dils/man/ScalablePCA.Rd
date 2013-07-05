@@ -10,7 +10,9 @@
   \item{x}{data.frame, data over which to run PCA}
 
   \item{filename}{character, name of the file containing
-  the data (NOT IMPLEMENTED)}
+  the data. This must be a tab-delimited file with a header
+  row formatted per the default options for
+  \code{\link{read.delim}}.}
 
   \item{db}{Object type, database connection to table
   containing the data (NOT IMPLEMENTED)}

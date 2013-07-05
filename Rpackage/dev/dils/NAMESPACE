@@ -1,3 +1,5 @@
 export(GetSampleFromDataFrame)
+export(GetSampleFromDb)
+export(GetSampleFromFile)
 export(RelationStrengthSimilarity)
 export(ScalablePCA)

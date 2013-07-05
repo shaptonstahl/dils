@@ -2,19 +2,20 @@ Package: dils
 Type: Package
 Title: Data-Informed Link Strength. Combine multiple-relationship
         networks into a single weighted network.
-Version: 0.1
-Date: 2013-06-13
+Version: 0.2
+Date: 2013-07-05
 Author: Stephen R. Haptonstahl
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Suggests: testthat
 Description: Combine multiple-relationship networks into a single weighted
     network.  The approach is similar to factor analysys in the that
     contribution from each constituent network varies so as to maximize the
-    information gleaned from the multimetwork.  This implementation uses an
-    Item-Response Theory (IRT) model estimated with a custom Gibbs Sampler.
+    information gleaned from the multimetwork.  This implementation uses
+    Principal Component Analysis calculated using 'prcomp' with bootstrap
+    subsampling.
 License: MIT + file LICENSE
 Depends: Rcpp (>= 0.9.13)
 LinkingTo: Rcpp
-Collate: 'GetSampleFromDataFrame.R' 'rcpp_hello_world.R'
-        'RelationStrengthSimilarity.R' 'ScalablePCA.R'
-Packaged: 2013-07-04 19:49:55 UTC; Steve
+Collate: 'GetSampleFromDataFrame.R' 'RelationStrengthSimilarity.R'
+        'ScalablePCA.R' 'GetSampleFromFile.R' 'GetSampleFromDb.R'
+Packaged: 2013-07-05 19:38:41 UTC; Steve

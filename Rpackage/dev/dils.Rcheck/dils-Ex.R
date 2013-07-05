@@ -23,6 +23,38 @@ x <- GetSampleFromDataFrame(10, iris)
 
 
 cleanEx()
+nameEx("GetSampleFromDb")
+### * GetSampleFromDb
+
+flush(stderr()); flush(stdout())
+
+### Name: GetSampleFromDb
+### Title: Sample from the rows of a (possibly large) database table
+### Aliases: GetSampleFromDb
+
+### ** Examples
+
+## Not run: x <- GetSampleFromDb(10, my.db)
+
+
+
+cleanEx()
+nameEx("GetSampleFromFile")
+### * GetSampleFromFile
+
+flush(stderr()); flush(stdout())
+
+### Name: GetSampleFromFile
+### Title: Sample from the rows of a (possibly large) text file
+### Aliases: GetSampleFromFile
+
+### ** Examples
+
+## Not run: x <- GetSampleFromFile(10, 150, "folder/containing/data.txt")
+
+
+
+cleanEx()
 nameEx("RelationStrengthSimilarity")
 ### * RelationStrengthSimilarity
 
@@ -65,24 +97,6 @@ data(iris)        # provides example data
 prcomp(iris[,1:4], center=FALSE, scale.=FALSE)$rotation[,1]
 ScalablePCA(iris, subsample=10, use.cols=1:4)
 ScalablePCA(iris, subsample=10, ignore.cols=5)
-
-
-
-cleanEx()
-nameEx("rcpp_hello_world")
-### * rcpp_hello_world
-
-flush(stderr()); flush(stdout())
-
-### Name: rcpp_hello_world
-### Title: Simple function using Rcpp
-### Aliases: rcpp_hello_world
-
-### ** Examples
-
-## Not run: 
-##D rcpp_hello_world()
-## End(Not run)
 
 
 

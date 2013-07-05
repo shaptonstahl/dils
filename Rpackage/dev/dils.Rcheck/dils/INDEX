@@ -1,5 +1,9 @@
 GetSampleFromDataFrame
                         Short description of the function
+GetSampleFromDb         Sample from the rows of a (possibly large)
+                        database table
+GetSampleFromFile       Sample from the rows of a (possibly large) text
+                        file
 RelationStrengthSimilarity
                         Calculate the RSS from one node to another
 ScalablePCA             Perform Principal Component Analysis on a large
@@ -7,4 +11,3 @@ ScalablePCA             Perform Principal Component Analysis on a large
 dils-package            Data-Informed Link Strength. Combine
                         multiple-relationship networks into a single
                         weighted network.
-rcpp_hello_world        Simple function using Rcpp

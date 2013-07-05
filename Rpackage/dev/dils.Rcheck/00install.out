@@ -8,7 +8,6 @@ cygwin warning:
   CYGWIN environment variable option "nodosfilewarning" turns off this warning.
   Consult the user's guide for more details about POSIX paths:
     http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
-g++ -m32 -I"C:/R/R-30~1.1/include" -DDEBUG      -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O0 -Wall  -mtune=core2 -g   -c rcpp_hello_world.cpp -o rcpp_hello_world.o
 g++ -m32 -I"C:/R/R-30~1.1/include" -DDEBUG      -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O0 -Wall  -mtune=core2 -g   -c relation_strength_similarity.cpp -o relation_strength_similarity.o
 relation_strength_similarity.cpp: In function 'Rcpp::List GetPathsAtoBUnderRadius(Rcpp::NumericMatrix, int, int, int)':
 relation_strength_similarity.cpp:107:32: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
@@ -16,7 +15,7 @@ relation_strength_similarity.cpp: In function 'double PathGeneralizedRelationStr
 relation_strength_similarity.cpp:117:47: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
 relation_strength_similarity.cpp: In function 'SEXPREC* relation_strength_similarity(SEXP, SEXP, SEXP, SEXP)':
 relation_strength_similarity.cpp:136:46: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-g++ -m32 -shared -s -static-libgcc -o dils.dll tmp.def rcpp_hello_world.o relation_strength_similarity.o C:/R/R-3.0.1/library/Rcpp/lib/i386/libRcpp.a -Ld:/RCompile/CRANpkg/extralibs64/local/lib/i386 -Ld:/RCompile/CRANpkg/extralibs64/local/lib -LC:/R/R-30~1.1/bin/i386 -lR
+g++ -m32 -shared -s -static-libgcc -o dils.dll tmp.def relation_strength_similarity.o C:/R/R-3.0.1/library/Rcpp/lib/i386/libRcpp.a -Ld:/RCompile/CRANpkg/extralibs64/local/lib/i386 -Ld:/RCompile/CRANpkg/extralibs64/local/lib -LC:/R/R-30~1.1/bin/i386 -lR
 cygwin warning:
   MS-DOS style path detected: C:/R/R-30~1.1/etc/i386/Makeconf
   Preferred POSIX equivalent is: /cygdrive/c/R/R-30~1.1/etc/i386/Makeconf
@@ -32,7 +31,6 @@ cygwin warning:
   CYGWIN environment variable option "nodosfilewarning" turns off this warning.
   Consult the user's guide for more details about POSIX paths:
     http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
-g++ -m64 -I"C:/R/R-30~1.1/include" -DDEBUG      -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O0 -Wall  -mtune=core2 -g   -c rcpp_hello_world.cpp -o rcpp_hello_world.o
 g++ -m64 -I"C:/R/R-30~1.1/include" -DDEBUG      -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O0 -Wall  -mtune=core2 -g   -c relation_strength_similarity.cpp -o relation_strength_similarity.o
 relation_strength_similarity.cpp: In function 'Rcpp::List GetPathsAtoBUnderRadius(Rcpp::NumericMatrix, int, int, int)':
 relation_strength_similarity.cpp:107:32: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
@@ -40,7 +38,7 @@ relation_strength_similarity.cpp: In function 'double PathGeneralizedRelationStr
 relation_strength_similarity.cpp:117:47: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
 relation_strength_similarity.cpp: In function 'SEXPREC* relation_strength_similarity(SEXP, SEXP, SEXP, SEXP)':
 relation_strength_similarity.cpp:136:46: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-g++ -m64 -shared -s -static-libgcc -o dils.dll tmp.def rcpp_hello_world.o relation_strength_similarity.o C:/R/R-3.0.1/library/Rcpp/lib/x64/libRcpp.a -Ld:/RCompile/CRANpkg/extralibs64/local/lib/x64 -Ld:/RCompile/CRANpkg/extralibs64/local/lib -LC:/R/R-30~1.1/bin/x64 -lR
+g++ -m64 -shared -s -static-libgcc -o dils.dll tmp.def relation_strength_similarity.o C:/R/R-3.0.1/library/Rcpp/lib/x64/libRcpp.a -Ld:/RCompile/CRANpkg/extralibs64/local/lib/x64 -Ld:/RCompile/CRANpkg/extralibs64/local/lib -LC:/R/R-30~1.1/bin/x64 -lR
 cygwin warning:
   MS-DOS style path detected: C:/R/R-30~1.1/etc/x64/Makeconf
   Preferred POSIX equivalent is: /cygdrive/c/R/R-30~1.1/etc/x64/Makeconf

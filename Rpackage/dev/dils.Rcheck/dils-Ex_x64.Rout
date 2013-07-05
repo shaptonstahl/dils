@@ -43,6 +43,38 @@ Loading required package: Rcpp
 > 
 > 
 > cleanEx()
+> nameEx("GetSampleFromDb")
+> ### * GetSampleFromDb
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: GetSampleFromDb
+> ### Title: Sample from the rows of a (possibly large) database table
+> ### Aliases: GetSampleFromDb
+> 
+> ### ** Examples
+> 
+> ## Not run: x <- GetSampleFromDb(10, my.db)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("GetSampleFromFile")
+> ### * GetSampleFromFile
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: GetSampleFromFile
+> ### Title: Sample from the rows of a (possibly large) text file
+> ### Aliases: GetSampleFromFile
+> 
+> ### ** Examples
+> 
+> ## Not run: x <- GetSampleFromFile(10, 150, "folder/containing/data.txt")
+> 
+> 
+> 
+> cleanEx()
 > nameEx("RelationStrengthSimilarity")
 > ### * RelationStrengthSimilarity
 > 
@@ -101,29 +133,11 @@ Sepal.Length  Sepal.Width Petal.Length  Petal.Width
 > 
 > 
 > 
-> cleanEx()
-> nameEx("rcpp_hello_world")
-> ### * rcpp_hello_world
-> 
-> flush(stderr()); flush(stdout())
-> 
-> ### Name: rcpp_hello_world
-> ### Title: Simple function using Rcpp
-> ### Aliases: rcpp_hello_world
-> 
-> ### ** Examples
-> 
-> ## Not run: 
-> ##D rcpp_hello_world()
-> ## End(Not run)
-> 
-> 
-> 
 > ### * <FOOTER>
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  2.25 0 2.29 NA NA 
+Time elapsed:  1.31 0.02 1.32 NA NA 
 > grDevices::dev.off()
 null device 
           1 

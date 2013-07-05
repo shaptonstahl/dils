@@ -1,6 +1,6 @@
 dils-package	dils-package
-dils	dils-package
 GetSampleFromDataFrame	GetSampleFromDataFrame
-rcpp_hello_world	rcpp_hello_world
+GetSampleFromDb	GetSampleFromDb
+GetSampleFromFile	GetSampleFromFile
 RelationStrengthSimilarity	RelationStrengthSimilarity
 ScalablePCA	ScalablePCA

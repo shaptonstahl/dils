@@ -4,7 +4,7 @@
 * using session charset: ISO8859-1
 * checking for file 'dils/DESCRIPTION' ... OK
 * checking extension type ... Package
-* this is package 'dils' version '0.1'
+* this is package 'dils' version '0.2'
 * checking package namespace information ... OK
 * checking package dependencies ... OK
 * checking if this is a source package ... OK
@@ -38,11 +38,7 @@
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
-* checking R code for possible problems ... NOTE
-ScalablePCA : pca.sample: no visible global function definition for
-  'GetSampleFromDb'
-ScalablePCA : pca.sample: no visible global function definition for
-  'GetSampleFromFile'
+* checking R code for possible problems ... OK
 * checking Rd files ... OK
 * checking Rd metadata ... OK
 * checking Rd cross-references ... OK
@@ -66,7 +62,3 @@ ScalablePCA : pca.sample: no visible global function definition for
 ** running tests for arch 'x64' OK
   Running 'run-all.R'
 * checking PDF version of manual ... OK
-NOTE: There was 1 note.
-See
-  'C:/Users/Steve/Documents/GitHub/dils/Rpackage/dev/dils.Rcheck/00check.log'
-for details.

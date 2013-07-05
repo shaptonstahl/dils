@@ -7,7 +7,7 @@
 #' @param x data.frame, data whose rows will be sampled.
 #' @return data.frame, size n random subset of the rows of x
 #' @export
-#' @seealso \code{\link{ScalablePCA}}
+#' @seealso \code{\link{ScalablePCA}}, \code{\link{GetSampleFromFile}}, \code{\link{GetSampleFromFile}}
 #' @references
 #' \url{http://www.haptonstahl.org/R}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}

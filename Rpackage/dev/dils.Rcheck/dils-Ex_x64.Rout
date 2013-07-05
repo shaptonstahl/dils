@@ -1,0 +1,135 @@
+
+R version 3.0.1 (2013-05-16) -- "Good Sport"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "dils"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> options(pager = "console")
+> library('dils')
+Loading required package: Rcpp
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("GetSampleFromDataFrame")
+> ### * GetSampleFromDataFrame
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: GetSampleFromDataFrame
+> ### Title: Short description of the function
+> ### Aliases: GetSampleFromDataFrame
+> 
+> ### ** Examples
+> 
+> data(iris)   # provides example data
+> x <- GetSampleFromDataFrame(10, iris)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("RelationStrengthSimilarity")
+> ### * RelationStrengthSimilarity
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: RelationStrengthSimilarity
+> ### Title: Calculate the RSS from one node to another
+> ### Aliases: RelationStrengthSimilarity
+> 
+> ### ** Examples
+> 
+> M.test.1 <- matrix(0, nrow=6, ncol=6)
+> M.test.1[1,2] <- M.test.1[2,1] <- 1
+> M.test.1[1,3] <- M.test.1[3,1] <- 1
+> M.test.1[3,4] <- M.test.1[4,3] <- 1
+> M.test.1[4,5] <- M.test.1[5,4] <- 1
+> M.test.1[5,6] <- M.test.1[6,5] <- 1
+> M.test.1[6,1] <- M.test.1[1,6] <- 1
+> M.test.1[1,4] <- M.test.1[4,1] <- 1
+> M.test.1
+     [,1] [,2] [,3] [,4] [,5] [,6]
+[1,]    0    1    1    1    0    1
+[2,]    1    0    0    0    0    0
+[3,]    1    0    0    1    0    0
+[4,]    1    0    1    0    1    0
+[5,]    0    0    0    1    0    1
+[6,]    1    0    0    0    1    0
+> ## Not run: RelationStrengthSimilarity(xadj=M.test.1, v1=5, v2=6, radius=2)
+> ## Not run: RelationStrengthSimilarity(xadj=M.test.1, v1=5, v2=6, radius=3)
+> ## Not run: RelationStrengthSimilarity(xadj=M.test.1, v1=5, v2=6, radius=4)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("ScalablePCA")
+> ### * ScalablePCA
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: ScalablePCA
+> ### Title: Perform Principal Component Analysis on a large data set
+> ### Aliases: ScalablePCA
+> 
+> ### ** Examples
+> 
+> data(iris)        # provides example data
+> prcomp(iris[,1:4], center=FALSE, scale.=FALSE)$rotation[,1]
+Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+  -0.7511082   -0.3800862   -0.5130089   -0.1679075 
+> ScalablePCA(iris, subsample=10, use.cols=1:4)
+Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+  -0.7517117   -0.3834942   -0.5072610   -0.1652128 
+> ScalablePCA(iris, subsample=10, ignore.cols=5)
+Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+  -0.7519963   -0.3824001   -0.5076251   -0.1650913 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("rcpp_hello_world")
+> ### * rcpp_hello_world
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: rcpp_hello_world
+> ### Title: Simple function using Rcpp
+> ### Aliases: rcpp_hello_world
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D rcpp_hello_world()
+> ## End(Not run)
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  2.25 0 2.29 NA NA 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

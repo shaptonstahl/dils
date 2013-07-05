@@ -1,0 +1,10 @@
+GetSampleFromDataFrame
+                        Short description of the function
+RelationStrengthSimilarity
+                        Calculate the RSS from one node to another
+ScalablePCA             Perform Principal Component Analysis on a large
+                        data set
+dils-package            Data-Informed Link Strength. Combine
+                        multiple-relationship networks into a single
+                        weighted network.
+rcpp_hello_world        Simple function using Rcpp

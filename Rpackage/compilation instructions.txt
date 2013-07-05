@@ -2,7 +2,9 @@
   - In R, setwd to dils/Rpackage/dev folder
   - library(roxygen2)
   - roxygenize("dils")
-2. Run tests using testthat
+2. Run tests using testthat: run automatically on compilation
 3. Regenerate package
   - Open command prompt to dils/Rpackage/dev folder.
-  - 
+  - R CMD build dils   (generates tar.gz for cran)
+  - R CMD check dils_1.0.tar.gz
+  - R CMD INSTALL –build dils   (gets me a local windows binary zip file)

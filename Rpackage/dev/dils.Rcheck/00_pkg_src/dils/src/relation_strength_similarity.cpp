@@ -8,8 +8,8 @@ Rcpp::NumericVector NumericVectorConcatenate(Rcpp::NumericVector a, Rcpp::Numeri
   for(int i = 0; i < a.size(); i++) { 
     c[i] = a[i]; 
   }
-  for(int i = a.size(); i < a.size() + b.size(); i++) { 
-    c[i] = b[i]; 
+  for(int i = 0; i < b.size(); i++) { 
+    c[i + a.size()] = b[i]; 
   }
   return(c);
 }
@@ -22,8 +22,8 @@ Rcpp::List ListConcatenate(Rcpp::List a, Rcpp::List b) {
   for(int i = 0; i < a.size(); i++) { 
     c[i] = a[i]; 
   }
-  for(int i = a.size(); i < a.size() + b.size(); i++) { 
-    c[i] = b[i]; 
+  for(int i = 0; i < b.size(); i++) { 
+    c[i + a.size()] = b[i]; 
   }
   return(c);
 }
@@ -53,7 +53,7 @@ Rcpp::List GetPathsLength1(Rcpp::NumericMatrix x, int v, Rcpp::NumericVector exc
   std::vector<int> neighbors = GetNeighborIds(x, v, excludeids);
   
   List out(neighbors.size());
-  for(unsigned int i = 0; i < out.size(); i++) {
+  for(int i = 0; i < out.size(); i++) {
     out[i] = NumericVector::create(v, neighbors[i]);  // store C++-based indices
   }
   return( out );
@@ -65,19 +65,57 @@ Rcpp::List GetMinPathsGivenRadius(Rcpp::NumericMatrix x, int v, int r, Rcpp::Num
   
   std::vector<int> neighbors = GetNeighborIds(x, v, excludeids);
   
+  List out;
   if ( 1 == r ) {
-    List out = GetPathsLength1(x, v, excludeids);
+    out = GetPathsLength1(x, v, excludeids);
   } else {
-    List out;
-    List next_paths;
     std::vector<int> neighbors = GetNeighborIds(x, v, excludeids);
-    for(int i = 0; i < neighbors.size(), i++) {
-      List next_paths;
-      next_paths = GetPathsLength1(x, neighbors[i], NumericVectorConcatenate(excludeids, NumericVector::create(v)));
+    for(unsigned int i = 0; i < neighbors.size(); i++) {
+      List next_paths = GetMinPathsGivenRadius(x, neighbors[i], r - 1, NumericVectorConcatenate(excludeids, NumericVector::create(v)));
       for(int j = 0; j < next_paths.size(); j++) {
         out = ListConcatenate(out, List::create(NumericVectorConcatenate(NumericVector::create(v), next_paths[j])));
       }
     }
+  }
+  return( out );
+}
+
+Rcpp::List GetPathsAtoBRadius(Rcpp::NumericMatrix x, int vfrom, int vto, int r) {
+  // vfrom, vto are C++-based indices
+  using namespace Rcpp ;
+  
+  NumericVector no_exclusions;
+  List all_paths = GetMinPathsGivenRadius(x, vfrom, r, no_exclusions);
+  List out;
+  NumericVector this_path;
+  int tail;
+  NumericVector tails;
+  for(int i = 0; i < all_paths.length(); i++) {
+    this_path = all_paths[i];
+    tail = (int) this_path[this_path.length() - 1];
+    if( vto == tail ) {
+      out = ListConcatenate(out, List::create(this_path));
+    }
+  }
+  return(out);
+}
+
+Rcpp::List GetPathsAtoBUnderRadius(Rcpp::NumericMatrix x, int vfrom, int vto, int r) {
+  using namespace Rcpp ;
+  
+  List out;
+  for(unsigned int i = 1; i <= r; i++) {
+    out = ListConcatenate(out, GetPathsAtoBRadius(x, vfrom, vto, i));
+  }
+  return out ;
+}
+
+double PathGeneralizedRelationStrength(Rcpp::NumericMatrix x, Rcpp::NumericVector path) {
+  using namespace Rcpp ;
+    
+  double out = 1.0;
+  for(unsigned int i = 0; i < path.length() - 1; i++) {
+    out = out * x(path(i), path(i+1));
   }
   return( out );
 }
@@ -87,8 +125,17 @@ SEXP relation_strength_similarity(SEXP xadj, SEXP v1, SEXP v2, SEXP radius) {
     
   NumericMatrix x( xadj );
   int vfrom = as<int>( v1 ) - 1;
-  int vto = as<int>( v1 ) - 1;
-  NumericVector r( radius );
+  int vto = as<int>( v2 ) - 1;
+  int r = as<int>( radius );
   
-  return wrap( GetMinPathsGivenRadius(x, vfrom, 2, NumericVector::create(3.0)) );
+  List paths = GetPathsAtoBUnderRadius(x, vfrom, vto, r);
+  if( 0 == paths.length() ) {
+    return( wrap(0) );
+  } else {
+    double out = 0.0;
+    for(unsigned int i = 0; i < paths.length(); i++) {
+      out = out + PathGeneralizedRelationStrength(x, paths[i]);
+    }
+    return wrap( out );
+  }
 }

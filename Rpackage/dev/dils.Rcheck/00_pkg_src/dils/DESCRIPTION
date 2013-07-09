@@ -2,8 +2,8 @@ Package: dils
 Type: Package
 Title: Data-Informed Link Strength. Combine multiple-relationship
         networks into a single weighted network.
-Version: 0.2
-Date: 2013-07-05
+Version: 0.3
+Date: 2013-07-09
 Author: Stephen R. Haptonstahl
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Suggests: testthat
@@ -14,8 +14,6 @@ Description: Combine multiple-relationship networks into a single weighted
     Principal Component Analysis calculated using 'prcomp' with bootstrap
     subsampling.
 License: MIT + file LICENSE
-Depends: Rcpp (>= 0.9.13)
-LinkingTo: Rcpp
 Collate: 'GetSampleFromDataFrame.R' 'RelationStrengthSimilarity.R'
         'ScalablePCA.R' 'GetSampleFromFile.R' 'GetSampleFromDb.R'
-Packaged: 2013-07-05 19:38:41 UTC; Steve
+Packaged: 2013-07-09 20:08:15 UTC; shaptonstahl

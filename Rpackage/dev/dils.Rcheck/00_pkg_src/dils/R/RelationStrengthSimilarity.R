@@ -15,18 +15,19 @@
 #' Hung-Hsuan Chen, Liang Gou, Xiaolong (Luke) Zhang, C. Lee Giles. 2012.
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @examples
-#' M.test.1 <- matrix(0, nrow=6, ncol=6)
-#' M.test.1[1,2] <- M.test.1[2,1] <- 1
-#' M.test.1[1,3] <- M.test.1[3,1] <- 1
-#' M.test.1[3,4] <- M.test.1[4,3] <- 1
-#' M.test.1[4,5] <- M.test.1[5,4] <- 1
-#' M.test.1[5,6] <- M.test.1[6,5] <- 1
-#' M.test.1[6,1] <- M.test.1[1,6] <- 1
-#' M.test.1[1,4] <- M.test.1[4,1] <- 1
-#' M.test.1
-#' \dontrun{RelationStrengthSimilarity(xadj=M.test.1, v1=5, v2=6, radius=2)}
-#' \dontrun{RelationStrengthSimilarity(xadj=M.test.1, v1=5, v2=6, radius=3)}
-#' \dontrun{RelationStrengthSimilarity(xadj=M.test.1, v1=5, v2=6, radius=4)}
+#' M <- matrix(0, nrow=6, ncol=6)
+#' M[1,2] <- M[2,1] <- 1
+#' M[1,3] <- M[3,1] <- 1
+#' M[3,4] <- M[4,3] <- 1
+#' M[4,5] <- M[5,4] <- 1
+#' M[5,6] <- M[6,5] <- 1
+#' M[6,1] <- M[1,6] <- 1
+#' M[1,4] <- M[4,1] <- 1
+#' M
+#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
+#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=2)
+#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3)
+#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=4)
 RelationStrengthSimilarity <- function(xadj, v1, v2, radius){
   #' Add guardians here
   stopifnot( is.matrix(xadj) )
@@ -43,15 +44,42 @@ RelationStrengthSimilarity <- function(xadj, v1, v2, radius){
   stopifnot(radius %% 1 == 0)
   stopifnot(radius > 0)
   
-  if( v1 == v2 ) {
-    return( 1 )
-  } else {
-    return( .Call("relation_strength_similarity",
-                  xadj, 
-                  v1, 
-                  v2, 
-                  radius,
-                  PACKAGE="dils" ) )
+  RssThisRadius <- function(x, v1, v2, r, prepped=FALSE) {
+    if( FALSE == prepped ) {
+      diag(x) <- 0
+      x <- sweep(x, 1, rowSums(x), "/")
+    }
+    n <- nrow(x)
+    
+    if( v1 == v2 ) {
+      out <- 0
+    } else if( 1 == r ) {
+      out <- x[v1, v2]
+    } else if( 2 == r ) {
+      out <- sum(x[v1,] * x[,v2])
+    } else if( 3 == r) {
+      y <- sapply(1:n, function(ell) {
+        RssThisRadius(x, v1, ell, 2, prepped=TRUE) - x[v1, v2] * x[v2, ell]
+      })
+      out <- sum(x[,v2] * y) + x[v1, v2] * x[v2, v1] * x[v1, v2]
+    } else if( 4 == r ) {
+      y <- sapply(1:n, function(ell) {
+        RssThisRadius(x, v1, ell, 3, prepped=TRUE) - 
+          x[v2, ell] * sum(x[v1,] * x[,v2]) +
+          x[v2, ell] * x[v1, ell] * x[ell, v2] +
+          x[v1, v2] * x[v2, v1] * x[v1, ell] -
+          x[v1, v2] * sum(x[v2,] * x[,ell])
+      })
+      out <- sum(x[,v2] * y) + 
+        x[v1,v2] * x[v2,v1] * sum(x[v1,] * x[,v2]) +
+        x[v1,v2] * x[v1,v2] * sum(x[v2,] * x[,v1])
+    } else {
+      stop("RssThisRadius not yet supported for this value of r")
+    }
+    return( out )
   }
+  
+  diag(xadj) <- 0
+  xadj <- sweep(xadj, 1, rowSums(xadj), "/")
+  return( sum(sapply(1:radius, function(this.r) RssThisRadius(xadj, v1, v2, this.r, prepped=TRUE))))
 }
-

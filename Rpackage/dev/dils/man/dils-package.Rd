@@ -11,8 +11,8 @@ Combine multiple-relationship networks into a single weighted network.  The appr
 \tabular{ll}{
 Package: \tab dils\cr
 Type: \tab Package\cr
-Version: \tab 0.2\cr
-Date: \tab 2013-07-05\cr
+Version: \tab 0.3\cr
+Date: \tab 2013-07-09\cr
 License: \tab MIT + file LICENSE\cr
 }
 Start with a table (data.frame, tab-delimited file, database) where each row/record represents a link between two nodes (a dyad) in a directed or undirected network and each column represents a different relationship between the two nodes, ie. each column is a network. DILS combines these columns/networks into a single network that is a weighted sum of the constituent networks.  The resulting DILS network uses information from all of the constituent networks and contains more information than any of the constituent networks.  The output is a data.frame of DILS scores for each dyad, therefore is a single network ready for analysis using \pkg{igraph} or other social network analysis (SNA) tools.

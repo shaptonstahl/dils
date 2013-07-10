@@ -21,3 +21,5 @@ Collate:
     'ScalablePCA.R'
     'GetSampleFromFile.R'
     'GetSampleFromDb.R'
+    'RssCell.R'
+    'RssThisRadius.R'

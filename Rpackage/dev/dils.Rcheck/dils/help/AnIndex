@@ -3,4 +3,6 @@ GetSampleFromDataFrame	GetSampleFromDataFrame
 GetSampleFromDb	GetSampleFromDb
 GetSampleFromFile	GetSampleFromFile
 RelationStrengthSimilarity	RelationStrengthSimilarity
+RssCell	RssCell
+RssThisRadius	RssThisRadius
 ScalablePCA	ScalablePCA

@@ -68,7 +68,7 @@ flush(stderr()); flush(stdout())
 
 M <- matrix(0, nrow=6, ncol=6)
 M[1,2] <- M[2,1] <- 1
-M[1,3] <- M[3,1] <- 1
+M[2,3] <- M[3,2] <- 1
 M[3,4] <- M[4,3] <- 1
 M[4,5] <- M[5,4] <- 1
 M[5,6] <- M[6,5] <- 1
@@ -79,6 +79,66 @@ RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=2)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=4)
+RelationStrengthSimilarity(xadj=M, radius=2)
+## Not run: RelationStrengthSimilarity(xadj=M, radius=3)
+
+
+
+cleanEx()
+nameEx("RssCell")
+### * RssCell
+
+flush(stderr()); flush(stdout())
+
+### Name: RssCell
+### Title: Calculate the RSS from one node to another
+### Aliases: RssCell
+
+### ** Examples
+
+M <- matrix(0, nrow=6, ncol=6)
+M[1,2] <- M[2,1] <- 1
+M[2,3] <- M[3,2] <- 1
+M[3,4] <- M[4,3] <- 1
+M[4,5] <- M[5,4] <- 1
+M[5,6] <- M[6,5] <- 1
+M[6,1] <- M[1,6] <- 1
+M[1,4] <- M[4,1] <- 1
+M
+M <- sweep(M, 1, rowMeans(M), "/")
+M
+RssCell(xadj=M, v1=5, v2=6, radius=1)
+RssCell(xadj=M, v1=5, v2=6, radius=2)
+RssCell(xadj=M, v1=5, v2=6, radius=3)
+RssCell(xadj=M, v1=5, v2=6, radius=4)
+
+
+
+cleanEx()
+nameEx("RssThisRadius")
+### * RssThisRadius
+
+flush(stderr()); flush(stdout())
+
+### Name: RssThisRadius
+### Title: Calculate part of the RSS from one node to another
+### Aliases: RssThisRadius
+
+### ** Examples
+
+M <- matrix(0, nrow=6, ncol=6)
+M[1,2] <- M[2,1] <- 1
+M[2,3] <- M[3,2] <- 1
+M[3,4] <- M[4,3] <- 1
+M[4,5] <- M[5,4] <- 1
+M[5,6] <- M[6,5] <- 1
+M[6,1] <- M[1,6] <- 1
+M[1,4] <- M[4,1] <- 1
+M
+RssThisRadius(x=M, v1=5, v2=6, r=1)
+RssThisRadius(x=M, v1=5, v2=6, r=2)
+RssThisRadius(x=M, v1=5, v2=6, r=3)
+RssThisRadius(x=M, v1=5, v2=6, r=4)
 
 
 

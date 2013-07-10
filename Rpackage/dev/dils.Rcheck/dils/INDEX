@@ -6,6 +6,9 @@ GetSampleFromFile       Sample from the rows of a (possibly large) text
                         file
 RelationStrengthSimilarity
                         Calculate the RSS from one node to another
+RssCell                 Calculate the RSS from one node to another
+RssThisRadius           Calculate part of the RSS from one node to
+                        another
 ScalablePCA             Perform Principal Component Analysis on a large
                         data set
 dils-package            Data-Informed Link Strength. Combine

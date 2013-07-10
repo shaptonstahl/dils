@@ -18,17 +18,21 @@
   from \code{v1} to \code{v2}.}
 }
 \value{
-  numeric, the Relation Strength Similarity score from
-  \code{v1} to \code{v2}.
+  numeric, Relation Strength Similarity score(s).
 }
 \description{
   A longer description of the function.  This can be
   perhaps a paragraph, perhaps more than one.
 }
+\details{
+  If \code{v1} and \code{v2} are specified, this returns
+  the RSS from \code{v1} to \code{v2}.  If not, it
+  calculates the RSS scores for all dyads in the network.
+}
 \examples{
 M <- matrix(0, nrow=6, ncol=6)
 M[1,2] <- M[2,1] <- 1
-M[1,3] <- M[3,1] <- 1
+M[2,3] <- M[3,2] <- 1
 M[3,4] <- M[4,3] <- 1
 M[4,5] <- M[5,4] <- 1
 M[5,6] <- M[6,5] <- 1
@@ -39,6 +43,8 @@ RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=2)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=4)
+RelationStrengthSimilarity(xadj=M, radius=2)
+\dontrun{RelationStrengthSimilarity(xadj=M, radius=3)}
 }
 \author{
   Stephen R. Haptonstahl \email{srh@haptonstahl.org}

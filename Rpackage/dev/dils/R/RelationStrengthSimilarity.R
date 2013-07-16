@@ -13,6 +13,8 @@
 #' @references
 #' "Discovering Missing Links in Networks Using Similarity Measures", 
 #' Hung-Hsuan Chen, Liang Gou, Xiaolong (Luke) Zhang, C. Lee Giles. 2012.
+#' 
+#' \url{https://github.com/shaptonstahl/}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @details
 #' If \code{v1} and \code{v2} are specified, this returns the RSS from \code{v1}

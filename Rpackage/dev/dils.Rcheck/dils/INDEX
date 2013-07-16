@@ -1,3 +1,9 @@
+EdgelistFill            Ensure an edgelist has all dyads and a column
+                        of weights.
+EdgelistFromAdjacency   Converts adjacency matrix to filled edgelist
+EdgelistFromIgraph      Converts an igraph to filled edgelist
+GenerateDilsNetwork     Combine multiple networks into a single
+                        weighted network.
 GetSampleFromDataFrame
                         Short description of the function
 GetSampleFromDb         Sample from the rows of a (possibly large)

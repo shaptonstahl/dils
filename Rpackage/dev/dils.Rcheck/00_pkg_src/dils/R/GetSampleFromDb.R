@@ -8,7 +8,7 @@
 #' @export
 #' @seealso \code{\link{ScalablePCA}}, \code{\link{GetSampleFromDataFrame}}, \code{\link{GetSampleFromFile}}
 #' @references
-#' \url{http://www.haptonstahl.org/R}
+#' \url{https://github.com/shaptonstahl/}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @examples
 #' \dontrun{x <- GetSampleFromDb(10, my.db)}

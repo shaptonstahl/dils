@@ -53,6 +53,8 @@ RelationStrengthSimilarity(xadj=M, radius=2)
   "Discovering Missing Links in Networks Using Similarity
   Measures", Hung-Hsuan Chen, Liang Gou, Xiaolong (Luke)
   Zhang, C. Lee Giles. 2012.
+
+  \url{https://github.com/shaptonstahl/}
 }
 \seealso{
   \code{\link{ScalablePCA}}

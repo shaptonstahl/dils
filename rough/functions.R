@@ -83,10 +83,10 @@ CombineTwoDyadTables <- function(x1, x2,
   }
   
   #' Check that ids are the same set
-  if( sort(unique(x1$v1)) != sort(unique(x1$v1)) ||
-        sort(unique(x1$v1)) != sort(unique(x1$v1)) ||
-        sort(unique(x1$v1)) != sort(unique(x1$v1)) ||
-        sort(unique(x1$v1)) != sort(unique(x1$v1)) ) stop ("Sets of ids not consistent")
+  x1v1values <- sort(unique(x1$v1))
+  if( x1v1values != sort(unique(x1$v2)) ||
+        x1v1values != sort(unique(x2$v1)) ||
+        x1v1values != sort(unique(x2$v2)) ) stop ("Sets of ids not consistent")
   
   #' Ensure that both are full; this ensures order matches
   x1 <- FillDyadTable(x1, zero.to.na=zero.to.na)

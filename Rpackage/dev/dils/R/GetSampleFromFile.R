@@ -9,7 +9,7 @@
 #' @export
 #' @seealso \code{\link{ScalablePCA}}, \code{\link{GetSampleFromDataFrame}}, \code{\link{GetSampleFromDb}}
 #' @references
-#' \url{http://www.haptonstahl.org/R}
+#' \url{https://github.com/shaptonstahl/}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @examples
 #' \dontrun{x <- GetSampleFromFile(10, 150, "folder/containing/data.txt")}

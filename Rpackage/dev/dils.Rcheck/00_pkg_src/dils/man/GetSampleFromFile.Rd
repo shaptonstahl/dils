@@ -30,7 +30,7 @@
   Stephen R. Haptonstahl \email{srh@haptonstahl.org}
 }
 \references{
-  \url{http://www.haptonstahl.org/R}
+  \url{https://github.com/shaptonstahl/}
 }
 \seealso{
   \code{\link{ScalablePCA}},

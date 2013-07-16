@@ -12,6 +12,8 @@
 #' @references
 #' "Discovering Missing Links in Networks Using Similarity Measures", 
 #' Hung-Hsuan Chen, Liang Gou, Xiaolong (Luke) Zhang, C. Lee Giles. 2012.
+#' 
+#' \url{https://github.com/shaptonstahl/}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @details
 #' This is an internal function.  There are no guardians and it assumes that

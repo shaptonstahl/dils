@@ -6,6 +6,99 @@ library('dils')
 
 base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 cleanEx()
+nameEx("EdgelistFill")
+### * EdgelistFill
+
+flush(stderr()); flush(stdout())
+
+### Name: EdgelistFill
+### Title: Ensure an edgelist has all dyads and a column of weights.
+### Aliases: EdgelistFill
+
+### ** Examples
+
+g <- erdos.renyi.game(10, 2/10)
+EdgelistFill(get.edgelist(g))
+EdgelistFill(get.edgelist(g), nodelist=1:10)
+
+E(g)$weight <- runif(ecount(g))
+el <- cbind(get.edgelist(g), E(g)$weight)
+EdgelistFill(el)
+EdgelistFill(el, nodelist=1:10)
+
+
+
+cleanEx()
+nameEx("EdgelistFromAdjacency")
+### * EdgelistFromAdjacency
+
+flush(stderr()); flush(stdout())
+
+### Name: EdgelistFromAdjacency
+### Title: Converts adjacency matrix to filled edgelist
+### Aliases: EdgelistFromAdjacency
+
+### ** Examples
+
+n <- 10
+A <- matrix(rnorm(n*n), nrow=n)
+A
+EdgelistFromAdjacency(A)
+
+n <- 100
+A <- matrix(rnorm(n*n), nrow=n)
+A
+EdgelistFromAdjacency(A)
+
+n <- 500
+A <- matrix(rnorm(n*n), nrow=n)
+A
+## Not run: EdgelistFromAdjacency(A)
+
+
+
+cleanEx()
+nameEx("EdgelistFromIgraph")
+### * EdgelistFromIgraph
+
+flush(stderr()); flush(stdout())
+
+### Name: EdgelistFromIgraph
+### Title: Converts an igraph to filled edgelist
+### Aliases: EdgelistFromIgraph
+
+### ** Examples
+
+g <- erdos.renyi.game(10, 2/10)
+EdgelistFromIgraph(g)
+
+V(g)$name <- letters[1:vcount(g)]
+EdgelistFromIgraph(g)
+
+E(g)$weight <- runif(ecount(g))
+EdgelistFromIgraph(g, useWeight=TRUE)
+
+
+
+cleanEx()
+nameEx("GenerateDilsNetwork")
+### * GenerateDilsNetwork
+
+flush(stderr()); flush(stdout())
+
+### Name: GenerateDilsNetwork
+### Title: Combine multiple networks into a single weighted network.
+### Aliases: GenerateDilsNetwork
+
+### ** Examples
+
+data(iris)        # provides example data
+GenerateDilsNetwork(iris, subsample=10, use.cols=1:4)
+GenerateDilsNetwork(iris, subsample=10, ignore.cols=5)
+
+
+
+cleanEx()
 nameEx("GetSampleFromDataFrame")
 ### * GetSampleFromDataFrame
 

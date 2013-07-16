@@ -17,6 +17,7 @@ Type 'q()' to quit R.
 
 > library(testthat)
 > library(dils)
+Loading required package: igraph
 > 
 > test_package("dils")
 GetSampleFromDataFrame : ........
@@ -25,4 +26,4 @@ ScalablePCA : ......................
 > 
 > proc.time()
    user  system elapsed 
-   1.13    0.04    1.15 
+   1.13    0.07    1.20 

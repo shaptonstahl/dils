@@ -9,7 +9,7 @@
 #' @export
 #' @seealso \code{\link{ScalablePCA}}, \code{\link{GetSampleFromFile}}, \code{\link{GetSampleFromFile}}
 #' @references
-#' \url{http://www.haptonstahl.org/R}
+#' \url{https://github.com/shaptonstahl/}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @examples
 #' data(iris)   # provides example data

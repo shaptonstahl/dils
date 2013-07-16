@@ -133,7 +133,7 @@ test_that("ScalablePCA catches bad input", {
 
 test_that("ScalablePCA returns correct values", {
   data(iris)
-  correct.results <- prcomp(iris[,1:4], center=FALSE, scale.=FALSE)$rotation[,1]
+  correct.results <- abs(prcomp(iris[,1:4], center=FALSE, scale.=FALSE)$rotation[,1])
   est.results <- ScalablePCA(iris, subsample=10, use.cols=1:4)
   relative.errors <- abs((correct.results - est.results) / correct.results)
   

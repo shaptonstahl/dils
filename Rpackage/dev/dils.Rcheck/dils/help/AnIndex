@@ -1,4 +1,8 @@
 dils-package	dils-package
+EdgelistFill	EdgelistFill
+EdgelistFromAdjacency	EdgelistFromAdjacency
+EdgelistFromIgraph	EdgelistFromIgraph
+GenerateDilsNetwork	GenerateDilsNetwork
 GetSampleFromDataFrame	GetSampleFromDataFrame
 GetSampleFromDb	GetSampleFromDb
 GetSampleFromFile	GetSampleFromFile

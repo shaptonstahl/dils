@@ -1,3 +1,7 @@
+export(EdgelistFill)
+export(EdgelistFromAdjacency)
+export(EdgelistFromIgraph)
+export(GenerateDilsNetwork)
 export(GetSampleFromDataFrame)
 export(GetSampleFromDb)
 export(GetSampleFromFile)

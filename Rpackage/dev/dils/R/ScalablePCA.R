@@ -15,7 +15,7 @@
 #' @export
 #' @seealso \code{\link{prcomp}}
 #' @references
-#' \url{http://www.haptonstahl.org/R}
+#' \url{https://github.com/shaptonstahl/}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @examples
 #' data(iris)        # provides example data
@@ -173,5 +173,6 @@ ScalablePCA <- function(x,
     
   # prepare and return the output
   out <- colMeans(draws)
+  out <- abs(out)
   return(out)
 }

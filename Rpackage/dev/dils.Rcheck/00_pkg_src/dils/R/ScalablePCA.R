@@ -1,7 +1,6 @@
 #' Perform Principal Component Analysis on a large data set
 #'
-#' Runs 'prcomp' on subsamples of the data set and compiles the
-#' results for the first dimension.
+#' Run 'prcomp' on subsamples of the data set and compile the results for the first dimension.
 #' 
 #' @param x data.frame, data over which to run PCA
 #' @param filename character, name of the file containing the data. This must be a tab-delimited file with a header row formatted per the default options for \code{\link{read.delim}}.

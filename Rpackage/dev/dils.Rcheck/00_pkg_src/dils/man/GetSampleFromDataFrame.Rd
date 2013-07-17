@@ -1,6 +1,6 @@
 \name{GetSampleFromDataFrame}
 \alias{GetSampleFromDataFrame}
-\title{Short description of the function}
+\title{Randomly select rows from a data.frame.}
 \usage{
   GetSampleFromDataFrame(n, x)
 }
@@ -13,12 +13,11 @@
   data.frame, size n random subset of the rows of x
 }
 \description{
-  A longer description of the function.  This can be
-  perhaps a paragraph, perhaps more than one.
+  Randomly select \code{n} rows from data.frame \code{x}.
 }
 \examples{
 data(iris)   # provides example data
-x <- GetSampleFromDataFrame(10, iris)
+x <- dils:::GetSampleFromDataFrame(10, iris)
 }
 \author{
   Stephen R. Haptonstahl \email{srh@haptonstahl.org}

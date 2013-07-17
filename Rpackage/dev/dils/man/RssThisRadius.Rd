@@ -1,6 +1,6 @@
 \name{RssThisRadius}
 \alias{RssThisRadius}
-\title{Calculate part of the RSS from one node to another}
+\title{Calculate part of the RSS from one node to another.}
 \usage{
   RssThisRadius(x, v1, v2, r, prepped = FALSE)
 }
@@ -31,19 +31,12 @@
   one particular length r.
 }
 \examples{
-M <- matrix(0, nrow=6, ncol=6)
-M[1,2] <- M[2,1] <- 1
-M[2,3] <- M[3,2] <- 1
-M[3,4] <- M[4,3] <- 1
-M[4,5] <- M[5,4] <- 1
-M[5,6] <- M[6,5] <- 1
-M[6,1] <- M[1,6] <- 1
-M[1,4] <- M[4,1] <- 1
+M <- as.matrix(get.adjacency(graph.atlas(128)))
 M
-RssThisRadius(x=M, v1=5, v2=6, r=1)
-RssThisRadius(x=M, v1=5, v2=6, r=2)
-RssThisRadius(x=M, v1=5, v2=6, r=3)
-RssThisRadius(x=M, v1=5, v2=6, r=4)
+dils:::RssThisRadius(x=M, v1=5, v2=6, r=1)
+dils:::RssThisRadius(x=M, v1=5, v2=6, r=2)
+dils:::RssThisRadius(x=M, v1=5, v2=6, r=3)
+dils:::RssThisRadius(x=M, v1=5, v2=6, r=4)
 }
 \author{
   Stephen R. Haptonstahl \email{srh@haptonstahl.org}

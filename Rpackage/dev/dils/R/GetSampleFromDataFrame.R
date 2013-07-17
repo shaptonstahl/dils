@@ -1,19 +1,17 @@
-#' Short description of the function
+#' Randomly select rows from a data.frame.
 #'
-#' A longer description of the function.  This can be perhaps
-#' a paragraph, perhaps more than one.
+#' Randomly select \code{n} rows from data.frame \code{x}.
 #' 
 #' @param n numeric, size of sample.
 #' @param x data.frame, data whose rows will be sampled.
 #' @return data.frame, size n random subset of the rows of x
-#' @export
 #' @seealso \code{\link{ScalablePCA}}, \code{\link{GetSampleFromFile}}, \code{\link{GetSampleFromFile}}
 #' @references
 #' \url{https://github.com/shaptonstahl/}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @examples
 #' data(iris)   # provides example data
-#' x <- GetSampleFromDataFrame(10, iris)
+#' x <- dils:::GetSampleFromDataFrame(10, iris)
 GetSampleFromDataFrame <- function(n,
                                    x) {
   # Guardians

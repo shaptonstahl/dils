@@ -26,6 +26,32 @@ Loading required package: igraph
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 > cleanEx()
+> nameEx("AdjacencyFromEdgelist")
+> ### * AdjacencyFromEdgelist
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: AdjacencyFromEdgelist
+> ### Title: Convert an edgelist to an adjacency matrix
+> ### Aliases: AdjacencyFromEdgelist
+> 
+> ### ** Examples
+> 
+> edgelist <- cbind(expand.grid(letters[1:2], letters[1:2]), runif(4))
+> AdjacencyFromEdgelist(edgelist)
+$adjacency
+          [,1]      [,2]
+[1,] 0.2655087 0.5728534
+[2,] 0.3721239 0.9082078
+
+$nodelist
+[1] a b
+Levels: a b
+
+> 
+> 
+> 
+> cleanEx()
 > nameEx("EdgelistFill")
 > ### * EdgelistFill
 > 
@@ -39,28 +65,37 @@ Loading required package: igraph
 > 
 > g <- erdos.renyi.game(10, 2/10)
 > EdgelistFill(get.edgelist(g))
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
    fromnode tonode weight
 1         2      2      0
-2         2      3      1
+2         2      3      0
 3         2      4      0
 4         2      5      0
 5         2      7      0
 6         2      8      0
 7         2      9      0
-8         2     10      1
+8         2     10      0
 9         3      2      0
 10        3      3      0
-11        3      4      1
+11        3      4      0
 12        3      5      0
 13        3      7      0
 14        3      8      0
-15        3      9      1
+15        3      9      0
 16        3     10      0
 17        4      2      0
 18        4      3      0
 19        4      4      0
 20        4      5      0
-21        4      7      1
+21        4      7      0
 22        4      8      0
 23        4      9      0
 24        4     10      0
@@ -68,8 +103,8 @@ Loading required package: igraph
 26        5      3      0
 27        5      4      0
 28        5      5      0
-29        5      7      1
-30        5      8      1
+29        5      7      0
+30        5      8      0
 31        5      9      0
 32        5     10      0
 33        7      2      0
@@ -77,7 +112,7 @@ Loading required package: igraph
 35        7      4      0
 36        7      5      0
 37        7      7      0
-38        7      8      1
+38        7      8      0
 39        7      9      0
 40        7     10      0
 41        8      2      0
@@ -95,7 +130,7 @@ Loading required package: igraph
 53        9      7      0
 54        9      8      0
 55        9      9      0
-56        9     10      1
+56        9     10      0
 57       10      2      0
 58       10      3      0
 59       10      4      0
@@ -105,6 +140,15 @@ Loading required package: igraph
 63       10      9      0
 64       10     10      0
 > EdgelistFill(get.edgelist(g), nodelist=1:10)
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
     fromnode tonode weight
 1          1      1      0
 2          1      2      0
@@ -118,23 +162,23 @@ Loading required package: igraph
 10         1     10      0
 11         2      1      0
 12         2      2      0
-13         2      3      1
+13         2      3      0
 14         2      4      0
 15         2      5      0
 16         2      6      0
 17         2      7      0
 18         2      8      0
 19         2      9      0
-20         2     10      1
+20         2     10      0
 21         3      1      0
 22         3      2      0
 23         3      3      0
-24         3      4      1
+24         3      4      0
 25         3      5      0
 26         3      6      0
 27         3      7      0
 28         3      8      0
-29         3      9      1
+29         3      9      0
 30         3     10      0
 31         4      1      0
 32         4      2      0
@@ -142,7 +186,7 @@ Loading required package: igraph
 34         4      4      0
 35         4      5      0
 36         4      6      0
-37         4      7      1
+37         4      7      0
 38         4      8      0
 39         4      9      0
 40         4     10      0
@@ -152,8 +196,8 @@ Loading required package: igraph
 44         5      4      0
 45         5      5      0
 46         5      6      0
-47         5      7      1
-48         5      8      1
+47         5      7      0
+48         5      8      0
 49         5      9      0
 50         5     10      0
 51         6      1      0
@@ -173,7 +217,7 @@ Loading required package: igraph
 65         7      5      0
 66         7      6      0
 67         7      7      0
-68         7      8      1
+68         7      8      0
 69         7      9      0
 70         7     10      0
 71         8      1      0
@@ -195,7 +239,7 @@ Loading required package: igraph
 87         9      7      0
 88         9      8      0
 89         9      9      0
-90         9     10      1
+90         9     10      0
 91        10      1      0
 92        10      2      0
 93        10      3      0
@@ -210,173 +254,191 @@ Loading required package: igraph
 > E(g)$weight <- runif(ecount(g))
 > el <- cbind(get.edgelist(g), E(g)$weight)
 > EdgelistFill(el)
-   fromnode tonode     weight
-1         2      2 0.00000000
-2         2      3 0.26722067
-3         2      4 0.00000000
-4         2      5 0.00000000
-5         2      7 0.00000000
-6         2      8 0.00000000
-7         2      9 0.00000000
-8         2     10 0.59956583
-9         3      2 0.00000000
-10        3      3 0.00000000
-11        3      4 0.38611409
-12        3      5 0.00000000
-13        3      7 0.00000000
-14        3      8 0.00000000
-15        3      9 0.48208012
-16        3     10 0.00000000
-17        4      2 0.00000000
-18        4      3 0.00000000
-19        4      4 0.00000000
-20        4      5 0.00000000
-21        4      7 0.01339033
-22        4      8 0.00000000
-23        4      9 0.00000000
-24        4     10 0.00000000
-25        5      2 0.00000000
-26        5      3 0.00000000
-27        5      4 0.00000000
-28        5      5 0.00000000
-29        5      7 0.38238796
-30        5      8 0.86969085
-31        5      9 0.00000000
-32        5     10 0.00000000
-33        7      2 0.00000000
-34        7      3 0.00000000
-35        7      4 0.00000000
-36        7      5 0.00000000
-37        7      7 0.00000000
-38        7      8 0.34034900
-39        7      9 0.00000000
-40        7     10 0.00000000
-41        8      2 0.00000000
-42        8      3 0.00000000
-43        8      4 0.00000000
-44        8      5 0.00000000
-45        8      7 0.00000000
-46        8      8 0.00000000
-47        8      9 0.00000000
-48        8     10 0.00000000
-49        9      2 0.00000000
-50        9      3 0.00000000
-51        9      4 0.00000000
-52        9      5 0.00000000
-53        9      7 0.00000000
-54        9      8 0.00000000
-55        9      9 0.00000000
-56        9     10 0.49354131
-57       10      2 0.00000000
-58       10      3 0.00000000
-59       10      4 0.00000000
-60       10      5 0.00000000
-61       10      7 0.00000000
-62       10      8 0.00000000
-63       10      9 0.00000000
-64       10     10 0.00000000
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+   fromnode tonode weight
+1         2      2      0
+2         2      3      0
+3         2      4      0
+4         2      5      0
+5         2      7      0
+6         2      8      0
+7         2      9      0
+8         2     10      0
+9         3      2      0
+10        3      3      0
+11        3      4      0
+12        3      5      0
+13        3      7      0
+14        3      8      0
+15        3      9      0
+16        3     10      0
+17        4      2      0
+18        4      3      0
+19        4      4      0
+20        4      5      0
+21        4      7      0
+22        4      8      0
+23        4      9      0
+24        4     10      0
+25        5      2      0
+26        5      3      0
+27        5      4      0
+28        5      5      0
+29        5      7      0
+30        5      8      0
+31        5      9      0
+32        5     10      0
+33        7      2      0
+34        7      3      0
+35        7      4      0
+36        7      5      0
+37        7      7      0
+38        7      8      0
+39        7      9      0
+40        7     10      0
+41        8      2      0
+42        8      3      0
+43        8      4      0
+44        8      5      0
+45        8      7      0
+46        8      8      0
+47        8      9      0
+48        8     10      0
+49        9      2      0
+50        9      3      0
+51        9      4      0
+52        9      5      0
+53        9      7      0
+54        9      8      0
+55        9      9      0
+56        9     10      0
+57       10      2      0
+58       10      3      0
+59       10      4      0
+60       10      5      0
+61       10      7      0
+62       10      8      0
+63       10      9      0
+64       10     10      0
 > EdgelistFill(el, nodelist=1:10)
-    fromnode tonode     weight
-1          1      1 0.00000000
-2          1      2 0.00000000
-3          1      3 0.00000000
-4          1      4 0.00000000
-5          1      5 0.00000000
-6          1      6 0.00000000
-7          1      7 0.00000000
-8          1      8 0.00000000
-9          1      9 0.00000000
-10         1     10 0.00000000
-11         2      1 0.00000000
-12         2      2 0.00000000
-13         2      3 0.26722067
-14         2      4 0.00000000
-15         2      5 0.00000000
-16         2      6 0.00000000
-17         2      7 0.00000000
-18         2      8 0.00000000
-19         2      9 0.00000000
-20         2     10 0.59956583
-21         3      1 0.00000000
-22         3      2 0.00000000
-23         3      3 0.00000000
-24         3      4 0.38611409
-25         3      5 0.00000000
-26         3      6 0.00000000
-27         3      7 0.00000000
-28         3      8 0.00000000
-29         3      9 0.48208012
-30         3     10 0.00000000
-31         4      1 0.00000000
-32         4      2 0.00000000
-33         4      3 0.00000000
-34         4      4 0.00000000
-35         4      5 0.00000000
-36         4      6 0.00000000
-37         4      7 0.01339033
-38         4      8 0.00000000
-39         4      9 0.00000000
-40         4     10 0.00000000
-41         5      1 0.00000000
-42         5      2 0.00000000
-43         5      3 0.00000000
-44         5      4 0.00000000
-45         5      5 0.00000000
-46         5      6 0.00000000
-47         5      7 0.38238796
-48         5      8 0.86969085
-49         5      9 0.00000000
-50         5     10 0.00000000
-51         6      1 0.00000000
-52         6      2 0.00000000
-53         6      3 0.00000000
-54         6      4 0.00000000
-55         6      5 0.00000000
-56         6      6 0.00000000
-57         6      7 0.00000000
-58         6      8 0.00000000
-59         6      9 0.00000000
-60         6     10 0.00000000
-61         7      1 0.00000000
-62         7      2 0.00000000
-63         7      3 0.00000000
-64         7      4 0.00000000
-65         7      5 0.00000000
-66         7      6 0.00000000
-67         7      7 0.00000000
-68         7      8 0.34034900
-69         7      9 0.00000000
-70         7     10 0.00000000
-71         8      1 0.00000000
-72         8      2 0.00000000
-73         8      3 0.00000000
-74         8      4 0.00000000
-75         8      5 0.00000000
-76         8      6 0.00000000
-77         8      7 0.00000000
-78         8      8 0.00000000
-79         8      9 0.00000000
-80         8     10 0.00000000
-81         9      1 0.00000000
-82         9      2 0.00000000
-83         9      3 0.00000000
-84         9      4 0.00000000
-85         9      5 0.00000000
-86         9      6 0.00000000
-87         9      7 0.00000000
-88         9      8 0.00000000
-89         9      9 0.00000000
-90         9     10 0.49354131
-91        10      1 0.00000000
-92        10      2 0.00000000
-93        10      3 0.00000000
-94        10      4 0.00000000
-95        10      5 0.00000000
-96        10      6 0.00000000
-97        10      7 0.00000000
-98        10      8 0.00000000
-99        10      9 0.00000000
-100       10     10 0.00000000
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+Warning in max(i) : no non-missing arguments to max; returning -Inf
+    fromnode tonode weight
+1          1      1      0
+2          1      2      0
+3          1      3      0
+4          1      4      0
+5          1      5      0
+6          1      6      0
+7          1      7      0
+8          1      8      0
+9          1      9      0
+10         1     10      0
+11         2      1      0
+12         2      2      0
+13         2      3      0
+14         2      4      0
+15         2      5      0
+16         2      6      0
+17         2      7      0
+18         2      8      0
+19         2      9      0
+20         2     10      0
+21         3      1      0
+22         3      2      0
+23         3      3      0
+24         3      4      0
+25         3      5      0
+26         3      6      0
+27         3      7      0
+28         3      8      0
+29         3      9      0
+30         3     10      0
+31         4      1      0
+32         4      2      0
+33         4      3      0
+34         4      4      0
+35         4      5      0
+36         4      6      0
+37         4      7      0
+38         4      8      0
+39         4      9      0
+40         4     10      0
+41         5      1      0
+42         5      2      0
+43         5      3      0
+44         5      4      0
+45         5      5      0
+46         5      6      0
+47         5      7      0
+48         5      8      0
+49         5      9      0
+50         5     10      0
+51         6      1      0
+52         6      2      0
+53         6      3      0
+54         6      4      0
+55         6      5      0
+56         6      6      0
+57         6      7      0
+58         6      8      0
+59         6      9      0
+60         6     10      0
+61         7      1      0
+62         7      2      0
+63         7      3      0
+64         7      4      0
+65         7      5      0
+66         7      6      0
+67         7      7      0
+68         7      8      0
+69         7      9      0
+70         7     10      0
+71         8      1      0
+72         8      2      0
+73         8      3      0
+74         8      4      0
+75         8      5      0
+76         8      6      0
+77         8      7      0
+78         8      8      0
+79         8      9      0
+80         8     10      0
+81         9      1      0
+82         9      2      0
+83         9      3      0
+84         9      4      0
+85         9      5      0
+86         9      6      0
+87         9      7      0
+88         9      8      0
+89         9      9      0
+90         9     10      0
+91        10      1      0
+92        10      2      0
+93        10      3      0
+94        10      4      0
+95        10      5      0
+96        10      6      0
+97        10      7      0
+98        10      8      0
+99        10      9      0
+100       10     10      0
 > 
 > 
 > 
@@ -387,7 +449,7 @@ Loading required package: igraph
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: EdgelistFromAdjacency
-> ### Title: Converts adjacency matrix to filled edgelist
+> ### Title: Convert an adjacency matrix to filled edgelist.
 > ### Aliases: EdgelistFromAdjacency
 > 
 > ### ** Examples
@@ -32561,7 +32623,7 @@ Loading required package: igraph
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: EdgelistFromIgraph
-> ### Title: Converts an igraph to filled edgelist
+> ### Title: Convert an igraph to filled edgelist
 > ### Aliases: EdgelistFromIgraph
 > 
 > ### ** Examples
@@ -32954,13 +33016,13 @@ detaching 'package:Matrix', 'package:lattice'
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: GetSampleFromDataFrame
-> ### Title: Short description of the function
+> ### Title: Randomly select rows from a data.frame.
 > ### Aliases: GetSampleFromDataFrame
 > 
 > ### ** Examples
 > 
 > data(iris)   # provides example data
-> x <- GetSampleFromDataFrame(10, iris)
+> x <- dils:::GetSampleFromDataFrame(10, iris)
 > 
 > 
 > 
@@ -32971,12 +33033,13 @@ detaching 'package:Matrix', 'package:lattice'
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: GetSampleFromDb
-> ### Title: Sample from the rows of a (possibly large) database table
+> ### Title: Sample from the rows of a (possibly large) database table (NOT
+> ###   IMPLEMENTED)
 > ### Aliases: GetSampleFromDb
 > 
 > ### ** Examples
 > 
-> ## Not run: x <- GetSampleFromDb(10, my.db)
+> ## Not run: x <- dils:::GetSampleFromDb(10, my.db)
 > 
 > 
 > 
@@ -32987,12 +33050,93 @@ detaching 'package:Matrix', 'package:lattice'
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: GetSampleFromFile
-> ### Title: Sample from the rows of a (possibly large) text file
+> ### Title: Sample from the rows of a (possibly large) text file (NOT
+> ###   IMPLEMENTED)
 > ### Aliases: GetSampleFromFile
 > 
 > ### ** Examples
 > 
-> ## Not run: x <- GetSampleFromFile(10, 150, "folder/containing/data.txt")
+> ## Not run: x <- dils:::GetSampleFromFile(10, 150, "folder/containing/data.txt")
+> 
+> 
+> 
+> cleanEx()
+> nameEx("IgraphFromEdgelist")
+> ### * IgraphFromEdgelist
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: IgraphFromEdgelist
+> ### Title: Convert an edgelist to an igraph
+> ### Aliases: IgraphFromEdgelist
+> 
+> ### ** Examples
+> 
+> edgelist <- cbind(expand.grid(letters[1:2], letters[1:2]), runif(4))
+> g <- IgraphFromEdgelist(edgelist)
+> get.edgelist(g)
+     [,1] [,2]
+[1,]    1    1
+[2,]    1    2
+[3,]    2    1
+[4,]    2    2
+> E(g)$weight
+[1] 0.2655087 0.5728534 0.3721239 0.9082078
+> plot(g, edge.width=5*E(g)$weight, edge.curved=TRUE)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("MeasureNetworkInformation")
+> ### * MeasureNetworkInformation
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: MeasureNetworkInformation
+> ### Title: Measure informativeness of a network of a particualar network
+> ###   measure.
+> ### Aliases: MeasureNetworkInformation
+> 
+> ### ** Examples
+> 
+> g.rand <- random.graph.game(100, 5/100)
+> m.rand <- MeasureNetworkInformation(g.rand)
+> m.rand
+[1] 0.02051872
+> 
+> pf <- matrix( c(.8, .2, .3, .7), nr=2)
+> g.pref <- preference.game(100, 2, pref.matrix=pf)
+> m.pref <- MeasureNetworkInformation(g.pref)
+> m.pref
+[1] 0.2308402
+> 
+> m.pref / m.rand  # Relative informativeness of this preference graph
+[1] 11.25023
+>                  # to this random graph with respect to betweenness
+> 
+> 
+> 
+> cleanEx()
+> nameEx("MergeEdgelists")
+> ### * MergeEdgelists
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: MergeEdgelists
+> ### Title: Combine edgelists into a single data.frame
+> ### Aliases: MergeEdgelists
+> 
+> ### ** Examples
+> 
+> edgelist1 <- data.frame(expand.grid(letters[1:2], letters[1:2]),
++                         uniform=runif(4))
+> edgelist2 <- data.frame(v1=c("a", "a"), v2=c("a", "b"), manual=c(.3, .5))
+> MergeEdgelists(edgelist1, edgelist2)
+  Var1 Var2   uniform    manual
+1    a    a 0.2655087 0.2655087
+2    a    b 0.5728534 0.5728534
+3    b    a 0.3721239 0.3721239
+4    b    b 0.9082078 0.9082078
 > 
 > 
 > 
@@ -33003,19 +33147,14 @@ detaching 'package:Matrix', 'package:lattice'
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: RelationStrengthSimilarity
-> ### Title: Calculate the RSS from one node to another
+> ### Title: Calculate the RSS from one node to another.
 > ### Aliases: RelationStrengthSimilarity
 > 
 > ### ** Examples
 > 
-> M <- matrix(0, nrow=6, ncol=6)
-> M[1,2] <- M[2,1] <- 1
-> M[2,3] <- M[3,2] <- 1
-> M[3,4] <- M[4,3] <- 1
-> M[4,5] <- M[5,4] <- 1
-> M[5,6] <- M[6,5] <- 1
-> M[6,1] <- M[1,6] <- 1
-> M[1,4] <- M[4,1] <- 1
+> M <- as.matrix(get.adjacency(graph.atlas(128)))
+Loading required package: Matrix
+Loading required package: lattice
 > M
      [,1] [,2] [,3] [,4] [,5] [,6]
 [1,]    0    1    0    1    0    1
@@ -33046,25 +33185,23 @@ detaching 'package:Matrix', 'package:lattice'
 > 
 > 
 > cleanEx()
+
+detaching 'package:Matrix', 'package:lattice'
+
 > nameEx("RssCell")
 > ### * RssCell
 > 
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: RssCell
-> ### Title: Calculate the RSS from one node to another
+> ### Title: Calculate the RSS from one node to another.
 > ### Aliases: RssCell
 > 
 > ### ** Examples
 > 
-> M <- matrix(0, nrow=6, ncol=6)
-> M[1,2] <- M[2,1] <- 1
-> M[2,3] <- M[3,2] <- 1
-> M[3,4] <- M[4,3] <- 1
-> M[4,5] <- M[5,4] <- 1
-> M[5,6] <- M[6,5] <- 1
-> M[6,1] <- M[1,6] <- 1
-> M[1,4] <- M[4,1] <- 1
+> M <- as.matrix(get.adjacency(graph.atlas(128)))
+Loading required package: Matrix
+Loading required package: lattice
 > M
      [,1] [,2] [,3] [,4] [,5] [,6]
 [1,]    0    1    0    1    0    1
@@ -33082,37 +33219,35 @@ detaching 'package:Matrix', 'package:lattice'
 [4,]    2    0    2    0    2    0
 [5,]    0    0    0    3    0    3
 [6,]    3    0    0    0    3    0
-> RssCell(xadj=M, v1=5, v2=6, radius=1)
+> dils:::RssCell(xadj=M, v1=5, v2=6, radius=1)
 [1] 3
-> RssCell(xadj=M, v1=5, v2=6, radius=2)
+> dils:::RssCell(xadj=M, v1=5, v2=6, radius=2)
 [1] 3
-> RssCell(xadj=M, v1=5, v2=6, radius=3)
+> dils:::RssCell(xadj=M, v1=5, v2=6, radius=3)
 [1] 15
-> RssCell(xadj=M, v1=5, v2=6, radius=4)
+> dils:::RssCell(xadj=M, v1=5, v2=6, radius=4)
 [1] 15
 > 
 > 
 > 
 > cleanEx()
+
+detaching 'package:Matrix', 'package:lattice'
+
 > nameEx("RssThisRadius")
 > ### * RssThisRadius
 > 
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: RssThisRadius
-> ### Title: Calculate part of the RSS from one node to another
+> ### Title: Calculate part of the RSS from one node to another.
 > ### Aliases: RssThisRadius
 > 
 > ### ** Examples
 > 
-> M <- matrix(0, nrow=6, ncol=6)
-> M[1,2] <- M[2,1] <- 1
-> M[2,3] <- M[3,2] <- 1
-> M[3,4] <- M[4,3] <- 1
-> M[4,5] <- M[5,4] <- 1
-> M[5,6] <- M[6,5] <- 1
-> M[6,1] <- M[1,6] <- 1
-> M[1,4] <- M[4,1] <- 1
+> M <- as.matrix(get.adjacency(graph.atlas(128)))
+Loading required package: Matrix
+Loading required package: lattice
 > M
      [,1] [,2] [,3] [,4] [,5] [,6]
 [1,]    0    1    0    1    0    1
@@ -33121,18 +33256,21 @@ detaching 'package:Matrix', 'package:lattice'
 [4,]    1    0    1    0    1    0
 [5,]    0    0    0    1    0    1
 [6,]    1    0    0    0    1    0
-> RssThisRadius(x=M, v1=5, v2=6, r=1)
+> dils:::RssThisRadius(x=M, v1=5, v2=6, r=1)
 [1] 0.5
-> RssThisRadius(x=M, v1=5, v2=6, r=2)
+> dils:::RssThisRadius(x=M, v1=5, v2=6, r=2)
 [1] 0
-> RssThisRadius(x=M, v1=5, v2=6, r=3)
+> dils:::RssThisRadius(x=M, v1=5, v2=6, r=3)
 [1] 0.05555556
-> RssThisRadius(x=M, v1=5, v2=6, r=4)
+> dils:::RssThisRadius(x=M, v1=5, v2=6, r=4)
 [1] 0
 > 
 > 
 > 
 > cleanEx()
+
+detaching 'package:Matrix', 'package:lattice'
+
 > nameEx("ScalablePCA")
 > ### * ScalablePCA
 > 
@@ -33161,7 +33299,7 @@ Sepal.Length  Sepal.Width Petal.Length  Petal.Width
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  5.49 0.73 6.22 NA NA 
+Time elapsed:  6.38 0.7 7.15 NA NA 
 > grDevices::dev.off()
 null device 
           1 

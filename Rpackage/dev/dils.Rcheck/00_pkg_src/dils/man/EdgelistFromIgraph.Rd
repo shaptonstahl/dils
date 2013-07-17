@@ -1,6 +1,6 @@
 \name{EdgelistFromIgraph}
 \alias{EdgelistFromIgraph}
-\title{Converts an igraph to filled edgelist}
+\title{Convert an igraph to filled edgelist}
 \usage{
   EdgelistFromIgraph(g, useWeight = FALSE)
 }
@@ -15,7 +15,7 @@
   for each in third column.
 }
 \description{
-  Given an igraph object for a network returns a data.frame
+  Given an igraph object for a network return a data.frame
   listing all possible edges and the weights for each edge.
 }
 \details{

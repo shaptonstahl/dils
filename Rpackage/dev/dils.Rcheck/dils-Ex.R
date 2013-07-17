@@ -6,6 +6,23 @@ library('dils')
 
 base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 cleanEx()
+nameEx("AdjacencyFromEdgelist")
+### * AdjacencyFromEdgelist
+
+flush(stderr()); flush(stdout())
+
+### Name: AdjacencyFromEdgelist
+### Title: Convert an edgelist to an adjacency matrix
+### Aliases: AdjacencyFromEdgelist
+
+### ** Examples
+
+edgelist <- cbind(expand.grid(letters[1:2], letters[1:2]), runif(4))
+AdjacencyFromEdgelist(edgelist)
+
+
+
+cleanEx()
 nameEx("EdgelistFill")
 ### * EdgelistFill
 
@@ -35,7 +52,7 @@ nameEx("EdgelistFromAdjacency")
 flush(stderr()); flush(stdout())
 
 ### Name: EdgelistFromAdjacency
-### Title: Converts adjacency matrix to filled edgelist
+### Title: Convert an adjacency matrix to filled edgelist.
 ### Aliases: EdgelistFromAdjacency
 
 ### ** Examples
@@ -64,7 +81,7 @@ nameEx("EdgelistFromIgraph")
 flush(stderr()); flush(stdout())
 
 ### Name: EdgelistFromIgraph
-### Title: Converts an igraph to filled edgelist
+### Title: Convert an igraph to filled edgelist
 ### Aliases: EdgelistFromIgraph
 
 ### ** Examples
@@ -105,13 +122,13 @@ nameEx("GetSampleFromDataFrame")
 flush(stderr()); flush(stdout())
 
 ### Name: GetSampleFromDataFrame
-### Title: Short description of the function
+### Title: Randomly select rows from a data.frame.
 ### Aliases: GetSampleFromDataFrame
 
 ### ** Examples
 
 data(iris)   # provides example data
-x <- GetSampleFromDataFrame(10, iris)
+x <- dils:::GetSampleFromDataFrame(10, iris)
 
 
 
@@ -122,12 +139,13 @@ nameEx("GetSampleFromDb")
 flush(stderr()); flush(stdout())
 
 ### Name: GetSampleFromDb
-### Title: Sample from the rows of a (possibly large) database table
+### Title: Sample from the rows of a (possibly large) database table (NOT
+###   IMPLEMENTED)
 ### Aliases: GetSampleFromDb
 
 ### ** Examples
 
-## Not run: x <- GetSampleFromDb(10, my.db)
+## Not run: x <- dils:::GetSampleFromDb(10, my.db)
 
 
 
@@ -138,12 +156,79 @@ nameEx("GetSampleFromFile")
 flush(stderr()); flush(stdout())
 
 ### Name: GetSampleFromFile
-### Title: Sample from the rows of a (possibly large) text file
+### Title: Sample from the rows of a (possibly large) text file (NOT
+###   IMPLEMENTED)
 ### Aliases: GetSampleFromFile
 
 ### ** Examples
 
-## Not run: x <- GetSampleFromFile(10, 150, "folder/containing/data.txt")
+## Not run: x <- dils:::GetSampleFromFile(10, 150, "folder/containing/data.txt")
+
+
+
+cleanEx()
+nameEx("IgraphFromEdgelist")
+### * IgraphFromEdgelist
+
+flush(stderr()); flush(stdout())
+
+### Name: IgraphFromEdgelist
+### Title: Convert an edgelist to an igraph
+### Aliases: IgraphFromEdgelist
+
+### ** Examples
+
+edgelist <- cbind(expand.grid(letters[1:2], letters[1:2]), runif(4))
+g <- IgraphFromEdgelist(edgelist)
+get.edgelist(g)
+E(g)$weight
+plot(g, edge.width=5*E(g)$weight, edge.curved=TRUE)
+
+
+
+cleanEx()
+nameEx("MeasureNetworkInformation")
+### * MeasureNetworkInformation
+
+flush(stderr()); flush(stdout())
+
+### Name: MeasureNetworkInformation
+### Title: Measure informativeness of a network of a particualar network
+###   measure.
+### Aliases: MeasureNetworkInformation
+
+### ** Examples
+
+g.rand <- random.graph.game(100, 5/100)
+m.rand <- MeasureNetworkInformation(g.rand)
+m.rand
+
+pf <- matrix( c(.8, .2, .3, .7), nr=2)
+g.pref <- preference.game(100, 2, pref.matrix=pf)
+m.pref <- MeasureNetworkInformation(g.pref)
+m.pref
+
+m.pref / m.rand  # Relative informativeness of this preference graph
+                 # to this random graph with respect to betweenness
+
+
+
+cleanEx()
+nameEx("MergeEdgelists")
+### * MergeEdgelists
+
+flush(stderr()); flush(stdout())
+
+### Name: MergeEdgelists
+### Title: Combine edgelists into a single data.frame
+### Aliases: MergeEdgelists
+
+### ** Examples
+
+edgelist1 <- data.frame(expand.grid(letters[1:2], letters[1:2]),
+                        uniform=runif(4))
+edgelist2 <- data.frame(v1=c("a", "a"), v2=c("a", "b"), manual=c(.3, .5))
+MergeEdgelists(edgelist1, edgelist2)
 
 
 
@@ -154,19 +239,12 @@ nameEx("RelationStrengthSimilarity")
 flush(stderr()); flush(stdout())
 
 ### Name: RelationStrengthSimilarity
-### Title: Calculate the RSS from one node to another
+### Title: Calculate the RSS from one node to another.
 ### Aliases: RelationStrengthSimilarity
 
 ### ** Examples
 
-M <- matrix(0, nrow=6, ncol=6)
-M[1,2] <- M[2,1] <- 1
-M[2,3] <- M[3,2] <- 1
-M[3,4] <- M[4,3] <- 1
-M[4,5] <- M[5,4] <- 1
-M[5,6] <- M[6,5] <- 1
-M[6,1] <- M[1,6] <- 1
-M[1,4] <- M[4,1] <- 1
+M <- as.matrix(get.adjacency(graph.atlas(128)))
 M
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=2)
@@ -184,26 +262,19 @@ nameEx("RssCell")
 flush(stderr()); flush(stdout())
 
 ### Name: RssCell
-### Title: Calculate the RSS from one node to another
+### Title: Calculate the RSS from one node to another.
 ### Aliases: RssCell
 
 ### ** Examples
 
-M <- matrix(0, nrow=6, ncol=6)
-M[1,2] <- M[2,1] <- 1
-M[2,3] <- M[3,2] <- 1
-M[3,4] <- M[4,3] <- 1
-M[4,5] <- M[5,4] <- 1
-M[5,6] <- M[6,5] <- 1
-M[6,1] <- M[1,6] <- 1
-M[1,4] <- M[4,1] <- 1
+M <- as.matrix(get.adjacency(graph.atlas(128)))
 M
 M <- sweep(M, 1, rowMeans(M), "/")
 M
-RssCell(xadj=M, v1=5, v2=6, radius=1)
-RssCell(xadj=M, v1=5, v2=6, radius=2)
-RssCell(xadj=M, v1=5, v2=6, radius=3)
-RssCell(xadj=M, v1=5, v2=6, radius=4)
+dils:::RssCell(xadj=M, v1=5, v2=6, radius=1)
+dils:::RssCell(xadj=M, v1=5, v2=6, radius=2)
+dils:::RssCell(xadj=M, v1=5, v2=6, radius=3)
+dils:::RssCell(xadj=M, v1=5, v2=6, radius=4)
 
 
 
@@ -214,24 +285,17 @@ nameEx("RssThisRadius")
 flush(stderr()); flush(stdout())
 
 ### Name: RssThisRadius
-### Title: Calculate part of the RSS from one node to another
+### Title: Calculate part of the RSS from one node to another.
 ### Aliases: RssThisRadius
 
 ### ** Examples
 
-M <- matrix(0, nrow=6, ncol=6)
-M[1,2] <- M[2,1] <- 1
-M[2,3] <- M[3,2] <- 1
-M[3,4] <- M[4,3] <- 1
-M[4,5] <- M[5,4] <- 1
-M[5,6] <- M[6,5] <- 1
-M[6,1] <- M[1,6] <- 1
-M[1,4] <- M[4,1] <- 1
+M <- as.matrix(get.adjacency(graph.atlas(128)))
 M
-RssThisRadius(x=M, v1=5, v2=6, r=1)
-RssThisRadius(x=M, v1=5, v2=6, r=2)
-RssThisRadius(x=M, v1=5, v2=6, r=3)
-RssThisRadius(x=M, v1=5, v2=6, r=4)
+dils:::RssThisRadius(x=M, v1=5, v2=6, r=1)
+dils:::RssThisRadius(x=M, v1=5, v2=6, r=2)
+dils:::RssThisRadius(x=M, v1=5, v2=6, r=3)
+dils:::RssThisRadius(x=M, v1=5, v2=6, r=4)
 
 
 

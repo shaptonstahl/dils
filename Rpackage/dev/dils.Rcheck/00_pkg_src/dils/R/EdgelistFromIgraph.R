@@ -1,6 +1,6 @@
-#' Converts an igraph to filled edgelist
+#' Convert an igraph to filled edgelist
 #'
-#' Given an igraph object for a network returns a data.frame listing all possible edges and the weights for each edge.
+#' Given an igraph object for a network return a data.frame listing all possible edges and the weights for each edge.
 #' 
 #' @param g igraph, from \link{igraph} package.
 #' @param useWeight logical, Should E(g)$weight be used as the weights for the edges?

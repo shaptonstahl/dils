@@ -1,6 +1,6 @@
 \name{GetSampleFromDb}
 \alias{GetSampleFromDb}
-\title{Sample from the rows of a (possibly large) database table}
+\title{Sample from the rows of a (possibly large) database table (NOT IMPLEMENTED)}
 \usage{
   GetSampleFromDb(n, db)
 }
@@ -14,11 +14,11 @@
   data.frame, size n random subset of the rows of filename
 }
 \description{
-  Accesses a dataabase table directly. Returns a data.frame
+  Access a database table directly. Return a data.frame
   whose rows are the sample.
 }
 \examples{
-\dontrun{x <- GetSampleFromDb(10, my.db)}
+\dontrun{x <- dils:::GetSampleFromDb(10, my.db)}
 }
 \author{
   Stephen R. Haptonstahl \email{srh@haptonstahl.org}

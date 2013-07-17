@@ -18,7 +18,7 @@
   for each in third column.
 }
 \description{
-  Given a matrix or data.frame edgelist, fills in all
+  Given a matrix or data.frame edgelist, fill in all
   possible edges not already listed with a weight of 0 or
   the value of \code{fillBlanksWith}.
 }

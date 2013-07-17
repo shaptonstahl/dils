@@ -1,4 +1,5 @@
 dils-package	dils-package
+AdjacencyFromEdgelist	AdjacencyFromEdgelist
 EdgelistFill	EdgelistFill
 EdgelistFromAdjacency	EdgelistFromAdjacency
 EdgelistFromIgraph	EdgelistFromIgraph
@@ -6,6 +7,9 @@ GenerateDilsNetwork	GenerateDilsNetwork
 GetSampleFromDataFrame	GetSampleFromDataFrame
 GetSampleFromDb	GetSampleFromDb
 GetSampleFromFile	GetSampleFromFile
+IgraphFromEdgelist	IgraphFromEdgelist
+MeasureNetworkInformation	MeasureNetworkInformation
+MergeEdgelists	MergeEdgelists
 RelationStrengthSimilarity	RelationStrengthSimilarity
 RssCell	RssCell
 RssThisRadius	RssThisRadius

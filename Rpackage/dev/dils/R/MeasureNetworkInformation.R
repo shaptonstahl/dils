@@ -1,0 +1,59 @@
+#' Measure informativeness of a network of a particualar network measure.
+#'
+#' Given an \code{igraph} network, repeatedly perturb the graph and take some measure of the network to see how much the measure varies.
+#' 
+#' @param g igraph, graph to measure
+#' @param FUN function, a function that takes an igraph and returns a value for each node in the network.
+#' @param remove.share numeric, fraction of the edges that are removed randomly when perturbing the network.
+#' @param sample.size numeric, number of perturbed graphs to generate
+#' @param progress.bar logical, if TRUE then a progress bar is shown.
+#' @return numeric, mean precision of the measure \code{FUN} across the network
+#' @export
+#' @references
+#' \url{https://github.com/shaptonstahl/}
+#' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
+#' @details Here information is measured as 1 / mean across nodes of the standard 
+#' deviation across perturbed graphs of a network node measure.
+#' 
+#' Specifically, \code{sample.size} copies of the igraph are generated.  For each, 
+#' \code{round(remove.share * n.edges)} randomly selected edges are dropped to
+#' generate a perturbed graph.  For each perturbed graph \code{FUN} is applied,
+#' generating a value for each node in the network.  For each node the standard
+#' deviation across the \code{sample.size} perturbed graphs is calculated,
+#' generating a standard deviation for each node. The mean is taken across the 
+#' nodes in the network, and then reciprocated.
+#' 
+#' This measure appears to be very sensitive to the choice of \code{FUN}.
+#' @examples
+#' g.rand <- random.graph.game(100, 5/100)
+#' m.rand <- MeasureNetworkInformation(g.rand)
+#' m.rand
+#' 
+#' pf <- matrix( c(.8, .2, .3, .7), nr=2)
+#' g.pref <- preference.game(100, 2, pref.matrix=pf)
+#' m.pref <- MeasureNetworkInformation(g.pref)
+#' m.pref
+#' 
+#' m.pref / m.rand  # Relative informativeness of this preference graph
+#'                  # to this random graph with respect to betweenness
+MeasureNetworkInformation <- function(g, 
+                                      FUN=betweenness,
+                                      remove.share=.2,
+                                      sample.size=100,
+                                      progress.bar=FALSE) {
+  n.nodes <- vcount(g)
+  draws <- matrix(0, nrow=sample.size, ncol=n.nodes)
+  
+  SampleIgraph <- function(g, remove.share=.2) {
+    n.edges <- ecount(g)
+    edges.to.remove <- sample(1:n.edges, round(remove.share * n.edges))
+    out <- delete.edges(g, E(g)[edges.to.remove])
+    return(out)
+  }
+  
+  for(k in 1:sample.size) {
+    this.g <- SampleIgraph(g, remove.share=remove.share)
+    draws[k,] <- do.call(FUN, list(this.g))
+  }
+  return( 1 / mean(apply(draws, 2, sd)) )
+}

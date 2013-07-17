@@ -1,7 +1,6 @@
-#' Calculate the RSS from one node to another
+#' Calculate the RSS from one node to another.
 #'
-#' A longer description of the function.  This can be perhaps
-#' a paragraph, perhaps more than one.
+#' For a single pair of nodes, implement the RSS algorithm of Chen et al. (2012).
 #' 
 #' @param xadj numeric matrix, then description of \code{arg1}.
 #' @param v1 numeric Object type, then description of \code{arg2}.
@@ -20,14 +19,7 @@
 #' If \code{v1} and \code{v2} are specified, this returns the RSS from \code{v1}
 #' to \code{v2}.  If not, it calculates the RSS scores for all dyads in the network.
 #' @examples
-#' M <- matrix(0, nrow=6, ncol=6)
-#' M[1,2] <- M[2,1] <- 1
-#' M[2,3] <- M[3,2] <- 1
-#' M[3,4] <- M[4,3] <- 1
-#' M[4,5] <- M[5,4] <- 1
-#' M[5,6] <- M[6,5] <- 1
-#' M[6,1] <- M[1,6] <- 1
-#' M[1,4] <- M[4,1] <- 1
+#' M <- as.matrix(get.adjacency(graph.atlas(128)))
 #' M
 #' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
 #' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=2)

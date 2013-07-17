@@ -37,7 +37,7 @@
   for comparison to \code{\link{prcomp}})
 }
 \description{
-  Runs 'prcomp' on subsamples of the data set and compiles
+  Run 'prcomp' on subsamples of the data set and compile
   the results for the first dimension.
 }
 \examples{

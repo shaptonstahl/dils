@@ -1,6 +1,6 @@
 #' Ensure an edgelist has all dyads and a column of weights.
 #'
-#' Given a matrix or data.frame edgelist, fills in all possible edges not already listed with a weight of 0 or the value of \code{fillBlanksWith}.
+#' Given a matrix or data.frame edgelist, fill in all possible edges not already listed with a weight of 0 or the value of \code{fillBlanksWith}.
 #' 
 #' @param elist data.frame or matrix, see 'Details' for formatting assumptions.
 #' @param fillBlanksWith numeric, default weight for edges not already listed in elist.
@@ -51,7 +51,9 @@ EdgelistFill <- function(elist,
   }
   
   for(i in 1:nrow(elist)) {
-    out[out[,1]==elist[i,1] & out[,2]==elist[i,2], 3] <- elist[i,3]
+    match1 <- levels(elist[i,1])[as.numeric(elist[i,1])]  # "unfactor" in case factor levels don't agree
+    match2 <- levels(elist[i,2])[as.numeric(elist[i,2])]  # "unfactor" in case factor levels don't agree
+    out[out[,1]==match1 & out[,2]==match2, 3] <- elist[i,3]
   }
   return( out )
 }

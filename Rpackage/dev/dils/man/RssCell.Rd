@@ -1,6 +1,6 @@
 \name{RssCell}
 \alias{RssCell}
-\title{Calculate the RSS from one node to another}
+\title{Calculate the RSS from one node to another.}
 \usage{
   RssCell(xadj, v1, v2, radius)
 }
@@ -31,21 +31,14 @@
   by the row mean.
 }
 \examples{
-M <- matrix(0, nrow=6, ncol=6)
-M[1,2] <- M[2,1] <- 1
-M[2,3] <- M[3,2] <- 1
-M[3,4] <- M[4,3] <- 1
-M[4,5] <- M[5,4] <- 1
-M[5,6] <- M[6,5] <- 1
-M[6,1] <- M[1,6] <- 1
-M[1,4] <- M[4,1] <- 1
+M <- as.matrix(get.adjacency(graph.atlas(128)))
 M
 M <- sweep(M, 1, rowMeans(M), "/")
 M
-RssCell(xadj=M, v1=5, v2=6, radius=1)
-RssCell(xadj=M, v1=5, v2=6, radius=2)
-RssCell(xadj=M, v1=5, v2=6, radius=3)
-RssCell(xadj=M, v1=5, v2=6, radius=4)
+dils:::RssCell(xadj=M, v1=5, v2=6, radius=1)
+dils:::RssCell(xadj=M, v1=5, v2=6, radius=2)
+dils:::RssCell(xadj=M, v1=5, v2=6, radius=3)
+dils:::RssCell(xadj=M, v1=5, v2=6, radius=4)
 }
 \author{
   Stephen R. Haptonstahl \email{srh@haptonstahl.org}

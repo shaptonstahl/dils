@@ -1,6 +1,6 @@
-#' Converts adjacency matrix to filled edgelist
+#' Convert an adjacency matrix to filled edgelist.
 #'
-#' Given the adjacency matrix for a network returns a data.frame listing all possible edges and the weights for each edge.
+#' Given the adjacency matrix for a network return a data.frame listing all possible edges and the weights for each edge.
 #' 
 #' @param A matrix, see 'Details' for formatting assumptions.
 #' @param nodelist character, optional list of node names.

@@ -1,18 +1,17 @@
-#' Sample from the rows of a (possibly large) text file
+#' Sample from the rows of a (possibly large) text file (NOT IMPLEMENTED)
 #'
-#' Reads a large text file in batches, keeping the rows to be included in the sample. Returns a data.frame whose rows are the sample.
+#' Read a large text file in batches, keeping the rows to be included in the sample. Return a data.frame whose rows are the sample.
 #' 
 #' @param n numeric, size of sample to be taken.
 #' @param out.of numeric, number of rows in the data set not including the header.
 #' @param filename character, name of the file containing the data. This must be a tab-delimited file with a header row formatted per the default options for \code{\link{read.delim}}.
 #' @return data.frame, size n random subset of the rows of filename
-#' @export
 #' @seealso \code{\link{ScalablePCA}}, \code{\link{GetSampleFromDataFrame}}, \code{\link{GetSampleFromDb}}
 #' @references
 #' \url{https://github.com/shaptonstahl/}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @examples
-#' \dontrun{x <- GetSampleFromFile(10, 150, "folder/containing/data.txt")}
+#' \dontrun{x <- dils:::GetSampleFromFile(10, 150, "folder/containing/data.txt")}
 GetSampleFromFile <- function(n,
                               out.of,
                               filename) {  

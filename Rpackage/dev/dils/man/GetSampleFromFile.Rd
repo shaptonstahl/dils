@@ -1,6 +1,6 @@
 \name{GetSampleFromFile}
 \alias{GetSampleFromFile}
-\title{Sample from the rows of a (possibly large) text file}
+\title{Sample from the rows of a (possibly large) text file (NOT IMPLEMENTED)}
 \usage{
   GetSampleFromFile(n, out.of, filename)
 }
@@ -19,12 +19,12 @@
   data.frame, size n random subset of the rows of filename
 }
 \description{
-  Reads a large text file in batches, keeping the rows to
-  be included in the sample. Returns a data.frame whose
-  rows are the sample.
+  Read a large text file in batches, keeping the rows to be
+  included in the sample. Return a data.frame whose rows
+  are the sample.
 }
 \examples{
-\dontrun{x <- GetSampleFromFile(10, 150, "folder/containing/data.txt")}
+\dontrun{x <- dils:::GetSampleFromFile(10, 150, "folder/containing/data.txt")}
 }
 \author{
   Stephen R. Haptonstahl \email{srh@haptonstahl.org}

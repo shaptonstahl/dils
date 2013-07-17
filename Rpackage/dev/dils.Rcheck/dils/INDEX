@@ -1,20 +1,26 @@
+AdjacencyFromEdgelist   Convert an edgelist to an adjacency matrix
 EdgelistFill            Ensure an edgelist has all dyads and a column
                         of weights.
-EdgelistFromAdjacency   Converts adjacency matrix to filled edgelist
-EdgelistFromIgraph      Converts an igraph to filled edgelist
+EdgelistFromAdjacency   Convert an adjacency matrix to filled edgelist.
+EdgelistFromIgraph      Convert an igraph to filled edgelist
 GenerateDilsNetwork     Combine multiple networks into a single
                         weighted network.
 GetSampleFromDataFrame
-                        Short description of the function
+                        Randomly select rows from a data.frame.
 GetSampleFromDb         Sample from the rows of a (possibly large)
-                        database table
+                        database table (NOT IMPLEMENTED)
 GetSampleFromFile       Sample from the rows of a (possibly large) text
-                        file
+                        file (NOT IMPLEMENTED)
+IgraphFromEdgelist      Convert an edgelist to an igraph
+MeasureNetworkInformation
+                        Measure informativeness of a network of a
+                        particualar network measure.
+MergeEdgelists          Combine edgelists into a single data.frame
 RelationStrengthSimilarity
-                        Calculate the RSS from one node to another
-RssCell                 Calculate the RSS from one node to another
+                        Calculate the RSS from one node to another.
+RssCell                 Calculate the RSS from one node to another.
 RssThisRadius           Calculate part of the RSS from one node to
-                        another
+                        another.
 ScalablePCA             Perform Principal Component Analysis on a large
                         data set
 dils-package            Data-Informed Link Strength. Combine

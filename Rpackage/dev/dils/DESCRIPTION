@@ -2,8 +2,8 @@ Package: dils
 Type: Package
 Title: Data-Informed Link Strength. Combine multiple-relationship networks into
     a single weighted network.
-Version: 0.4
-Date: 2013-07-16
+Version: 0.5
+Date: 2013-07-17
 Author: Stephen R. Haptonstahl
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Depends:
@@ -30,3 +30,7 @@ Collate:
     'EdgelistFromAdjacency.R'
     'EdgelistFromIgraph.R'
     'GenerateDilsNetwork.R'
+    'MergeEdgelists.R'
+    'AdjacencyFromEdgelist.R'
+    'IgraphFromEdgelist.R'
+    'MeasureNetworkInformation.R'

@@ -1,6 +1,6 @@
 \name{EdgelistFromAdjacency}
 \alias{EdgelistFromAdjacency}
-\title{Converts adjacency matrix to filled edgelist}
+\title{Convert an adjacency matrix to filled edgelist.}
 \usage{
   EdgelistFromAdjacency(A,
     nodelist = paste("node", 1:nrow(A), sep = ""))
@@ -16,7 +16,7 @@
   for each in third column.
 }
 \description{
-  Given the adjacency matrix for a network returns a
+  Given the adjacency matrix for a network return a
   data.frame listing all possible edges and the weights for
   each edge.
 }

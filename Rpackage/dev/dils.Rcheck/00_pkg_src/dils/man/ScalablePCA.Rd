@@ -4,7 +4,7 @@
 \usage{
   ScalablePCA(x, filename = NULL, db = NULL,
     subsample = 10000, n.subsamples = 1000, ignore.cols,
-    use.cols, progress.bar = FALSE)
+    use.cols, return.sds = FALSE, progress.bar = FALSE)
 }
 \arguments{
   \item{x}{data.frame, data over which to run PCA}
@@ -15,7 +15,7 @@
   \code{\link{read.delim}}.}
 
   \item{db}{Object type, database connection to table
-  containing the data (NOT IMPLEMENTED)}
+  containing the data (NOT IMPLEMENTED).}
 
   \item{subsample}{numeric or logical, If an integer, size
   of each subsample.  If FALSE, runs PCA on entire data
@@ -24,21 +24,37 @@
   \item{n.subsamples}{numeric, number of subsamples.}
 
   \item{ignore.cols}{numeric, indices of columns not to
-  include}
+  include.}
 
-  \item{use.cols}{numeric, indices of columns to use}
+  \item{use.cols}{numeric, indices of columns to use.}
+
+  \item{return.sds}{logical, if TRUE return the standard
+  deviations of each network's edge weights.}
 
   \item{progress.bar}{logical, if TRUE then progress in
   running subsamples will be shown.}
 }
 \value{
-  vector, named vector of component weights for first
-  dimension of principal component analysis (see example
-  for comparison to \code{\link{prcomp}})
+  If \code{return.sds} is FALSE, return named vector of
+  component weights for first dimension of principal
+  component analysis (see example for comparison to
+  \code{\link{prcomp}}).
+
+  If \code{return.sds} is TRUE, return a list.
+  \tabular{ll}{ coefficients \tab named vector of the
+  component weights for first dimension of principal
+  component analysis (see example for comparison to
+  \code{\link{prcomp}}).\cr sds \tab named vector of the
+  standard deviations of each network's edge weights.\cr }
 }
 \description{
-  Run 'prcomp' on subsamples of the data set and compile
-  the results for the first dimension.
+  Run \code{prcomp} on subsamples of the data set and
+  compile the results for the first dimension.
+}
+\details{
+  Scales the function \code{\link{prcomp}} to data sets
+  with an arbitrarily large number of rows by running
+  \code{prcomp} on repeated subsamples of the rows.
 }
 \examples{
 data(iris)        # provides example data

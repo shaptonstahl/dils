@@ -1,16 +1,27 @@
 #' Perform Principal Component Analysis on a large data set
 #'
-#' Run 'prcomp' on subsamples of the data set and compile the results for the first dimension.
+#' Run \code{prcomp} on subsamples of the data set and compile the results for the first dimension.
 #' 
 #' @param x data.frame, data over which to run PCA
 #' @param filename character, name of the file containing the data. This must be a tab-delimited file with a header row formatted per the default options for \code{\link{read.delim}}.
-#' @param db Object type, database connection to table containing the data (NOT IMPLEMENTED)
+#' @param db Object type, database connection to table containing the data (NOT IMPLEMENTED).
 #' @param subsample numeric or logical, If an integer, size of each subsample.  If FALSE, runs PCA on entire data set.
 #' @param n.subsamples numeric, number of subsamples.
-#' @param ignore.cols numeric, indices of columns not to include
-#' @param use.cols numeric, indices of columns to use
+#' @param ignore.cols numeric, indices of columns not to include.
+#' @param use.cols numeric, indices of columns to use.
+#' @param return.sds logical, if TRUE return the standard deviations of each network's edge weights.
 #' @param progress.bar logical, if TRUE then progress in running subsamples will be shown.
-#' @return vector, named vector of component weights for first dimension of principal component analysis (see example for comparison to \code{\link{prcomp}})
+#' @return If \code{return.sds} is FALSE, return named vector of 
+#' component weights for first dimension of principal component 
+#' analysis (see example for comparison to \code{\link{prcomp}}).
+#' 
+#' If \code{return.sds} is TRUE, return a list.
+#' \tabular{ll}{
+#' coefficients \tab named vector of the component weights for first dimension of principal component analysis (see example for comparison to \code{\link{prcomp}}).\cr
+#' sds \tab named vector of the standard deviations of each network's edge weights.\cr
+#' }
+#' @details Scales the function \code{\link{prcomp}} to data sets with an arbitrarily
+#' large number of rows by running \code{prcomp} on repeated subsamples of the rows. 
 #' @export
 #' @seealso \code{\link{prcomp}}
 #' @references
@@ -28,6 +39,7 @@ ScalablePCA <- function(x,
                         n.subsamples=1e3,
                         ignore.cols,
                         use.cols,
+                        return.sds=FALSE,
                         progress.bar=FALSE) {
   # Guardians
   if( missing(x) ) {
@@ -160,12 +172,22 @@ ScalablePCA <- function(x,
   draws <- matrix(0, nrow=n.subsamples, ncol=n.cols.used)
   colnames(draws) <- use.names
   
+  if(return.sds) {
+    sd.draws <- matrix(0, nrow=n.subsamples, ncol=n.cols.used)
+    colnames(sd.draws) <- use.names
+  }
+  
   # perform the function
   if(progress.bar) pb <- txtProgressBar(max=n.subsamples, style=2)
   for(g in 1:n.subsamples) {
     samp <- pca.sample()
     pca.result <- prcomp(samp[,use.cols], center=FALSE, scale.=FALSE)
     draws[g,] <- pca.result$rotation[,1]
+    
+    if(return.sds) {
+      sd.draws[g,] <- apply(samp[,use.cols], 2, sd)
+    }
+    
     if(progress.bar) setTxtProgressBar(pb, g)
   }
   if(progress.bar) close(pb)
@@ -173,5 +195,9 @@ ScalablePCA <- function(x,
   # prepare and return the output
   out <- colMeans(draws)
   out <- abs(out)
+  if(return.sds) {
+    out <- list(coefficients=out,
+                sds=colMeans(sd.draws))
+  }
   return(out)
 }

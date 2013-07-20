@@ -32961,6 +32961,7 @@ detaching 'package:Matrix', 'package:lattice'
 > 
 > data(iris)        # provides example data
 > GenerateDilsNetwork(iris, subsample=10, use.cols=1:4)
+$dils
   [1]  5.919168  5.577078  5.452708  5.440640  5.882346  6.483300  5.521484
   [8]  5.856373  5.162873  5.649632  6.272106  5.756757  5.485386  4.957351
  [15]  6.535661  6.799108  6.280395  5.935689  6.653942  6.101463  6.258510
@@ -32983,7 +32984,17 @@ detaching 'package:Matrix', 'package:lattice'
 [134]  8.644418  8.654486 10.412944  9.276836  9.087106  8.392989  9.461799
 [141]  9.462473  9.342663  8.296298  9.711650  9.606419  9.204698  8.544729
 [148]  9.004792  9.083692  8.469996
+
+$coefficients
+Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+   0.7517117    0.3834942    0.5072610    0.1652128 
+
+$weights
+Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+  0.39370870   0.38885714   0.12394952   0.09348465 
+
 > GenerateDilsNetwork(iris, subsample=10, ignore.cols=5)
+$dils
   [1]  5.917275  5.575675  5.450994  5.439079  5.880315  6.481139  5.519546
   [8]  5.854598  5.161437  5.648169  6.270116  5.754961  5.483967  4.955681
  [15]  6.533347  6.796413  6.278089  5.933784  6.651989  6.099266  6.256921
@@ -33006,6 +33017,15 @@ detaching 'package:Matrix', 'package:lattice'
 [134]  8.644822  8.655246 10.413795  9.276656  9.087319  8.392943  9.462082
 [141]  9.462735  9.342812  8.296620  9.711953  9.606487  9.204936  8.545376
 [148]  9.005009  9.083423  8.470031
+
+$coefficients
+Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+   0.7519963    0.3824001    0.5076251    0.1650913 
+
+$weights
+Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+  0.39768368   0.38465943   0.12415186   0.09350502 
+
 > 
 > 
 > 
@@ -33102,17 +33122,28 @@ detaching 'package:Matrix', 'package:lattice'
 > g.rand <- random.graph.game(100, 5/100)
 > m.rand <- MeasureNetworkInformation(g.rand)
 > m.rand
-[1] 0.02051872
+[1] 1.758653
 > 
 > pf <- matrix( c(.8, .2, .3, .7), nr=2)
 > g.pref <- preference.game(100, 2, pref.matrix=pf)
 > m.pref <- MeasureNetworkInformation(g.pref)
 > m.pref
-[1] 0.2308402
+[1] 4.195923
 > 
 > m.pref / m.rand  # Relative informativeness of this preference graph
-[1] 11.25023
+[1] 2.385874
 >                  # to this random graph with respect to betweenness
+> ## Not run: 
+> ##D p.values <- 1:50
+> ##D mnis <- sapply(p.values, function(p)
+> ##D   MeasureNetworkInformation(random.graph.game(100, p/100)))
+> ##D plot(p.values/100, mnis,
+> ##D      type="l",
+> ##D      main="Network Information of random graphs",
+> ##D      xlab="probability of link formation",
+> ##D      ylab="information")
+> ##D mtext("with respect to betweenness measure", line=0.5)
+> ## End(Not run)
 > 
 > 
 > 
@@ -33299,7 +33330,7 @@ Sepal.Length  Sepal.Width Petal.Length  Petal.Width
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  6.38 0.7 7.15 NA NA 
+Time elapsed:  9.43 1.74 11.24 NA NA 
 > grDevices::dev.off()
 null device 
           1 

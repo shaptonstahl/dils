@@ -24,9 +24,14 @@
   running subsamples will be shown.}
 }
 \value{
-  vector, named vector of component weights for first
-  dimension of principal component analysis (see example
-  for comparison to \code{\link{prcomp}})
+  list \tabular{ll}{ dils \tab vector, named vector of
+  component weights for first dimension of principal
+  component analysis (see example for comparison to
+  \code{\link{prcomp}}). \cr coefficients \tab named
+  vector, weights that genereate \code{dils} by taking
+  dot-product with network data. \cr weights \tab named
+  vector, raw.weights scaled by standard deviations of
+  network edges, then scaled to sum to 1. \cr }
 }
 \description{
   Use ScalablePCA to recover optimal weights for each

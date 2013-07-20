@@ -31,20 +31,27 @@
   much the measure varies.
 }
 \details{
-  Here information is measured as 1 / mean across nodes of
-  the standard deviation across perturbed graphs of a
-  network node measure.
+  Here information is measured as 1 / mean across and
+  perturbed graphs nodes of the relative error of a network
+  node measure.
 
-  Specifically, \code{sample.size} copies of the igraph are
-  generated.  For each, \code{round(remove.share *
-  n.edges)} randomly selected edges are dropped to generate
-  a perturbed graph.  For each perturbed graph \code{FUN}
-  is applied, generating a value for each node in the
-  network.  For each node the standard deviation across the
-  \code{sample.size} perturbed graphs is calculated,
-  generating a standard deviation for each node. The mean
-  is taken across the nodes in the network, and then
-  reciprocated.
+  Specifically, \code{FUN} is applied to the graph \code{g}
+  to generate reference values.  Some \code{sample.size}
+  copies of the igraph are generated.  For each,
+  \code{round(remove.share * n.edges)} randomly selected
+  edges are dropped to generate a perturbed graph.  For
+  each perturbed graph \code{FUN} is applied, generating a
+  value for each node in the network.  For each node the
+  relative error
+
+  \deqn{|\frac{measure of perturbed g - measure of
+  g}{measure of g}|}{abs( (measure of perturbed g - measure
+  of g) / measure of g )}
+
+  The mean of these across nodes and perturbed graphs is
+  calculated, generating a mean relative error for the
+  network. This value is reciprocated to get a measure of
+  precision.
 
   This measure appears to be very sensitive to the choice
   of \code{FUN}.
@@ -61,6 +68,15 @@ m.pref
 
 m.pref / m.rand  # Relative informativeness of this preference graph
                  # to this random graph with respect to betweenness
+\dontrun{p.values <- 1:50
+mnis <- sapply(p.values, function(p)
+  MeasureNetworkInformation(random.graph.game(100, p/100)))
+plot(p.values/100, mnis,
+     type="l",
+     main="Network Information of random graphs",
+     xlab="probability of link formation",
+     ylab="information")
+mtext("with respect to betweenness measure", line=0.5)}
 }
 \author{
   Stephen R. Haptonstahl \email{srh@haptonstahl.org}

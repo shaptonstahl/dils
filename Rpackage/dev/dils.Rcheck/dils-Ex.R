@@ -210,6 +210,17 @@ m.pref
 
 m.pref / m.rand  # Relative informativeness of this preference graph
                  # to this random graph with respect to betweenness
+## Not run: 
+##D p.values <- 1:50
+##D mnis <- sapply(p.values, function(p)
+##D   MeasureNetworkInformation(random.graph.game(100, p/100)))
+##D plot(p.values/100, mnis,
+##D      type="l",
+##D      main="Network Information of random graphs",
+##D      xlab="probability of link formation",
+##D      ylab="information")
+##D mtext("with respect to betweenness measure", line=0.5)
+## End(Not run)
 
 
 

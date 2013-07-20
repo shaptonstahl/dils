@@ -8,7 +8,12 @@
 #' @param ignore.cols numeric, indices of columns not to include
 #' @param use.cols numeric, indices of columns to use
 #' @param progress.bar logical, if TRUE then progress in running subsamples will be shown.
-#' @return vector, named vector of component weights for first dimension of principal component analysis (see example for comparison to \code{\link{prcomp}})
+#' @return list
+#' \tabular{ll}{
+#' dils \tab vector, named vector of component weights for first dimension of principal component analysis (see example for comparison to \code{\link{prcomp}}). \cr
+#' coefficients \tab named vector, weights that genereate \code{dils} by taking dot-product with network data. \cr
+#' weights \tab named vector, raw.weights scaled by standard deviations of network edges, then scaled to sum to 1. \cr
+#' }
 #' @export
 #' @seealso \code{\link{prcomp}}
 #' @references
@@ -34,14 +39,23 @@ GenerateDilsNetwork <- function(x,
   }
   
   # perform the function
-  net.weights <- ScalablePCA(x=x,
-                             subsample=subsample,
-                             n.subsamples=n.subsamples,
-                             use.cols=use.cols,
-                             progress.bar=progress.bar)
+  spca <- ScalablePCA(x=x,
+                      subsample=subsample,
+                      n.subsamples=n.subsamples,
+                      use.cols=use.cols,
+                      return.sds=TRUE,
+                      progress.bar=progress.bar)
+  net.coefficients <- spca$coefficients
+  net.sds <- spca$sds
   use.x <- as.matrix(x[,use.cols])
-  dils.link.weights <- as.vector(use.x %*% net.weights)
+  dils.link.coefficients <- as.vector(use.x %*% net.coefficients)
+  
+  comparitor.weights <- net.coefficients/net.sds
+  comparitor.weights <- comparitor.weights / sum(comparitor.weights)
   
   # prepare and return the output
-  return(dils.link.weights)
+  out <- list(dils=dils.link.coefficients,
+              coefficients=net.coefficients,
+              weights=comparitor.weights)
+  return(out)
 }

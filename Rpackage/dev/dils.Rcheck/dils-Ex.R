@@ -211,10 +211,11 @@ m.pref
 m.pref / m.rand  # Relative informativeness of this preference graph
                  # to this random graph with respect to betweenness
 ## Not run: 
-##D p.values <- 1:50
-##D mnis <- sapply(p.values, function(p)
-##D   MeasureNetworkInformation(random.graph.game(100, p/100)))
-##D plot(p.values/100, mnis,
+##D 
+##D prob.of.link <- c(1:50)/100
+##D mnis <- sapply(prob.of.link, function(p)
+##D   MeasureNetworkInformation(random.graph.game(100, p)))
+##D plot(prob.of.link, mnis,
 ##D      type="l",
 ##D      main="Network Information of random graphs",
 ##D      xlab="probability of link formation",
@@ -255,14 +256,20 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
-M <- as.matrix(get.adjacency(graph.atlas(128)))
+g <- graph.atlas(128)
+## Not run: plot(g)
+M <- as.matrix(get.adjacency(g))
 M
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=2)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=4)
+
 RelationStrengthSimilarity(xadj=M, radius=2)
-## Not run: RelationStrengthSimilarity(xadj=M, radius=3)
+RelationStrengthSimilarity(xadj=M, radius=3)
+
+RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3, directed=FALSE)
+RelationStrengthSimilarity(xadj=M, radius=3, directed=FALSE)
 
 
 
@@ -286,6 +293,27 @@ dils:::RssCell(xadj=M, v1=5, v2=6, radius=1)
 dils:::RssCell(xadj=M, v1=5, v2=6, radius=2)
 dils:::RssCell(xadj=M, v1=5, v2=6, radius=3)
 dils:::RssCell(xadj=M, v1=5, v2=6, radius=4)
+
+
+
+cleanEx()
+nameEx("RssSuggestedNetwork")
+### * RssSuggestedNetwork
+
+flush(stderr()); flush(stdout())
+
+### Name: RssSuggestedNetwork
+### Title: Suggest a network with imputed links
+### Aliases: RssSuggestedNetwork
+
+### ** Examples
+
+g <- graph.atlas(128)
+## Not run: plot(g)
+
+suggested <- RssSuggestedNetwork(g, q.impute.above=.6)
+## Not run: plot(suggested$g.imputed)
+suggested$frac.filled
 
 
 

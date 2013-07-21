@@ -6,6 +6,7 @@
 #' @param v1 numeric Object type, then description of \code{arg2}.
 #' @param v2 numeric Object type, then description of \code{arg2}.
 #' @param radius numeric, length of longest path examined from \code{v1} to \code{v2}.
+#' @param directed logical, if TRUE returns a symmetric RSS matrix.
 #' @return numeric, Relation Strength Similarity score(s).
 #' @export
 #' @seealso \code{\link{ScalablePCA}}
@@ -19,18 +20,32 @@
 #' If \code{v1} and \code{v2} are specified, this returns the RSS from \code{v1}
 #' to \code{v2}.  If not, it calculates the RSS scores for all dyads in the network.
 #' @examples
-#' M <- as.matrix(get.adjacency(graph.atlas(128)))
+#' g <- graph.atlas(128)
+#' \dontrun{plot(g)}
+#' M <- as.matrix(get.adjacency(g))
 #' M
 #' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
 #' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=2)
 #' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3)
 #' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=4)
+#' 
 #' RelationStrengthSimilarity(xadj=M, radius=2)
-#' \dontrun{RelationStrengthSimilarity(xadj=M, radius=3)}
-RelationStrengthSimilarity <- function(xadj, v1, v2, radius){
+#' RelationStrengthSimilarity(xadj=M, radius=3)
+#' 
+#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3, directed=FALSE)
+#' RelationStrengthSimilarity(xadj=M, radius=3, directed=FALSE)
+RelationStrengthSimilarity <- function(xadj, 
+                                       v1, 
+                                       v2, 
+                                       radius,
+                                       directed=TRUE) {
   #' Add guardians here
-  stopifnot( is.matrix(xadj) )
-  stopifnot( ncol(xadj) == nrow(xadj) )
+  stopifnot(is(xadj, "matrix"),
+            ncol(xadj) == nrow(xadj),
+            is(directed, "logical"),
+            1 == length(directed)
+  )
+  
   # Prep the adjacency matrix
   diag(xadj) <- 0
   xadj <- sweep(xadj, 1, rowSums(xadj), "/")
@@ -93,6 +108,7 @@ RelationStrengthSimilarity <- function(xadj, v1, v2, radius){
         }
       }
       close(pb)
+      if(!directed) out <- (out + t(out)) / 2
     }
     # END matrix calculation
   } else if( missing(v2) ) {
@@ -107,7 +123,12 @@ RelationStrengthSimilarity <- function(xadj, v1, v2, radius){
     stopifnot(v2 >= 0)
     stopifnot( v2 <= nrow(xadj) )
     
-    out <- RssCell(xadj=xadj, v1=v1, v2=v2, radius=radius)
+    if(directed) {
+      out <- RssCell(xadj=xadj, v1=v1, v2=v2, radius=radius)
+    } else {
+      out <- (RssCell(xadj=xadj, v1=v1, v2=v2, radius=radius) + 
+                RssCell(xadj=xadj, v1=v2, v2=v1, radius=radius)) / 2
+    }
   }
   return( out )
 }

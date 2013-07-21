@@ -19,6 +19,7 @@ MergeEdgelists          Combine edgelists into a single data.frame
 RelationStrengthSimilarity
                         Calculate the RSS from one node to another.
 RssCell                 Calculate the RSS from one node to another.
+RssSuggestedNetwork     Suggest a network with imputed links
 RssThisRadius           Calculate part of the RSS from one node to
                         another.
 ScalablePCA             Perform Principal Component Analysis on a large

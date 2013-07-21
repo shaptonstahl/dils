@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2013.5.20)  19 JUL 2013 21:16
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2013.5.20)  21 JUL 2013 12:26
 entering extended mode
-**C:/Users/Steve/AppData/Local/Temp/Rtmp6jTCjy/Rd2pdf280c19612083/Rd2.tex
-(C:/Users/Steve/AppData/Local/Temp/Rtmp6jTCjy/Rd2pdf280c19612083/Rd2.tex
+**C:/Users/Steve/AppData/Local/Temp/RtmpGY1We4/Rd2pdf109053114258/Rd2.tex
+(C:/Users/Steve/AppData/Local/Temp/RtmpGY1We4/Rd2pdf109053114258/Rd2.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -600,7 +600,7 @@ File: latin1.def 2008/03/30 v1.1d Input encoding file
 \@indexfile=\write3
 
 Writing index file Rd2.idx
-(C:\Users\Steve\AppData\Local\Temp\Rtmp6jTCjy\Rd2pdf280c19612083\Rd2.aux)
+(C:\Users\Steve\AppData\Local\Temp\RtmpGY1We4\Rd2pdf109053114258\Rd2.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
 LaTeX Font Info:    ... okay on input line 8.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
@@ -654,8 +654,8 @@ LaTeX Info: Redefining \ref on input line 8.
 LaTeX Info: Redefining \pageref on input line 8.
 LaTeX Info: Redefining \nameref on input line 8.
 
-(C:\Users\Steve\AppData\Local\Temp\Rtmp6jTCjy\Rd2pdf280c19612083\Rd2.out)
-(C:\Users\Steve\AppData\Local\Temp\Rtmp6jTCjy\Rd2pdf280c19612083\Rd2.out)
+(C:\Users\Steve\AppData\Local\Temp\RtmpGY1We4\Rd2pdf109053114258\Rd2.out)
+(C:\Users\Steve\AppData\Local\Temp\RtmpGY1We4\Rd2pdf109053114258\Rd2.out)
 \@outlinefile=\write4
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <24.88> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 9.
@@ -668,12 +668,12 @@ LaTeX Font Info:    Try loading font information for T1+fi4 on input line 22.
 (c:\miktex\tex\latex\inconsolata\t1fi4.fd
 File: t1fi4.fd 2009/05/28 T1/Inconsolata
 )
-Overfull \hbox (1054.66644pt too wide) in paragraph at lines 38--39
+Overfull \hbox (1162.84535pt too wide) in paragraph at lines 38--39
 \T1/ptm/m/n/10 'GetSampleFromDataFrame.R' 'RelationStrengthSimilarity.R''Scalab
 lePCA.R' 'GetSampleFromFile.R' 'GetSampleFromDb.R''RssCell.R' 'RssThisRadius.R'
  'EdgelistFill.R''EdgelistFromAdjacency.R' 'EdgelistFromIgraph.R''GenerateDilsN
 etwork.R' 'MergeEdgelists.R''AdjacencyFromEdgelist.R' 'IgraphFromEdgelist.R''Me
-asureNetworkInformation.R'  
+asureNetworkInformation.R' 'RssSuggestedNetwork.R'  
  []
 
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
@@ -682,7 +682,7 @@ LaTeX Font Info:    Try loading font information for T1+phv on input line 40.
 (c:\miktex\tex\latex\psnfss\t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
-(C:\Users\Steve\AppData\Local\Temp\Rtmp6jTCjy\Rd2pdf280c19612083\Rd2.toc
+(C:\Users\Steve\AppData\Local\Temp\RtmpGY1We4\Rd2pdf109053114258\Rd2.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 1.
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -742,37 +742,39 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) [15] (c:\miktex\tex\latex\base\utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-[16]
-Overfull \hbox (190.34781pt too wide) in alignment at lines 1023--1023
+[16] (c:\miktex\tex\latex\base\utf8.def
+File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+) [17]
+Overfull \hbox (190.34781pt too wide) in alignment at lines 1094--1094
  [] [] 
  []
 
-(C:\Users\Steve\AppData\Local\Temp\Rtmp6jTCjy\Rd2pdf280c19612083\Rd2.ind
-[17]
+(C:\Users\Steve\AppData\Local\Temp\RtmpGY1We4\Rd2pdf109053114258\Rd2.ind
+[18]
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 3.
- [18
+ [19
 
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1047.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1047.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1118.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1118.
 
-(C:\Users\Steve\AppData\Local\Temp\Rtmp6jTCjy\Rd2pdf280c19612083\Rd2.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1047.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1047.
+(C:\Users\Steve\AppData\Local\Temp\RtmpGY1We4\Rd2pdf109053114258\Rd2.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1118.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1118.
 
 Package rerunfilecheck Info: File `Rd2.out' has not changed.
-(rerunfilecheck)             Checksum: E7A1F286E38009F80C5714F85BA7E951;1123.
+(rerunfilecheck)             Checksum: D202BA2016A5EEEA9F9CF79822389757;1195.
  ) 
 Here is how much of TeX's memory you used:
- 6363 strings out of 494045
- 89210 string characters out of 3155641
- 167256 words of memory out of 3000000
- 9333 multiletter control sequences out of 15000+200000
+ 6377 strings out of 494045
+ 89454 string characters out of 3155641
+ 166256 words of memory out of 3000000
+ 9334 multiletter control sequences out of 15000+200000
  40684 words of font info for 49 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 38i,6n,34p,790b,590s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,6n,34p,790b,586s stack positions out of 5000i,500n,10000p,200000b,50000s
 pdfTeX warning (dest): name{Rfn.read.delim} has been referenced but does not 
 exist, replaced by a fixed one
 
@@ -789,9 +791,9 @@ fonts/cm/cmsy10.pfb><c:/miktex/fonts/type1/urw/helvetic/uhvr8a.pfb><c:/miktex/f
 onts/type1/urw/times/utmb8a.pfb><c:/miktex/fonts/type1/urw/times/utmr8a.pfb><c:
 /miktex/fonts/type1/urw/times/utmr8a.pfb><c:/miktex/fonts/type1/urw/times/utmri
 8a.pfb>
-Output written on Rd2.pdf (18 pages, 176641 bytes).
+Output written on Rd2.pdf (19 pages, 180889 bytes).
 PDF statistics:
- 502 PDF objects out of 1000 (max. 8388607)
- 201 named destinations out of 1000 (max. 500000)
- 137 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 527 PDF objects out of 1000 (max. 8388607)
+ 212 named destinations out of 1000 (max. 500000)
+ 145 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -68,10 +68,12 @@ m.pref
 
 m.pref / m.rand  # Relative informativeness of this preference graph
                  # to this random graph with respect to betweenness
-\dontrun{p.values <- 1:50
-mnis <- sapply(p.values, function(p)
-  MeasureNetworkInformation(random.graph.game(100, p/100)))
-plot(p.values/100, mnis,
+\dontrun{
+
+prob.of.link <- c(1:50)/100
+mnis <- sapply(prob.of.link, function(p)
+  MeasureNetworkInformation(random.graph.game(100, p)))
+plot(prob.of.link, mnis,
      type="l",
      main="Network Information of random graphs",
      xlab="probability of link formation",

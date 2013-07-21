@@ -2,7 +2,8 @@
 \alias{RelationStrengthSimilarity}
 \title{Calculate the RSS from one node to another.}
 \usage{
-  RelationStrengthSimilarity(xadj, v1, v2, radius)
+  RelationStrengthSimilarity(xadj, v1, v2, radius,
+    directed = TRUE)
 }
 \arguments{
   \item{xadj}{numeric matrix, then description of
@@ -16,6 +17,9 @@
 
   \item{radius}{numeric, length of longest path examined
   from \code{v1} to \code{v2}.}
+
+  \item{directed}{logical, if TRUE returns a symmetric RSS
+  matrix.}
 }
 \value{
   numeric, Relation Strength Similarity score(s).
@@ -30,14 +34,20 @@
   calculates the RSS scores for all dyads in the network.
 }
 \examples{
-M <- as.matrix(get.adjacency(graph.atlas(128)))
+g <- graph.atlas(128)
+\dontrun{plot(g)}
+M <- as.matrix(get.adjacency(g))
 M
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=2)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3)
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=4)
+
 RelationStrengthSimilarity(xadj=M, radius=2)
-\dontrun{RelationStrengthSimilarity(xadj=M, radius=3)}
+RelationStrengthSimilarity(xadj=M, radius=3)
+
+RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3, directed=FALSE)
+RelationStrengthSimilarity(xadj=M, radius=3, directed=FALSE)
 }
 \author{
   Stephen R. Haptonstahl \email{srh@haptonstahl.org}

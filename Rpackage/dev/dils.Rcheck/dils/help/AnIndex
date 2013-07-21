@@ -12,5 +12,6 @@ MeasureNetworkInformation	MeasureNetworkInformation
 MergeEdgelists	MergeEdgelists
 RelationStrengthSimilarity	RelationStrengthSimilarity
 RssCell	RssCell
+RssSuggestedNetwork	RssSuggestedNetwork
 RssThisRadius	RssThisRadius
 ScalablePCA	ScalablePCA

@@ -8,12 +8,11 @@
 #' @param ignore.cols numeric, indices of columns not to include
 #' @param use.cols numeric, indices of columns to use
 #' @param progress.bar logical, if TRUE then progress in running subsamples will be shown.
-#' @return list
-#' \tabular{ll}{
-#' dils \tab vector, named vector of component weights for first dimension of principal component analysis (see example for comparison to \code{\link{prcomp}}). \cr
-#' coefficients \tab named vector, weights that genereate \code{dils} by taking dot-product with network data. \cr
-#' weights \tab named vector, raw.weights scaled by standard deviations of network edges, then scaled to sum to 1. \cr
-#' }
+#' @return A list
+#' \item{dils}{vector, named vector of component weights for first dimension of principal component analysis (see example for comparison to \code{\link{prcomp}}).}
+#' \item{dils.edgelist}{Unused columns of \code{x} bound with the DILS scores on the right. Forms an edgelist if there were two unused columns and they containted the ids for the dyads.}
+#' \item{coefficients}{named vector, weights that genereate \code{dils} by taking dot-product with network data.}
+#' \item{weights}{named vector, raw.weights scaled by standard deviations of network edges, then scaled to sum to 1.}
 #' @export
 #' @seealso \code{\link{prcomp}}
 #' @references
@@ -55,6 +54,7 @@ GenerateDilsNetwork <- function(x,
   
   # prepare and return the output
   out <- list(dils=dils.link.coefficients,
+              dils.edgelist=cbind(x[,-use.cols], dils.link.coefficients),
               coefficients=net.coefficients,
               weights=comparitor.weights)
   return(out)

@@ -26,7 +26,7 @@ IgraphFromEdgelist <- function(elist,
   adj.result <- AdjacencyFromEdgelist(elist)
   g <- graph.adjacency(adj.result$adjacency, 
                        mode=ifelse(directed, "directed", "undirected"),
-                       ifelse(all(adj.result$adjacency %in% c(0,1)), NULL, TRUE))
+                       weighted=ifelse(all(adj.result$adjacency %in% c(0,1)), NULL, TRUE))
   V(g)$name <- adj.result$nodelist
   return(g)
 }

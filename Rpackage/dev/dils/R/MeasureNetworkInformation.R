@@ -23,7 +23,7 @@
 #' 
 #' \deqn{|\frac{measure of perturbed g - measure of g}{measure of g}|}{abs( (measure of perturbed g - measure of g) / measure of g )}
 #' 
-#' The mean of these across nodes and perturbed graphs is calculated,
+#' is calculated, then the mean of these across nodes and perturbed graphs is calculated,
 #' generating a mean relative error for the network. This value is reciprocated
 #' to get a measure of precision.
 #' 
@@ -66,13 +66,18 @@ MeasureNetworkInformation <- function(g,
     return(out)
   }
   
+  if(progress.bar) pb <- txtProgressBar(max=sample.size + 1, style=2)
+  
   ref.values <- do.call(FUN, list(g))
   ref.values[ref.values == 0] <- NA
+  if(progress.bar) setTxtProgressBar(pb, 1)
   
   for(k in 1:sample.size) {
     this.g <- SampleIgraph(g, remove.share=remove.share)
     relative.errors <- abs((do.call(FUN, list(this.g)) - ref.values)/ref.values)
     draws[k,] <- relative.errors
+    if(progress.bar) setTxtProgressBar(pb, k + 1)
   }
+  if(progress.bar) close(pb)
   return( 1 / mean(draws, na.rm=TRUE) )
 }

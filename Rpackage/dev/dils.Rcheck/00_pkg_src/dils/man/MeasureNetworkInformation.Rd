@@ -48,10 +48,10 @@
   g}{measure of g}|}{abs( (measure of perturbed g - measure
   of g) / measure of g )}
 
-  The mean of these across nodes and perturbed graphs is
-  calculated, generating a mean relative error for the
-  network. This value is reciprocated to get a measure of
-  precision.
+  is calculated, then the mean of these across nodes and
+  perturbed graphs is calculated, generating a mean
+  relative error for the network. This value is
+  reciprocated to get a measure of precision.
 
   This measure appears to be very sensitive to the choice
   of \code{FUN}.

@@ -1,0 +1,54 @@
+# Titan test
+g = new TinkerGraph()
+
+v1 = g.addVertex(1)
+v1.setProperty("name", "a")
+v2 = g.addVertex(2)
+v2.setProperty("name", "b")
+v3 = g.addVertex(3)
+v3.setProperty("name", "c")
+v4 = g.addVertex(4)
+v4.setProperty("name", "d")
+v5 = g.addVertex(5)
+v5.setProperty("name", "e")
+v6 = g.addVertex(6)
+v6.setProperty("name", "f")
+
+e1 = g.addEdge(v1,v2,'knows')
+e1.setProperty("weight", 2.0)
+e2 = g.addEdge(v2,v3,'knows')
+e2.setProperty("weight", 3.0)
+e3 = g.addEdge(v3,v4,'knows')
+e3.setProperty("weight", 5.0)
+e4 = g.addEdge(v4,v5,'knows')
+e4.setProperty("weight", 7.0)
+e5 = g.addEdge(v5,v6,'knows')
+e5.setProperty("weight", 11.0)
+e6 = g.addEdge(v6,v1,'knows')
+e6.setProperty("weight", 13.0)
+e7 = g.addEdge(v1,v4,'knows')
+e7.setProperty("weight", 17.0)
+
+g.v(1).both.simplePath.path
+g.v(1).both.both.simplePath.path
+g.v(1).both.both.both.simplePath.path
+g.v(1).both.both.both.both.simplePath.path
+g.v(1).both.both.both.both.both.simplePath.path
+g.v(1).both.both.both.both.both.both.simplePath.path
+
+g.v(1).outE.inV.loop(2){it.object.id!="3" && it.loops < 6}.path.transform{[it.findAll{it instanceof Edge}.sum{it.weight}, it]}
+
+g.v(1).outE.inV.loop(2){it.object.id!="3" && it.loops < 6}.path.simplePath.transform{[it.findAll{it instanceof Edge}.sum{it.weight}, it]}
+
+x = []
+g.v(1).store(x).bothE.bothV.except(x).store(x)loop(4){it.object.id!="3" && it.loops < 6}.path.simplePath.transform{[it.findAll{it instanceof Edge}.sum{it.weight}, it]}
+
+x = []
+g.v(1).store(x).bothE.bothV.except(x).store(x)loop(4){it.object.id!="3" && it.loops < 6}.path.transform{[it, x]}
+
+
+
+
+# Sample on http://gremlindocs.com/
+g = TinkerGraphFactory.createTinkerGraph()
+g.v('a')

@@ -15,26 +15,35 @@ v6 = g.addVertex(6)
 v6.setProperty("name", "f")
 
 e1 = g.addEdge(v1,v2,'knows')
-e1.setProperty("weight", 2.0)
+e1.setProperty("weight", 0.2)
 e2 = g.addEdge(v2,v3,'knows')
-e2.setProperty("weight", 3.0)
+e2.setProperty("weight", 0.3)
 e3 = g.addEdge(v3,v4,'knows')
-e3.setProperty("weight", 5.0)
+e3.setProperty("weight", 0.5)
 e4 = g.addEdge(v4,v5,'knows')
-e4.setProperty("weight", 7.0)
+e4.setProperty("weight", 0.7)
 e5 = g.addEdge(v5,v6,'knows')
-e5.setProperty("weight", 11.0)
+e5.setProperty("weight", 0.11)
 e6 = g.addEdge(v6,v1,'knows')
-e6.setProperty("weight", 13.0)
+e6.setProperty("weight", 0.13)
 e7 = g.addEdge(v1,v4,'knows')
-e7.setProperty("weight", 17.0)
+e7.setProperty("weight", 0.17)
 
-g.v(1).both.simplePath.path
-g.v(1).both.both.simplePath.path
-g.v(1).both.both.both.simplePath.path
-g.v(1).both.both.both.both.simplePath.path
-g.v(1).both.both.both.both.both.simplePath.path
-g.v(1).both.both.both.both.both.both.simplePath.path
+e1.setProperty("weight", 1)
+e2.setProperty("weight", 1)
+e3.setProperty("weight", 1)
+e4.setProperty("weight", 1)
+e5.setProperty("weight", 1)
+e6.setProperty("weight", 1)
+e7.setProperty("weight", 1)
+
+
+g.v(1).both.simplePath.path{it.name}
+g.v(1).both.both.simplePath.path{it.name}
+g.v(1).both.both.both.simplePath.path{it.name}
+g.v(1).both.both.both.both.simplePath.path{it.name}
+g.v(1).both.both.both.both.both.simplePath.path{it.name}
+g.v(1).both.both.both.both.both.both.simplePath.path{it.name}
 
 g.v(1).outE.inV.loop(2){it.object.id!="3" && it.loops < 6}.path.transform{[it.findAll{it instanceof Edge}.sum{it.weight}, it]}
 
@@ -47,8 +56,97 @@ x = []
 g.v(1).store(x).bothE.bothV.except(x).store(x)loop(4){it.object.id!="3" && it.loops < 6}.path.transform{[it, x]}
 
 
+g.v(1).bothE.bothV.loop(2){it.object.id!="3" && it.loops <= 5}.path.simplePath.transform{[it.findAll{it instanceof Edge}, it]}
+g.v(1).bothE.bothV.loop(2){it.object.id!="3" && it.loops <= 5}.path.simplePath.transform{it.findAll{it instanceof Edge}}
+g.v(1).bothE.bothV.loop(2){it.object.id!="3" && it.loops <= 5}.path.simplePath.transform{it.findAll{it instanceof Edge}}.transform{it.weight}
+g.v(1).bothE.bothV.loop(2){it.object.id!="3" && it.loops <= 5}.path.simplePath.transform{it.findAll{it instanceof Edge}}.transform{product(it.weight)}
+g.v(1).bothE.bothV.loop(2){it.object.id!="3" && it.loops <= 5}.path.simplePath.transform{it.findAll{it instanceof Edge}}.transform{product(it.weight)}.gather
+g.v(1).bothE.bothV.loop(2){it.object.id!="3" && it.loops <= 5}.path.simplePath.transform{it.findAll{it instanceof Edge}}.transform{product(it.weight)}.gather.transform{sum(it)}
+
+rss = { from, toid ->
+  from.bothE.bothV.loop(2){it.object.id != toid && it.loops <= 5}.path.simplePath.transform{it.findAll{it instanceof Edge}}.transform{product(it.weight)}.gather.transform{sum(it)}
+}
+rss(g.v(1), "3")
+
+###############  THIS IS IT  ##############
+product = {
+  p = 1
+  for(factor in it) { p *= factor }
+  p
+}
+product([2,3])
+product([2,3,5])
+
+sum = {
+  p = 0
+  for(addend in it) { p += addend }
+  p
+}
+
+rss = { from, to ->
+  from.bothE.bothV.loop(2){it.object != to && it.loops <= 5}.path.simplePath.transform{it.findAll{it instanceof Edge}}.transform{product(it.weight)}.gather.transform{sum(it)}
+}
+rss(g.v(1), g.v(2))
+rss(g.v(1), g.v(3))
+rss(g.v(1), g.v(4))
+rss(g.v(1), g.v(5))
+rss(g.v(1), g.v(6))
+rss(g.v(2), g.v(3))
+rss(g.v(4), g.v(4))
+rss(g.v(3), g.v(5))
+rss(g.v(2), g.v(6))
+rss(g.v(3), g.v(4))
+rss(g.v(3), g.v(5))
+rss(g.v(3), g.v(6))
+rss(g.v(4), g.v(5))
+rss(g.v(4), g.v(6))
+rss(g.v(5), g.v(6))
+###########################################
+
+t = {key, value -> key * value}
+t(2,3)
+
+neighbors = {ego, radius -> 
+  ego.both.loop(1){it.loops < radius}.simplePath.path
+}
+neighbors(v1, 2)
+neighbors(v1, 3)
+
+neighbors = {ego, radius -> 
+  ego.both.loop(1){it.loops <= radius}.simplePath.name
+}
+neighbors(v1, 1)
+neighbors(v1, 2)
+neighbors(v1, 3)
+
+n3 = {ego, radius -> 
+  ego.both.loop(1){it.loops <= radius}.simplePath.name
+}
+neighbors(v1, 1)
+neighbors(v1, 2)
+neighbors(v1, 3)
 
 
-# Sample on http://gremlindocs.com/
-g = TinkerGraphFactory.createTinkerGraph()
-g.v('a')
+radius = 2
+g.v(1).both.loop(1){it.loops <= radius}.simplePath.path
+radius = 4
+g.v(1).both.loop(1){it.loops <= radius}.simplePath.path
+
+g.v(1).out.out 
+
+#########################
+g = new TinkerGraph()
+root = g.addVertex()
+(1..10).each { outer ->
+  parent = root
+  (1..10).each { inner ->
+    child = g.addVertex()
+    g.addEdge(parent, child, 'to')
+    parent = child
+  }
+}; null
+
+target = '99'; c = 0; root.both().sideEffect{c++}.loop(2){it.object.id != target && it.loops <= 10}.has('id',target).path().iterate(); c
+
+s = [root] as Set
+target = '99'; c = 0; root.both().except(s).store(s).sideEffect{c++}.loop(4){it.object.id != target && it.loops <= 10}.has('id',target).path().iterate(); c

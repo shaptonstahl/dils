@@ -68,7 +68,8 @@ rss = { from, toid ->
 }
 rss(g.v(1), "3")
 
-###############  THIS IS IT  ##############
+###############  THIS IS CLOSE  ##############
+# Missing normalization of weights
 product = {
   p = 1
   for(factor in it) { p *= factor }
@@ -83,9 +84,12 @@ sum = {
   p
 }
 
+normalizer = { it.bothE.weight.gather.transform{sum(it)} }
+
 rss = { from, to ->
-  from.bothE.bothV.loop(2){it.object != to && it.loops <= 5}.path.simplePath.transform{it.findAll{it instanceof Edge}}.transform{product(it.weight)}.gather.transform{sum(it)}
+  from.bothE.bothV.loop(2){it.object != to && it.loops <= 4}.path.simplePath.transform{it.findAll{it instanceof Edge}}.transform{product(it.weight)}.gather.transform{sum(it)}
 }
+
 rss(g.v(1), g.v(2))
 rss(g.v(1), g.v(3))
 rss(g.v(1), g.v(4))
@@ -102,6 +106,11 @@ rss(g.v(4), g.v(5))
 rss(g.v(4), g.v(6))
 rss(g.v(5), g.v(6))
 ###########################################
+
+from.bothE.bothV.loop(2){it.object != to && it.loops <= 4}.path.simplePath.as('p').transform{it.findAll{it instanceof Vertex}}.transform{it[0..(it.size()-2)]}
+
+normalizer = { node -> node.bothE.weight.gather.transform{sum(it)} }
+
 
 t = {key, value -> key * value}
 t(2,3)

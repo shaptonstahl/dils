@@ -16,6 +16,7 @@ MeasureNetworkInformation
                         Measure informativeness of a network of a
                         particualar network measure.
 MergeEdgelists          Combine edgelists into a single data.frame
+RSSCppMatrix            Calculate the RSS from one node to another
 RelationStrengthSimilarity
                         Calculate the RSS from one node to another.
 RssCell                 Calculate the RSS from one node to another.

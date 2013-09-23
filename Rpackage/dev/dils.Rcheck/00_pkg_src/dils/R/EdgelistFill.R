@@ -51,8 +51,16 @@ EdgelistFill <- function(elist,
   }
   
   for(i in 1:nrow(elist)) {
-    match1 <- levels(elist[i,1])[as.numeric(elist[i,1])]  # "unfactor" in case factor levels don't agree
-    match2 <- levels(elist[i,2])[as.numeric(elist[i,2])]  # "unfactor" in case factor levels don't agree
+    if( is.factor(elist[,1]) ) {
+      match1 <- levels(elist[i,1])[as.numeric(elist[i,1])]  # "unfactor" in case factor levels don't agree
+    } else {
+      match1 <- elist[i,1]
+    }
+    if( is.factor(elist[,2]) ) {
+      match2 <- levels(elist[i,2])[as.numeric(elist[i,2])]  # "unfactor" in case factor levels don't agree
+    } else {
+      match2 <- elist[i,2]
+    }
     out[out[,1]==match1 & out[,2]==match2, 3] <- elist[i,3]
   }
   return( out )

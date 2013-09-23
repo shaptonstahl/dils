@@ -245,6 +245,33 @@ MergeEdgelists(edgelist1, edgelist2)
 
 
 cleanEx()
+nameEx("RSSCppMatrix")
+### * RSSCppMatrix
+
+flush(stderr()); flush(stdout())
+
+### Name: RSSCppMatrix
+### Title: Calculate the RSS from one node to another
+### Aliases: RSSCppMatrix
+
+### ** Examples
+
+M.test.1 <- matrix(0, nrow=6, ncol=6)
+M.test.1[1,2] <- M.test.1[2,1] <- 1
+M.test.1[1,3] <- M.test.1[3,1] <- 1
+M.test.1[3,4] <- M.test.1[4,3] <- 1
+M.test.1[4,5] <- M.test.1[5,4] <- 1
+M.test.1[5,6] <- M.test.1[6,5] <- 1
+M.test.1[6,1] <- M.test.1[1,6] <- 1
+M.test.1[1,4] <- M.test.1[4,1] <- 1
+M.test.1
+## Not run: RelationStrengthSimilarity(xadj=M.test.1, v1=5, v2=6, radius=2)
+## Not run: RelationStrengthSimilarity(xadj=M.test.1, v1=5, v2=6, radius=3)
+## Not run: RelationStrengthSimilarity(xadj=M.test.1, v1=5, v2=6, radius=4)
+
+
+
+cleanEx()
 nameEx("RelationStrengthSimilarity")
 ### * RelationStrengthSimilarity
 

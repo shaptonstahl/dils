@@ -2,38 +2,14 @@
 ** libs
 
 *** arch - i386
-cygwin warning:
-  MS-DOS style path detected: C:/R/R-30~1.1/etc/i386/Makeconf
-  Preferred POSIX equivalent is: /cygdrive/c/R/R-30~1.1/etc/i386/Makeconf
-  CYGWIN environment variable option "nodosfilewarning" turns off this warning.
-  Consult the user's guide for more details about POSIX paths:
-    http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
-g++ -m32 -I"C:/R/R-30~1.1/include" -DDEBUG      -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O0 -Wall  -mtune=core2 -g   -c RSSCppMatrix.cpp -o RSSCppMatrix.o
-g++ -m32 -shared -s -static-libgcc -o dils.dll tmp.def RSSCppMatrix.o -Ld:/RCompile/CRANpkg/extralibs64/local/lib/i386 -Ld:/RCompile/CRANpkg/extralibs64/local/lib -LC:/R/R-30~1.1/bin/i386 -lR
-cygwin warning:
-  MS-DOS style path detected: C:/R/R-30~1.1/etc/i386/Makeconf
-  Preferred POSIX equivalent is: /cygdrive/c/R/R-30~1.1/etc/i386/Makeconf
-  CYGWIN environment variable option "nodosfilewarning" turns off this warning.
-  Consult the user's guide for more details about POSIX paths:
-    http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
-installing to C:/Users/Steve/Documents/GitHub/dils/Rpackage/dev/dils.Rcheck/dils/libs/i386
+g++ -m32 -I"C:/R/R-30~1.1/include" -DNDEBUG    -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O2 -Wall  -mtune=core2 -c RSSCppMatrix.cpp -o RSSCppMatrix.o
+g++ -m32 -shared -s -static-libgcc -o dils.dll tmp.def RSSCppMatrix.o C:/R/R-3.0.1/library/Rcpp/lib/i386/libRcpp.a -Ld:/RCompile/CRANpkg/extralibs64/local/lib/i386 -Ld:/RCompile/CRANpkg/extralibs64/local/lib -LC:/R/R-30~1.1/bin/i386 -lR
+installing to C:/github/dils/Rpackage/dev/dils.Rcheck/dils/libs/i386
 
 *** arch - x64
-cygwin warning:
-  MS-DOS style path detected: C:/R/R-30~1.1/etc/x64/Makeconf
-  Preferred POSIX equivalent is: /cygdrive/c/R/R-30~1.1/etc/x64/Makeconf
-  CYGWIN environment variable option "nodosfilewarning" turns off this warning.
-  Consult the user's guide for more details about POSIX paths:
-    http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
-g++ -m64 -I"C:/R/R-30~1.1/include" -DDEBUG      -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O0 -Wall  -mtune=core2 -g   -c RSSCppMatrix.cpp -o RSSCppMatrix.o
-g++ -m64 -shared -s -static-libgcc -o dils.dll tmp.def RSSCppMatrix.o -Ld:/RCompile/CRANpkg/extralibs64/local/lib/x64 -Ld:/RCompile/CRANpkg/extralibs64/local/lib -LC:/R/R-30~1.1/bin/x64 -lR
-cygwin warning:
-  MS-DOS style path detected: C:/R/R-30~1.1/etc/x64/Makeconf
-  Preferred POSIX equivalent is: /cygdrive/c/R/R-30~1.1/etc/x64/Makeconf
-  CYGWIN environment variable option "nodosfilewarning" turns off this warning.
-  Consult the user's guide for more details about POSIX paths:
-    http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
-installing to C:/Users/Steve/Documents/GitHub/dils/Rpackage/dev/dils.Rcheck/dils/libs/x64
+g++ -m64 -I"C:/R/R-30~1.1/include" -DNDEBUG    -I"C:/R/R-3.0.1/library/Rcpp/include" -I"d:/RCompile/CRANpkg/extralibs64/local/include"     -O2 -Wall  -mtune=core2 -c RSSCppMatrix.cpp -o RSSCppMatrix.o
+g++ -m64 -shared -s -static-libgcc -o dils.dll tmp.def RSSCppMatrix.o C:/R/R-3.0.1/library/Rcpp/lib/x64/libRcpp.a -Ld:/RCompile/CRANpkg/extralibs64/local/lib/x64 -Ld:/RCompile/CRANpkg/extralibs64/local/lib -LC:/R/R-30~1.1/bin/x64 -lR
+installing to C:/github/dils/Rpackage/dev/dils.Rcheck/dils/libs/x64
 ** R
 ** inst
 ** preparing package for lazy loading

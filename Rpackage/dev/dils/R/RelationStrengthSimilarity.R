@@ -57,28 +57,29 @@ RelationStrengthSimilarity <- function(xadj,
     # calculate for the entire matrix
     # Check calculation time
     n <- nrow(xadj)
-    if( (n*n)^radius > (20*20)^2 ) {
-      cat("Estimating time to complete...\n")
-      # Check a sample
-      dyads <- expand.grid(1:n,1:n)
-      test.dyad.rows <- sample(1:(n^2), 10)
-      est.mean.time.seconds <- mean(sapply(1:10, function(k) {
-        system.time(RssCell(xadj=xadj, 
-                            v1=dyads[test.dyad.rows[k],1], 
-                            v2=dyads[test.dyad.rows[k],2], 
-                            radius=radius))[3]
-      }))
-      est.total.time.min <- round(n * n * est.mean.time.seconds / 60, 1)
-      cat("This calculation should take", 
-          est.total.time.min,
-          "minutes on this computer.\n")
+    
+    cat("Estimating time to complete...\n")
+    # Check a sample
+    dyads <- expand.grid(1:n,1:n)
+    test.dyad.rows <- sample(1:(n^2), 10)
+    est.mean.time.seconds <- mean(sapply(1:10, function(k) {
+      system.time(RssCell(xadj=xadj, 
+                          v1=dyads[test.dyad.rows[k],1], 
+                          v2=dyads[test.dyad.rows[k],2], 
+                          radius=radius))[3]
+    }))
+    est.total.time.min <- round(n * n * est.mean.time.seconds / 60, 1)
+    cat("This calculation should take", 
+        est.total.time.min,
+        "minutes on this computer.\n")
+    
+    if(est.total.time.min > 1) {
       ANSWER <- readline("Continue (y/n)? ")
-      
-      if( !("y" == ANSWER || "Y" == ANSWER) ) {
+      if( "y" == ANSWER || "Y" == ANSWER ) {
+        cat("Calculating...\n")
+      } else {
         cat("\n")
         return(invisible(NULL))
-      } else {
-        cat("Calculating...\n")
       }
     }
     

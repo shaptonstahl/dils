@@ -1,32 +1,4 @@
-#include "RSSCppMatrix.h"
-
-Rcpp::NumericVector NumericVectorConcatenate(Rcpp::NumericVector a, Rcpp::NumericVector b) {
-  // I'm sure there is a command for this, but I can't figure it out, so....
-  using namespace Rcpp;
-  
-  NumericVector c(a.size() + b.size());
-  for(int i = 0; i < a.size(); i++) { 
-    c[i] = a[i]; 
-  }
-  for(int i = 0; i < b.size(); i++) { 
-    c[i + a.size()] = b[i]; 
-  }
-  return(c);
-}
-
-Rcpp::List ListConcatenate(Rcpp::List a, Rcpp::List b) {
-  // I'm sure there is a command for this, but I can't figure it out, so....
-  using namespace Rcpp;
-  
-  List c(a.size() + b.size());
-  for(int i = 0; i < a.size(); i++) { 
-    c[i] = a[i]; 
-  }
-  for(int i = 0; i < b.size(); i++) { 
-    c[i + a.size()] = b[i]; 
-  }
-  return(c);
-}
+#include "rss_cpp_matrix.h"
 
 double DotProduct(Rcpp::NumericVector a, Rcpp::NumericVector b) {
   using namespace Rcpp;
@@ -45,6 +17,8 @@ Rcpp::NumericMatrix PrepMatrix(Rcpp::NumericMatrix x) {
   double rowsum = 0.0;
   
   for(int i = 0; i < x.ncol(); i++) {
+    x(i,i) = 0.0;
+    rowsum = 0.0;
     for(int j = 0; j < x.ncol(); j++) {
       rowsum += x(i,j);
     }
@@ -63,7 +37,7 @@ double RssThisRadius(Rcpp::NumericMatrix x, int v1, int v2, int r) {
   
   int n = x.nrow();
   
-  if (0 == 1) {
+  if (v1 == v2) {
     out = 0.0;
   } else if (1 == r) {
     out = x(v1, v2);
@@ -98,14 +72,14 @@ double RssCell(Rcpp::NumericMatrix x, int v1, int v2, int r) {
   using namespace Rcpp;
   double out = 0.0;
   
-  for(int i = 1; i <= r; i++) {
-    out += RssThisRadius(x, v1, v2, i);
+  for(int i = 0; i < r; i++) {
+    out += RssThisRadius(x, v1, v2, i+1);
   }
   
   return(out);
 }
 
-SEXP RSSCppMatrix(SEXP xadj, SEXP radius) {
+SEXP rss_cpp_matrix(SEXP xadj, SEXP radius, SEXP width) {
   using namespace Rcpp;
     
   NumericMatrix x( xadj );
@@ -114,6 +88,8 @@ SEXP RSSCppMatrix(SEXP xadj, SEXP radius) {
   NumericMatrix out(x.nrow(), x.ncol());
   
   x = PrepMatrix(x);
+  
+  Rcout << "test" << std::endl;
   
   for(int i = 0; i < x.nrow(); i++) {
     for(int j = 0; j < x.nrow(); j++) {

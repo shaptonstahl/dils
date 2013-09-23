@@ -33,8 +33,9 @@ RSSCppMatrix <- function(xadj, radius){
   stopifnot(radius %% 1 == 0)
   stopifnot(radius > 0)
   
-  return( .Call("RSSCppMatrix",
+  return( .Call("rss_cpp_matrix",
                 xadj, 
                 radius,
+                width=options()$width,
                 PACKAGE="dils" ) )
 }

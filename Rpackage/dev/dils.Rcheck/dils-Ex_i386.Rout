@@ -33687,7 +33687,7 @@ Sepal.Length  Sepal.Width Petal.Length  Petal.Width
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  5.51 1.01 6.52 NA NA 
+Time elapsed:  7.54 0.87 8.49 NA NA 
 > grDevices::dev.off()
 null device 
           1 

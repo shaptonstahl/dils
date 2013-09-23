@@ -1,4 +1,4 @@
-* using log directory 'C:/Users/Steve/Documents/GitHub/dils/Rpackage/dev/dils.Rcheck'
+* using log directory 'C:/github/dils/Rpackage/dev/dils.Rcheck'
 * using R version 3.0.1 (2013-05-16)
 * using platform: x86_64-w64-mingw32 (64-bit)
 * using session charset: ISO8859-1
@@ -48,7 +48,11 @@
 * checking Rd contents ... OK
 * checking for unstated dependencies in examples ... OK
 * checking line endings in C/C++/Fortran sources/headers ... OK
-* checking line endings in Makefiles ... OK
+* checking line endings in Makefiles ... WARNING
+Found the following Makefiles with CR or CRLF line endings:
+  src/Makevars
+Some Unix 'make' programs require LF line endings.
+* checking for portable compilation flags in Makevars ... OK
 * checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
 * checking compiled code ... OK
 * checking examples ...
@@ -61,3 +65,7 @@
 ** running tests for arch 'x64' OK
   Running 'run-all.R'
 * checking PDF version of manual ... OK
+WARNING: There was 1 warning.
+See
+  'C:/github/dils/Rpackage/dev/dils.Rcheck/00check.log'
+for details.

@@ -24,4 +24,4 @@ Collate: 'GetSampleFromDataFrame.R' 'RelationStrengthSimilarity.R'
         'AdjacencyFromEdgelist.R' 'IgraphFromEdgelist.R'
         'MeasureNetworkInformation.R' 'RssSuggestedNetwork.R'
         'RSSCppMatrix.R'
-Packaged: 2013-09-23 12:37:03 UTC; Steve
+Packaged: 2013-09-23 18:45:34 UTC; shaptonstahl

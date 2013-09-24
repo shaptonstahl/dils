@@ -4,6 +4,7 @@
 #include <Rcpp.h>
 #include <time.h>
 
-RcppExport SEXP rss_cpp_matrix(SEXP xadj, SEXP radius);
+RcppExport SEXP rss_cell(SEXP xadj, SEXP vin, SEXP vout, SEXP radius, SEXP directed);
+RcppExport SEXP rss_cpp_matrix(SEXP xadj, SEXP radius, SEXP directed);
 
 #endif

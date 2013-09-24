@@ -61,11 +61,27 @@ double RssCell(Rcpp::NumericMatrix x, int v1, int v2, int r) {
   return(out);
 }
 
-SEXP rss_cpp_matrix(SEXP xadj, SEXP radius) {
+SEXP rss_cell(SEXP xadj, SEXP vin, SEXP vout, SEXP radius, SEXP directed) {
+  using namespace Rcpp;
+  NumericMatrix x( xadj );
+  int v1 = as<int>( vin ) - 1;
+  int v2 = as<int>( vout ) - 1;
+  int r = as<int>( radius );
+  int d = as<int>( directed );
+  
+  if(1 == d) {
+    return( wrap(RssCell(x, v1, v2, r)) );
+  } else {
+    return( wrap((RssCell(x, v1, v2, r) + RssCell(x, v2, v1, r)) / 2.0) );
+  }
+}
+
+SEXP rss_cpp_matrix(SEXP xadj, SEXP radius, SEXP directed) {
   using namespace Rcpp;
     
   NumericMatrix x( xadj );
   int r = as<int>( radius );
+  int d = as<int>( directed );
   int n = x.nrow();
   NumericMatrix out(x.nrow(), x.ncol());
   int remaining_seconds = 0;
@@ -86,6 +102,15 @@ SEXP rss_cpp_matrix(SEXP xadj, SEXP radius) {
     remaining_seconds = difftime(end_main, begin_main) * double(n-i) / double(i);
     Rprintf("\rCompleted calculation for node %d of %d. Remaining time: %d seconds                    ", 
       i+1, n, remaining_seconds);
+  }
+  
+  if(0 == d) {
+    for(int i = 0; i < n; i++) {
+      for(int j = i; j < n; j++) {
+        out(i,j) = (out(i,j) + out(j,i)) / 2.0;
+        out(j,i) = out(i,j);
+      }
+    }
   }
   
   time(&end_all);

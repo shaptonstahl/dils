@@ -37,4 +37,3 @@ Collate:
     'IgraphFromEdgelist.R'
     'MeasureNetworkInformation.R'
     'RssSuggestedNetwork.R'
-    'RSSCppMatrix.R'

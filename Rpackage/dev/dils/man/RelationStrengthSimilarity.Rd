@@ -3,7 +3,8 @@
 \title{Calculate the RSS from one node to another.}
 \usage{
   RelationStrengthSimilarity(xadj, v1, v2, radius,
-    directed = TRUE)
+    directed = TRUE,
+    method = c("Rcpp", "BetterR", "NaiveR"))
 }
 \arguments{
   \item{xadj}{numeric matrix, then description of
@@ -36,6 +37,7 @@
 \examples{
 g <- graph.atlas(128)
 \dontrun{plot(g)}
+
 M <- as.matrix(get.adjacency(g))
 M
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
@@ -45,6 +47,7 @@ RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=4)
 
 RelationStrengthSimilarity(xadj=M, radius=2)
 RelationStrengthSimilarity(xadj=M, radius=3)
+RelationStrengthSimilarity(xadj=M, radius=3, method="BetterR")
 
 RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3, directed=FALSE)
 RelationStrengthSimilarity(xadj=M, radius=3, directed=FALSE)

@@ -22,6 +22,7 @@
 #' @examples
 #' g <- graph.atlas(128)
 #' \dontrun{plot(g)}
+#' 
 #' M <- as.matrix(get.adjacency(g))
 #' M
 #' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
@@ -31,6 +32,7 @@
 #' 
 #' RelationStrengthSimilarity(xadj=M, radius=2)
 #' RelationStrengthSimilarity(xadj=M, radius=3)
+#' RelationStrengthSimilarity(xadj=M, radius=3, method="BetterR")
 #' 
 #' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3, directed=FALSE)
 #' RelationStrengthSimilarity(xadj=M, radius=3, directed=FALSE)
@@ -38,98 +40,149 @@ RelationStrengthSimilarity <- function(xadj,
                                        v1, 
                                        v2, 
                                        radius,
-                                       directed=TRUE) {
+                                       directed=TRUE,
+                                       method=c("Rcpp", "BetterR", "NaiveR")) {
   #' Add guardians here
-  stopifnot(is(xadj, "matrix"),
-            ncol(xadj) == nrow(xadj),
-            is(directed, "logical"),
-            1 == length(directed)
-  )
-  
-  # Prep the adjacency matrix
-  diag(xadj) <- 0
-  xadj <- sweep(xadj, 1, rowSums(xadj), "/")
-
+  stopifnot( is.matrix(xadj) )
+  stopifnot( ncol(xadj) == nrow(xadj) )
+  stopifnot( is(directed, "logical") )
+  stopifnot( 1 == length(directed) )
   stopifnot(radius %% 1 == 0)
   stopifnot(radius > 0)
+  if(radius > 4 ) stop("This radius not yet supported for this value of r.")
+  method <- match.arg(method)
   
-  if( missing(v1) ) {
-    # calculate for the entire matrix
-    # Check calculation time
-    n <- nrow(xadj)
-    
-    cat("Estimating time to complete...\n")
-    # Check a sample
-    dyads <- expand.grid(1:n,1:n)
-    test.dyad.rows <- sample(1:(n^2), 10)
-    est.mean.time.seconds <- mean(sapply(1:10, function(k) {
-      system.time(RssCell(xadj=xadj, 
-                          v1=dyads[test.dyad.rows[k],1], 
-                          v2=dyads[test.dyad.rows[k],2], 
-                          radius=radius))[3]
-    }))
-    est.total.time.min <- round(n * n * est.mean.time.seconds / 60, 1)
-    cat("This calculation should take", 
-        est.total.time.min,
-        "minutes on this computer.\n")
-    
-    if(est.total.time.min > 1) {
-      ANSWER <- readline("Continue (y/n)? ")
-      if( "y" == ANSWER || "Y" == ANSWER ) {
-        cat("Calculating...\n")
-      } else {
-        cat("\n")
-        return(invisible(NULL))
-      }
-    }
-    
-    #' Calculate
-    out <- 0 * xadj
-    if( all(xadj == t(xadj)) ) {
-      # xadj is symmetric (is or is isomorphic to an undirected network)
-      pb <- txtProgressBar(max=n*(n+1)/2, style=2)
-      n.cells.complete <- 0
-      for(i in 1:n) {
-        for(j in i:n) {
-          out[i,j] <- out [j,i] <- RssCell(xadj=xadj, v1=i, v2=j, radius=radius)
-          n.cells.complete <- n.cells.complete + 1
-          setTxtProgressBar(pb, n.cells.complete)
-        }
-      }
-      close(pb)
+  out <- NULL
+  
+  ####################################################
+  ##  Call the C++ version of the better algorithm  ##
+  ####################################################
+  if("Rcpp" == method) {
+    if( missing(v1) ) {
+      out <- .Call("rss_cpp_matrix",
+                   xadj, 
+                   radius,
+                   ifelse(directed, 1, 0),
+                   PACKAGE="dils")
+    } else if( missing(v2) ) {
+      stop("Must specify both v1 and v2 to calculate RSS for a single dyad")
     } else {
-      # xadj is not symmetric (is a directed network)
-      pb <- txtProgressBar(max=n*n, style=2)
-      n.cells.complete <- 0
-      for(i in 1:n) {
-        for(j in 1:n) {
-          out[i,j] <- RssCell(xadj=xadj, v1=i, v2=j, radius=radius)
-          n.cells.complete <- n.cells.complete + 1
-          setTxtProgressBar(pb, n.cells.complete)
-        }
-      }
-      close(pb)
-      if(!directed) out <- (out + t(out)) / 2
-    }
-    # END matrix calculation
-  } else if( missing(v2) ) {
-    stop("Must specify both v1 and v2 to calculate RSS for a single dyad")
-  } else {
-    #' calculate for a single dyad
-    stopifnot(v1 %% 1 == 0)
-    stopifnot(v1 >= 0)
-    stopifnot( v1 <= nrow(xadj) )
-    
-    stopifnot(v2 %% 1 == 0)
-    stopifnot(v2 >= 0)
-    stopifnot( v2 <= nrow(xadj) )
-    
-    if(directed) {
-      out <- RssCell(xadj=xadj, v1=v1, v2=v2, radius=radius)
-    } else {
-      out <- (RssCell(xadj=xadj, v1=v1, v2=v2, radius=radius) + 
-                RssCell(xadj=xadj, v1=v2, v2=v1, radius=radius)) / 2
+      #' calculate for a single dyad
+      stopifnot(v1 %% 1 == 0)
+      stopifnot(v1 >= 1)
+      stopifnot(v1 <= nrow(xadj) )
+      
+      stopifnot(v2 %% 1 == 0)
+      stopifnot(v2 >= 1)
+      stopifnot(v2 <= nrow(xadj) )
+      
+      out <- .Call("rss_cell",
+                   xadj, 
+                   v1,
+                   v2,
+                   radius,
+                   ifelse(directed, 1, 0),
+                   PACKAGE="dils")
     }
   }
+
+  #################################################
+  ##  Use the R version of the better algorithm  ##
+  #################################################
+  if("BetterR" == method) {
+    # Prep the adjacency matrix
+    diag(xadj) <- 0
+    xadj <- sweep(xadj, 1, rowSums(xadj), "/")
+    
+    if( missing(v1) ) {
+      # calculate for the entire matrix
+      # Check calculation time
+      n <- nrow(xadj)
+      
+      cat("Estimating time to complete...\n")
+      # Check a sample
+      dyads <- expand.grid(1:n,1:n)
+      test.dyad.rows <- sample(1:(n^2), 10)
+      est.mean.time.seconds <- mean(sapply(1:10, function(k) {
+        system.time(RssCell(xadj=xadj, 
+                            v1=dyads[test.dyad.rows[k],1], 
+                            v2=dyads[test.dyad.rows[k],2], 
+                            radius=radius))[3]
+      }))
+      est.total.time.min <- round(n * n * est.mean.time.seconds / 60, 1)
+      cat("This calculation should take", 
+          est.total.time.min,
+          "minutes on this computer.\n")
+      
+      if(est.total.time.min > 1) {
+        ANSWER <- readline("Continue (y/n)? ")
+        if( "y" == ANSWER || "Y" == ANSWER ) {
+          cat("Calculating...\n")
+          show.progressbar <- TRUE
+        } else {
+          cat("\n")
+          return(invisible(NULL))
+        }
+      } else {
+        show.progressbar <- FALSE
+      }
+      
+      #' Calculate
+      out <- 0 * xadj
+      if( all(xadj == t(xadj)) ) {
+        # xadj is symmetric (is or is isomorphic to an undirected network)
+        if(show.progressbar) pb <- txtProgressBar(max=n*(n+1)/2, style=2)
+        n.cells.complete <- 0
+        for(i in 1:n) {
+          for(j in i:n) {
+            out[i,j] <- out [j,i] <- RssCell(xadj=xadj, v1=i, v2=j, radius=radius)
+            n.cells.complete <- n.cells.complete + 1
+            if(show.progressbar) setTxtProgressBar(pb, n.cells.complete)
+          }
+        }
+        if(show.progressbar) close(pb)
+      } else {
+        # xadj is not symmetric (is a directed network)
+        if(show.progressbar) pb <- txtProgressBar(max=n*n, style=2)
+        n.cells.complete <- 0
+        for(i in 1:n) {
+          for(j in 1:n) {
+            out[i,j] <- RssCell(xadj=xadj, v1=i, v2=j, radius=radius)
+            n.cells.complete <- n.cells.complete + 1
+            if(show.progressbar) setTxtProgressBar(pb, n.cells.complete)
+          }
+        }
+        if(show.progressbar) close(pb)
+        if(!directed) out <- (out + t(out)) / 2
+      }
+      # END matrix calculation
+    } else if( missing(v2) ) {
+      stop("Must specify both v1 and v2 to calculate RSS for a single dyad")
+    } else {
+      #' calculate for a single dyad
+      stopifnot(v1 %% 1 == 0)
+      stopifnot(v1 >= 1)
+      stopifnot(v1 <= nrow(xadj) )
+      
+      stopifnot(v2 %% 1 == 0)
+      stopifnot(v2 >= 1)
+      stopifnot(v2 <= nrow(xadj) )
+      
+      if(directed) {
+        out <- RssCell(xadj=xadj, v1=v1, v2=v2, radius=radius)
+      } else {
+        out <- (RssCell(xadj=xadj, v1=v1, v2=v2, radius=radius) + 
+                  RssCell(xadj=xadj, v1=v2, v2=v1, radius=radius)) / 2
+      }
+    }
+  }
+  
+  ################################################
+  ##  Use the R version of the naive algorithm  ##
+  ################################################
+  if("NaiveR" == method) {
+    stop("The naive algorithm is not yet implemented.")
+  }
+  
   return( out )
 }

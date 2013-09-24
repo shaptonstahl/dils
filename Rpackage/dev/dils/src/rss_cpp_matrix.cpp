@@ -1,30 +1,12 @@
 #include "rss_cpp_matrix.h"
 
-double DotProduct(Rcpp::NumericVector a, Rcpp::NumericVector b) {
-  using namespace Rcpp;
-  double out = 0.0;
-  
-  for(int i = 0; i < a.size(); i++) {
-    out += a(i) * b(i);
-  }
-  
-  return(out);
-}
-
 Rcpp::NumericMatrix PrepMatrix(Rcpp::NumericMatrix x) {
   // Given a matrix divides each row by the rowsum
   using namespace Rcpp;
-  double rowsum = 0.0;
   
   for(int i = 0; i < x.ncol(); i++) {
     x(i,i) = 0.0;
-    rowsum = 0.0;
-    for(int j = 0; j < x.ncol(); j++) {
-      rowsum += x(i,j);
-    }
-    for(int j = 0; j < x.ncol(); j++) {
-      x(i,j) /= rowsum;
-    }
+    x(i,_) = x(i,_) / sum(x(i,_));
   }
   return(x);
 }
@@ -42,25 +24,25 @@ double RssThisRadius(Rcpp::NumericMatrix x, int v1, int v2, int r) {
   } else if (1 == r) {
     out = x(v1, v2);
   } else if (2 == r) {
-    out = DotProduct(x(v1,_), x(_,v2));
+    out = sum(x(v1,_) * x(_,v2));
   } else if (3 == r) {
     NumericVector y(n);
     for(int i = 0; i < n; i++) {
       y[i] = RssThisRadius(x, v1, i, 2) - x(v1, v2) * x(v2, i);
     }
-    out = DotProduct(x(_,v2), y) + x(v1, v2) * x(v2, v1) * x(v1, v2);
+    out = sum(x(_,v2) * y) + x(v1, v2) * x(v2, v1) * x(v1, v2);
   } else if (4 == r) {
     NumericVector y(n);
     for(int i = 0; i < n; i++) {
       y[i] = RssThisRadius(x, v1, i, 3) - 
-        x(v2, i) * DotProduct(x(v1,_), x(_,v2)) +
+        x(v2, i) * sum(x(v1,_) * x(_,v2)) +
         x(v2, i) * x(v1, i) * x(i, v2) +
         x(v1, v2) * x(v2, v1) * x(v1, i) -
-        x(v1, v2) * DotProduct(x(v2,_), x(_,i));
+        x(v1, v2) * sum(x(v2,_) * x(_,i));
     }
-    out = DotProduct(x(_,v2), y) + 
-      x(v1,v2) * x(v2,v1) * DotProduct(x(v1,_), x(_,v2)) +
-      x(v1,v2) * x(v1,v2) * DotProduct(x(v2,_), x(_,v1));
+    out = sum(x(_,v2) * y) + 
+      x(v1,v2) * x(v2,v1) * sum(x(v1,_) * x(_,v2)) +
+      x(v1,v2) * x(v1,v2) * sum(x(v2,_) * x(_,v1));
   } else {
     out = -1000.0;
   }
@@ -79,24 +61,35 @@ double RssCell(Rcpp::NumericMatrix x, int v1, int v2, int r) {
   return(out);
 }
 
-SEXP rss_cpp_matrix(SEXP xadj, SEXP radius, SEXP width) {
+SEXP rss_cpp_matrix(SEXP xadj, SEXP radius) {
   using namespace Rcpp;
     
   NumericMatrix x( xadj );
   int r = as<int>( radius );
-  int w = as<int>( width );
-  
+  int n = x.nrow();
   NumericMatrix out(x.nrow(), x.ncol());
+  int remaining_seconds = 0;
+  time_t begin_all, end_all;
+  
+  time(&begin_all);
   
   x = PrepMatrix(x);
   
-  Rcout << "test" << std::endl;
+  time_t begin_main, end_main;
+  time(&begin_main);
   
-  for(int i = 0; i < x.nrow(); i++) {
-    for(int j = 0; j < x.nrow(); j++) {
+  for(int i = 0; i < n; i++) {
+    for(int j = 0; j < n; j++) {
       out(i,j) = RssCell(x, i, j, r);
     }
+    time(&end_main);
+    remaining_seconds = difftime(end_main, begin_main) * double(n-i) / double(i);
+    Rprintf("\rCompleted calculation for node %d of %d. Remaining time: %d seconds                    ", 
+      i+1, n, remaining_seconds);
   }
   
-  return wrap( out );
+  time(&end_all);
+  Rprintf("\nCalculation complete. Run time: %d seconds\n", int(difftime(end_all, begin_all)));
+  
+  return wrap(out);
 }

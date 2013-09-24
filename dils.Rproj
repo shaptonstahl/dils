@@ -11,4 +11,8 @@ Encoding: UTF-8
 
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
-RootDocument: 
+
+BuildType: Package
+PackagePath: Rpackage/dev/dils
+PackageInstallArgs: --no-multiarch
+PackageRoxygenize: rd,collate

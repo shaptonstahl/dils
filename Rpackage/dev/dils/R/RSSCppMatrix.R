@@ -36,6 +36,5 @@ RSSCppMatrix <- function(xadj, radius){
   return( .Call("rss_cpp_matrix",
                 xadj, 
                 radius,
-                width=options()$width,
                 PACKAGE="dils" ) )
 }

@@ -20,26 +20,31 @@
 #' If \code{v1} and \code{v2} are specified, this returns the RSS from \code{v1}
 #' to \code{v2}.  If not, it calculates the RSS scores for all dyads in the network.
 #' @examples
-#' g <- graph.atlas(128)
-#' \dontrun{plot(g)}
+#' g1 <- graph.atlas(128)
+#' \dontrun{plot(g1)}
 #' 
-#' M <- as.matrix(get.adjacency(g))
-#' M
-#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=1)
-#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=2)
-#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3)
-#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=4)
+#' M1 <- as.matrix(get.adjacency(g1))
+#' M1
+#' RelationStrengthSimilarity(xadj=M1, v1=5, v2=6, radius=1)
+#' RelationStrengthSimilarity(xadj=M1, v1=5, v2=6, radius=2)
+#' RelationStrengthSimilarity(xadj=M1, v1=5, v2=6, radius=3)
+#' RelationStrengthSimilarity(xadj=M1, v1=5, v2=6, radius=4)
 #' 
-#' RelationStrengthSimilarity(xadj=M, radius=2)
-#' RelationStrengthSimilarity(xadj=M, radius=3)
-#' RelationStrengthSimilarity(xadj=M, radius=3, method="BetterR")
+#' RelationStrengthSimilarity(xadj=M1, radius=2)
 #' 
-#' RelationStrengthSimilarity(xadj=M, v1=5, v2=6, radius=3, directed=FALSE)
-#' RelationStrengthSimilarity(xadj=M, radius=3, directed=FALSE)
+#' TestUndirectedNetwork <- function(n) {
+#'   M <- matrix(runif(n*n), nrow=n)
+#'   M <- (M + t(M)) / 2
+#'   diag(M) <- 0
+#'   return(M)
+#' }
+#' M2 <- TestUndirectedNetwork(75)
+#' system.time(RelationStrengthSimilarity(xadj=M2, directed=FALSE, method="BetterR"))  # all R
+#' system.time(RelationStrengthSimilarity(xadj=M2, directed=FALSE))                    # Rcpp
 RelationStrengthSimilarity <- function(xadj, 
                                        v1, 
                                        v2, 
-                                       radius,
+                                       radius=3,
                                        directed=TRUE,
                                        method=c("Rcpp", "BetterR", "NaiveR")) {
   #' Add guardians here

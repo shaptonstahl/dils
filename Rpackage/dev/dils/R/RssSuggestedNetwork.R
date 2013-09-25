@@ -57,7 +57,7 @@ RssSuggestedNetwork <- function(g,
   g.imputed <- graph.adjacency(adj.imputed, mode=mode.g)
   g.new <- graph.adjacency(adj.new, mode=mode.g)
   
-  frac.filled <- (1 - graph.density(g.imputed)) / (1 - graph.density(g))
+  frac.filled <- (graph.density(g.imputed) - graph.density(g)) / (1 - graph.density(g))
   
   # prepare and return the output
   out <- list(g.imputed=g.imputed,

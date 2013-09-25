@@ -8,6 +8,7 @@
 #' @param r numeric, length of paths examined from \code{v1} to \code{v2}.
 #' @param prepped logical, whether or not the adjacency matrix \code{x} has had zeros entered on the diagonal and each row divided by the row sum.
 #' @return numeric, the part of the Relation Strength Similarity score from \code{v1} to \code{v2} contributed by paths of length \code{r}.
+#' @export
 #' @seealso \code{\link{RelationStrengthSimilarity}}
 #' @references
 #' "Discovering Missing Links in Networks Using Similarity Measures", 

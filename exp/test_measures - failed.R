@@ -1,8 +1,17 @@
-
+#' Some comments:
+#' This measure has very low reliability.  Even dialing
+#' the remove.share to 1% (both # iters = 50) the sd of the measure
+#' was .28 on a [0,1] scale.  Unacceptable.
+#' 
+#' I suspect the problem is in generating random networks
+#' with the same degree.  These networks need not have any
+#' relationship to the original network.
+#' 
+#' This "measure" should not be used.
 
 MeasureNetworkInformation2 <- function(g, 
                                        FUN=betweenness,
-                                       remove.share=.2,
+                                       remove.share=.05,
                                        perturbed.sample.size=500,
                                        bootstrap.sample.size=30,
                                        progress.bar=FALSE,

@@ -1,6 +1,13 @@
-#' Measure informativeness of a network of a particualar network measure.
+#' Measure how much a network informs a particular network measure
 #'
-#' Given an \code{igraph} network, repeatedly perturb the graph and take some measure of the network to see how much the measure varies.
+#' Given an \code{igraph} network, repeatedly perturb the graph and take some 
+#' measure of the network to see how much the measure varies, then return
+#' a measure that increases as the precision of the function values increases.
+#' 
+#' This function can vary tremendously based on the network measure being
+#' considered and the other parameters.  It is only recommended that this
+#' be used for comparing the informativeness of two networks on
+#' the same set of nodes, keeping all the parameters the same.
 #' 
 #' @param g igraph, graph to measure
 #' @param FUN function, a function that takes an igraph and returns a value for each node in the network.
@@ -10,7 +17,7 @@
 #' @return numeric, mean precision of the measure \code{FUN} across the network
 #' @export
 #' @references
-#' \url{https://github.com/shaptonstahl/}
+#' \url{https://github.com/shaptonstahl/dils}
 #' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
 #' @details Here information is measured as 1 / mean across and perturbed graphs
 #' nodes of the relative error of a network node measure.
@@ -41,7 +48,6 @@
 #' m.pref / m.rand  # Relative informativeness of this preference graph
 #'                  # to this random graph with respect to betweenness
 #' \dontrun{
-#' 
 #' prob.of.link <- c(1:50)/100
 #' mnis <- sapply(prob.of.link, function(p) 
 #'   MeasureNetworkInformation(random.graph.game(100, p)))

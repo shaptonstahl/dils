@@ -21,6 +21,9 @@
 
   \item{directed}{logical, if TRUE returns a symmetric RSS
   matrix.}
+
+  \item{method}{character, choose the method of
+  calculation.}
 }
 \value{
   numeric, Relation Strength Similarity score(s).

@@ -7,6 +7,7 @@
 #' @param v2 numeric Object type, then description of \code{arg2}.
 #' @param radius numeric, length of longest path examined from \code{v1} to \code{v2}.
 #' @param directed logical, if TRUE returns a symmetric RSS matrix.
+#' @param method character, choose the method of calculation.
 #' @return numeric, Relation Strength Similarity score(s).
 #' @export
 #' @seealso \code{\link{ScalablePCA}}

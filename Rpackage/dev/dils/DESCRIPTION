@@ -1,9 +1,9 @@
 Package: dils
 Type: Package
 Title: Data-Informed Link Strength. Combine multiple-relationship networks into
-    a single weighted network.
-Version: 0.7
-Date: 2013-09-23
+    a single weighted network. Impute (fill-in) missing network links.
+Version: 0.8
+Date: 2013-10-14
 Author: Stephen R. Haptonstahl
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Depends:
@@ -16,9 +16,10 @@ Suggests:
 Description: Combine multiple-relationship networks into a single weighted
     network.  The approach is similar to factor analysys in the that
     contribution from each constituent network varies so as to maximize the
-    information gleaned from the multimetwork.  This implementation uses
+    information gleaned from the multinetwork.  This implementation uses
     Principal Component Analysis calculated using 'prcomp' with bootstrap
-    subsampling.
+    subsampling.  Missing links are imputed using the method of Chen et al.
+    (2012).
 License: MIT + file LICENSE
 Collate:
     'GetSampleFromDataFrame.R'
@@ -37,3 +38,4 @@ Collate:
     'IgraphFromEdgelist.R'
     'MeasureNetworkInformation.R'
     'RssSuggestedNetwork.R'
+    'RelativeNetworkInformation.R'

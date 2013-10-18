@@ -24,7 +24,7 @@ Workflow synthesizing networks might typically look like this:
   \item Use \code{\link{MergeEdgelists}} to combine the individual network datasets into a single dataset.
   \item Use \code{\link{GenerateDilsNetwork}} to synthesize the networks in the merged data set into a single weighted network.
   \item Use \code{\link{IgraphFromEdgelist}} or \code{\link{AdjacencyFromEdgelist}} to convert the edgelist output to the desired output.
-  \item Use \code{\link{MeasureNetworkInformation}} on input networks and DILS network to see if/how much the information content of the DILS network exceeds the information content of the input networks.
+  \item Use \code{\link{RelativeNetworkInformation}} on input networks and DILS network to see if/how much the information content of the DILS network exceeds the information content of the input networks.
 }
 
 Workflow for imputing edges for a binary network might typically look like this:

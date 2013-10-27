@@ -3,7 +3,7 @@ Type: Package
 Title: Data-Informed Link Strength. Combine multiple-relationship networks into
     a single weighted network. Impute (fill-in) missing network links.
 Version: 0.8
-Date: 2013-10-14
+Date: 2013-10-27
 Author: Stephen R. Haptonstahl
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Depends:

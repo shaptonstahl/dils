@@ -14,11 +14,12 @@ LinkingTo: Rcpp
 Suggests:
     testthat
 Description: Combine multiple-relationship networks into a single weighted
-    network.  The approach is similar to factor analysys in the that
+    network.  The approach is similar to factor analysis in the that
     contribution from each constituent network varies so as to maximize the
-    information gleaned from the multinetwork.  This implementation uses
-    Principal Component Analysis calculated using 'prcomp' with bootstrap
-    subsampling.  Missing links are imputed using the method of Chen et al.
+    information gleaned from the multiple-relationship networks.
+    This implementation uses Principal Component Analysis calculated using
+    'prcomp' with bootstrap subsampling.  Missing links are imputed using
+    the method of Chen et al.
     (2012).
 License: MIT + file LICENSE
 Collate:

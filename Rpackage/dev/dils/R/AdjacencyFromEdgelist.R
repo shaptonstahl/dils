@@ -17,21 +17,22 @@
 #' @examples
 #' edgelist <- cbind(expand.grid(letters[1:2], letters[1:2]), runif(4))
 #' AdjacencyFromEdgelist(edgelist)
-AdjacencyFromEdgelist <- function(elist) {
+AdjacencyFromEdgelist <- function(elist, check.full=TRUE) {
   # Guardians
   stopifnot(is(elist, "data.frame"),
             3 == ncol(elist),
             is.numeric(elist[,3]))
   
-  filled.elist <- EdgelistFill(elist)  # I assume that this is sorted by first col, then second, 
+  if(check.full) elist <- EdgelistFill(elist)  # I assume that this is sorted by first col, then second, 
                                        # so the third col has consecutive rows of the adjacency matrix
   
-  nodelist <- sort(unique(filled.elist[,1]))
+  nodelist <- sort(unique(elist[,1]))
   n <- length(nodelist)
+  weights <- elist[,3]
   
   adjacency <- matrix(0, nrow=n, ncol=n)
   for(i in 1:n) {
-    adjacency[i,] <- filled.elist[((i-1)*n+1):(i*n),3]
+    adjacency[i,] <- weights[((i-1)*n+1):(i*n)]
   }
   out <- list(adjacency=adjacency, nodelist=nodelist)
   return(out)

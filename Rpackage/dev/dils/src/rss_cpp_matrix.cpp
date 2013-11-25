@@ -99,7 +99,7 @@ SEXP rss_cpp_matrix(SEXP xadj, SEXP radius, SEXP directed) {
       out(i,j) = RssCell(x, i, j, r);
     }
     time(&end_main);
-    remaining_seconds = difftime(end_main, begin_main) * double(n-i) / double(i);
+    remaining_seconds = difftime(end_main, begin_main) * double(n-i) / (double(i) + 0.1);
     Rprintf("\rCompleted calculation for node %d of %d. Remaining time: %d seconds                    ", 
       i+1, n, remaining_seconds);
   }

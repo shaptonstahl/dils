@@ -7,9 +7,7 @@
 #' @param g1 igraph, graph to measure
 #' @param g2 igraph, graph to measure
 #' @param FUN function, a function that takes an igraph and returns a value for each node in the network.
-#' @param remove.share numeric, fraction of the edges that are removed randomly when perturbing the network.
-#' @param sample.size numeric, number of perturbed graphs to generate
-#' @param progress.bar logical, if TRUE then a progress bar is shown.
+#' @param score.range numeric, length-2 vector giving minimum and maximum possible values of \code{FUN}.
 #' @return list, containing the following
 #' \tabular{lll}{
 #'   \code{g1.over.g2} \tab numeric \tab informativeness of the first network over the second \cr
@@ -32,20 +30,14 @@
 #' RelativeNetworkInformation(g.rand, g.pref)
 RelativeNetworkInformation <- function(g1,
                                        g2,
-                                       FUN=betweenness,
-                                       remove.share=.2,
-                                       sample.size=100,
-                                       progress.bar=FALSE) {
+                                       FUN=function(x) evcent(x)$vector,
+                                       score.range=c(0,1)) {
   m1 <- MeasureNetworkInformation(g1,
                                   FUN=FUN,
-                                  remove.share=remove.share,
-                                  sample.size=sample.size,
-                                  progress.bar=progress.bar)
+                                  score.range=score.range)
   m2 <- MeasureNetworkInformation(g2,
                                   FUN=FUN,
-                                  remove.share=remove.share,
-                                  sample.size=sample.size,
-                                  progress.bar=progress.bar)
+                                  score.range=score.range)
   return(list(g1.over.g2=m1/m2,
               winner=ifelse(m1>m2, "g1", "g2"),
               g1.measure=m1,

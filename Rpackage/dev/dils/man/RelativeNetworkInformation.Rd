@@ -2,9 +2,9 @@
 \alias{RelativeNetworkInformation}
 \title{Compare how much two networks inform a particular network measure}
 \usage{
-  RelativeNetworkInformation(g1, g2, FUN = betweenness,
-    remove.share = 0.2, sample.size = 100,
-    progress.bar = FALSE)
+  RelativeNetworkInformation(g1, g2,
+    FUN = function(x) evcent(x)$vector,
+    score.range = c(0, 1))
 }
 \arguments{
   \item{g1}{igraph, graph to measure}
@@ -14,14 +14,8 @@
   \item{FUN}{function, a function that takes an igraph and
   returns a value for each node in the network.}
 
-  \item{remove.share}{numeric, fraction of the edges that
-  are removed randomly when perturbing the network.}
-
-  \item{sample.size}{numeric, number of perturbed graphs to
-  generate}
-
-  \item{progress.bar}{logical, if TRUE then a progress bar
-  is shown.}
+  \item{score.range}{numeric, length-2 vector giving
+  minimum and maximum possible values of \code{FUN}.}
 }
 \value{
   list, containing the following \tabular{lll}{

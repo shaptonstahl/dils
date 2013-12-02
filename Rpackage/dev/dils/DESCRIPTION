@@ -9,7 +9,8 @@ Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Depends:
     R (>= 3.0.1),
     igraph,
-    Rcpp (>= 0.10.4)
+    Rcpp (>= 0.10.4),
+    entropy
 LinkingTo: Rcpp
 Suggests:
     testthat,

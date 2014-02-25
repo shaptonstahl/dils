@@ -1,0 +1,145 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+%\geometry{a4paper} % or letterpaper (US) or a5paper or....
+\geometry{letterpaper}
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+\geometry{margin=1in}
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+
+\usepackage{amsmath}
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{Calculating RSS for Finite Discovery Ranges}
+\author{Stephen R. Haptonstahl}
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+
+This implements the Relation Strength Similarity (RSS) measure defined in Chen et al. (2012).
+
+\section{Assumptions}
+Let $B$ be the adjacency matrix of the input network where $b_{ij}$ represents the strength of the link from node $i$ to node $j$.  First, divide each row by its row sum, so the sum of each row is now 1.  This normalization implements Equation (1) of Chen et al. (2002).  Call this normalized adjacency matrix $A$.  
+
+Now for each directed dyad $(i,j)$ we calculate the RSS score $S(i,j)$ as
+  $$S(i,j) = \sum_{k=0}^r L(i,j,k)$$
+where $r\geq1$ is the discovery range (the maximum path length considered between $i$ and $j$) and $L(i,j,k)$ is the product of $a_{\cdot,\cdot}$ along simple\footnote{A simple path is one that does not contain any node twice.} paths of length $k$ from $i$ to $j$.
+
+\subsection{$r=0$}
+We will not search paths of length zero (from $i$i to $i$) but it may be useful to define $S(i,i)$.
+
+\begin{align}
+  L(i,j,0) &= \left\{ \begin{array}{lll} 1 & \hspace{1em} & \text{if } i=j \\ 0 & & \text{otherwise} \end{array} \right.
+\end{align}
+
+This serves two purposes: (1) It defines $S(i,i)=1$ which fits our notion that RSS measures strength of connection between two nodes, and (2) for $k>0$ it defines $L(i,i,k)=0$ which is correct (every path from $i$i to $i$ repeats a node, manely $i$, so it's not simple and it therefore excluded) and convenient notationally.
+
+\subsection{$r=1$}
+The only path (simple or otherwise) between nodes $i$ and $j$ of length 1 is given by the link between them.
+
+\begin{align}
+  L(i,j,1) &= a_{ij}
+\end{align}
+
+\subsection{$r=2$}
+We now consider paths of length 2 that have some node $\ell$ between nodes $i$ and $j$.  Considering only simple paths means here only that $\ell\neq i$ and $\ell\neq j$.
+
+\begin{align}
+  L(i,j,2) &= \sum_{\ell \neq i,j} a_{i\ell} a_{\ell j} \\
+           &= \sum_{\ell=1}^n a_{i\ell} a_{\ell j} - a_{ii} a_{ij} - a_{ij} a_{jj} \\
+           &= \sum_{\ell=1}^n a_{i\ell} a_{\ell j}
+\end{align}
+if we set all diagonal entries to zero.  This makes sense given that we are only considering simple paths, so this should be part of the initial normalization of the adjacency matrix.  However, remember that $S(i,i)=1$, not zero, for all $i$, and this case will have to be trapped separately from the calculations using $L(\cdot)$.
+
+\subsection{$r=3$}
+We now consider paths of length 3 that follow nodes $i \to m \to \ell \to j$.  Considering only simple paths means here only that $\ell\neq i,j$ and $m\neq i,j,\ell$.
+
+\begin{align}
+  L(i,j,3) &= \sum_{\ell \neq i,j} \, \sum_{m\neq i,j,\ell} a_{im} a_{m\ell} a_{\ell j} \\
+           &= \sum_{\ell \neq i,j} a_{\ell j} \left[ \sum_{m\neq i,j,\ell} a_{im} a_{m\ell} \right] \\
+           &= \sum_{\ell \neq i,j} a_{\ell j} \left[ \sum_{m=1}^n a_{im} a_{m\ell} - a_{ij}a_{j\ell} \right] \\
+           &= \sum_{\ell \neq i,j} a_{\ell j} \bigl[ \L(i,\ell,2) - a_{ij}a_{j\ell} \bigr] \\
+           &= \sum_{\ell=1}^n a_{\ell j} \bigl[ \L(i,\ell,2) - a_{ij}a_{j\ell} \bigr] \\
+           &= \text{sum} \left( A[,j] \cdot \left[ \begin{array}{c}L(i,1,2) - a_{ij}a_{j1} \\ L(i,2,2) - a_{ij}a_{j2} \\ \vdots \\ L(i,n,2) - a_{ij}a_{jn} \end{array} \right] \right) - a_{ij}[\underbrace{L(i,i,2)}_{=0}-a_{ij}a_{ji}] \\
+           &= \text{sum} \left( A[,j] \cdot \left[ \begin{array}{c}L(i,1,2) - a_{ij}a_{j1} \\ L(i,2,2) - a_{ij}a_{j2} \\ \vdots \\ L(i,n,2) - a_{ij}a_{jn} \end{array} \right] \right) + a_{ij}^2 a_{ji}
+\end{align}
+
+\newpage
+\subsection{$r=4$}
+We now consider paths of length 4 that follow nodes $i \to p \to m \to \ell \to j$.  Considering only simple paths means here only that $\ell\neq i,j$, $m\neq i,j,\ell$, and $p\neq i,j,\ell,m$.
+
+\begin{align}
+  L(i,j,4) &= \sum_{\ell \neq i,j} \, \sum_{m\neq i,j,\ell} \, \sum_{p\neq i,j,\ell,m} a_{ip} a_{pm} a_{m\ell} a_{\ell j} \\
+  &= \sum_{\ell \neq i,j}  a_{\ell j} \left[ \sum_{m\neq i,j,\ell} \, \sum_{p\neq i,j,\ell,m} a_{ip} a_{pm} a_{m\ell} \right] \\
+  &= \sum_{\ell \neq i,j}  a_{\ell j} \left[ \sum_{m\neq i,j,\ell} \left( \sum_{p\neq i,\ell,m} a_{ip} a_{pm} a_{m\ell} - a_{ij} a_{jm} a_{m\ell} \right) \right] \\
+  &= \sum_{\ell \neq i,j}  a_{\ell j} \left[ \sum_{m\neq i,j,\ell} \sum_{p\neq i,\ell,m} a_{ip} a_{pm} a_{m\ell} - \sum_{m\neq i,j,\ell} a_{ij} a_{jm} a_{m\ell} \right] \\
+  &= \sum_{\ell \neq i,j}  a_{\ell j} \left[ \sum_{m\neq i,\ell} \sum_{p\neq i,\ell,m} a_{ip} a_{pm} a_{m\ell} - \sum_{p\neq i,j,\ell} a_{ip} a_{pj} a_{j\ell} - \sum_{m\neq i,j,\ell} a_{ij} a_{jm} a_{m\ell} \right] \\
+  &= \sum_{\ell \neq i,j}  a_{\ell j} \left[ L(i,\ell,3) - a_{j\ell} \sum_{p\neq i,j,\ell} a_{ip} a_{pj} - a_{ij} \sum_{m\neq i,j,\ell} a_{jm} a_{m\ell} \right] \\
+  &= \sum_{\ell \neq i,j}  a_{\ell j} \left[ L(i,\ell,3) - a_{j\ell} \left( \underbrace{\text{sum}(A[i,] \cdot A[,j])}_{L(i,j,2)} - a_{i\ell} a_{\ell j} \right) \right. \nonumber \\
+  &{} \hspace{1in} \left. - a_{ij} \left( \underbrace{\text{sum}(A[j,] \cdot A[,\ell])}_{L(j,\ell,2)} - a_{ji} a_{i\ell} \right) \right] \\
+  &= \sum_{\ell \neq i,j}  a_{\ell j} \biggl[ L(i,\ell,3) - a_{j\ell} L(i,j,2) + a_{j\ell} a_{i\ell} a_{\ell j} - a_{ij} L(j,\ell,2) + a_{ij} a_{ji} a_{i\ell} \biggr] \\
+  &= \sum_{\ell \neq i}  a_{\ell j} \biggl[ L(i,\ell,3) - a_{j\ell} L(i,j,2) + a_{j\ell} a_{i\ell} a_{\ell j} - a_{ij} L(j,\ell,2) + a_{ij} a_{ji} a_{i\ell} \biggr] \\
+\intertext{because $a_{jj}=0$. When $\ell=i$ some terms are zero and some are not, so}
+  &= \sum_{\ell=1}^n  a_{\ell j} \biggl[ L(i,\ell,3) - a_{j\ell} L(i,j,2) + a_{j\ell} a_{i\ell} a_{\ell j} - a_{ij} L(j,\ell,2) + a_{ij} a_{ji} a_{i\ell} \biggr] \nonumber \\
+  &{} \hspace{1in} + a_{ij} a_{ji} L(i,j,2) + a_{ij}^2 L(j,i,2) \\
+  &= \text{sum} \left( A[,j] \cdot \left[ \begin{array}{l} L(i,1,3) - a_{j1}L(i,j,2) - a_{ij}L(j,1,2) + a_{j1}a_{i1}a_{1 j} + a_{ij}a_{ji}a_{i1} \\ L(i,2,3) - a_{j2}L(i,j,2) - a_{ij}L(j,2,2) + a_{j2}a_{i2}a_{2 j} + a_{ij}a_{ji}a_{i2} \\ \vdots \\ L(i,n,3) - a_{jn}L(i,j,2) - a_{ij}L(j,n,2) + a_{jn}a_{in}a_{n j} + a_{ij}a_{ji}a_{in} \end{array} \right] \right) \nonumber \\
+  &{} \hspace{1in} + a_{ij} a_{ji} L(i,j,2) + a_{ij}^2 L(j,i,2)
+\end{align}
+
+\subsection{$r=5$}
+We now consider paths of length 5 that follow nodes $i \to q \to p \to m \to \ell \to j$.  Considering only simple paths means here only that $\ell\neq i,j$, $m\neq i,j,\ell$, $p\neq i,j,\ell,m$, and $q\neq i,j,\ell,m,p$.
+
+\begin{align}
+  L(i,j,5) &= \sum_{\ell \neq i,j} \, \sum_{m\neq i,j,\ell} \, \sum_{p\neq i,j,\ell,m} \, \sum_{q\neq i,j,\ell,m,p} a_{iq} a_{qp} a_{pm} a_{m\ell} a_{\ell j} \\
+\end{align}
+
+\end{document}

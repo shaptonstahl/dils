@@ -1,0 +1,46 @@
+Definitions of Networks
+
+- 4183 Chinese officials
+- Source: http://www.chinavitae.com/
+
+- Most (16/18) networks are binary: officials both with some trait are linked
+- "nationality" is clusters
+- "age" looks are difference in ages: linked if difference <= 5 years
+
+===
+
+age (5_build_age_links_smarter.R): linked if age difference is <= five years (not linked if one/both ages not known; age known for 65% of officials, 42% of dyads)
+
+commissar (binary, 3_build_binary_nets.R): linked if both have served as commissars
+
+CPC (binary, 3_build_binary_nets.R): linked if both are in the Communist Party of China (hold 1/3 seats in CPPCC)
+
+CPPCC (binary, 3_build_binary_nets.R): linked if both have served in the Chinese People's Political Consultative Conference
+
+criminal (binary, 3_build_binary_nets.R): linked if both have job descriptions including the terms prison, parole, sentence, or persecuted
+
+diplomat (binary, 3_build_binary_nets.R): linked if both have served as diplomats
+
+educator (binary, 3_build_binary_nets.R): linked if both have been educators
+
+engineer (binary, 3_build_binary_nets.R): linked if both have been engineers
+
+executive (binary, 3_build_binary_nets.R): linked if both have served as executives (minister, secretary, president, director, etc.)
+
+female (binary, 3_build_binary_nets.R): linked if both female
+
+flag (binary, 3_build_binary_nets.R): linked if both have served as generals, admirals, or higher in the military
+
+health (binary, 3_build_binary_nets.R): linked if both have served as in health care (doctors, medics, etc.)
+
+law (binary, 3_build_binary_nets.R): linked if both have served in some legal work (judge, lawyer, etc.)
+
+mayor (binary, 3_build_binary_nets.R): linked if both have served as mayors
+
+nationality (clusters, 4_build_cluster_nets.R): linked if they have the same nationality (3089/74% have listed, 93% of those are "Chinese")
+
+NPC (binary, 3_build_binary_nets.R): linked if both have served in the National People's Congress (national legislature)
+
+representative (binary, 3_build_binary_nets.R): linked if both have job descriptions including the terms representative, delegate, or trustee
+
+scientist (binary, 3_build_binary_nets.R): linked if both have been scientists
